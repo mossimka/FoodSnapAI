@@ -14,12 +14,29 @@
   font-display: swap;
 }
 
+:root {
+  --bg-color: #F8F3EC;
+  --gradient: linear-gradient(to bottom right, #F48A3B, #D4657F);
+  --gradient2: linear-gradient(to right, #f48a3b, #d4657f);
+  --shadow-color-active: rgb(212, 101, 87);
+  --shadow: 0 4px 12px rgba(244, 138, 59, 0.3);
+  --hover-shadow: 0 6px 16px rgba(212, 101, 87, 0.4);
+  --active-shadow: 0 3px 10px rgba(212, 101, 87, 0.2);
+}
 
 * {
-    margin: 0;
-    font-family: 'Rubik', sans-serif;
+  margin: 0;
+  font-family: 'Rubik', sans-serif;
 }
 
 body {
-    background-color: #F8F3EC;
+  background-color: var(--bg-color);
+}
+
+.gradientText {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }

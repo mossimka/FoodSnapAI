@@ -1,0 +1,43 @@
+.header {
+    display: flex;
+    font-family: inherit;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    width: 75vw;
+    height: 10vh;
+}
+
+.logoSection {
+    display: flex;
+    width: 15vw;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.user {
+    border-radius: 50%;
+}
+
+.nav {
+    width: 26vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 111;
+}
+
+.profileButton{
+    background: none;
+    border: none;
+}
+
+.profileWrapper{
+    position: relative;
+    z-index: 111;
+}
+
+.popup {
+  position: absolute;
+  z-index: 1000;
+}

@@ -1,0 +1,52 @@
+"use client";
+
+import React, { useState } from "react";
+import Image from "next/image";
+import { AnimatePresence } from "framer-motion";
+
+import Styles from "./Navbar.module.css";
+import { NavButton } from "../NavButton/NavButton";
+import { ProfilePopup } from "../ProfilePopup/ProfilePopup";
+
+export const Navbar: React.FC = () => {
+  const [showPopup, setShowPopup] = useState(false);
+
+  return (
+    <header className={Styles.header}>
+      <section className={Styles.logoSection}>
+        <Image
+          src="/images/logo.png"
+          alt="logo"
+          className={Styles.logo}
+          width={60}
+          height={60}
+        />
+        <h1>FoodSnap <span className="gradientText">AI</span></h1>
+      </section>
+      <nav className={Styles.nav}>
+        <NavButton text="+ Generate a recipe" link="/generate" />
+        <NavButton text="View posted" link="/posted" />
+
+        <div className={Styles.profileWrapper}>
+            <button
+              onClick={() => setShowPopup(!showPopup)}
+              className={Styles.profileButton}
+            >
+            <Image
+                src="/images/user.png"
+                alt="user"
+                className={Styles.user}
+                width={50}
+                height={50}
+            />
+            </button>
+            <div className={Styles.popup}>
+              <AnimatePresence>
+                  {showPopup && <ProfilePopup onClose={() => setShowPopup(false)} />}
+              </AnimatePresence>
+            </div>
+        </div>
+      </nav>
+    </header>
+  );
+};

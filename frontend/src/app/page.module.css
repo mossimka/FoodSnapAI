@@ -1,9 +1,4 @@
-.header {
-    display: flex;
-    font-family: inherit;
-}
 
-.logo {
-    width: 6vh;
-    margin: 0 0 0 15vw;
+.main {
+    margin: 0 auto;
 }
