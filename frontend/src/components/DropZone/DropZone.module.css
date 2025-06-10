@@ -1,0 +1,53 @@
+.dropZone {
+  width: 75%;
+  margin: 3rem auto;
+}
+
+.dropZoneBox {
+  border: 3px dashed var(--border-color);
+  background-color: var(--bg-color);
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.dropZoneBox:hover {
+  background-color: #fff0e0;
+}
+
+.dropZoneInput p {
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.dropZoneImageWrapper {
+  margin: 1rem 0;
+}
+
+.dropZoneImage {
+  width: 60px;
+  height: 60px;
+  color: var(--accent-color);
+}
+
+.previewSection {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border: 2px dashed var(--border-color);
+  border-radius: 1rem;
+  background-color: var(--bg-color);
+}
+
+.previewImageWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.previewLabel {
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+}

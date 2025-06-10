@@ -2,8 +2,10 @@ import React from "react";
 //import Image from "next/image";
 
 import Styles from "./page.module.css";
-import { Navbar } from "../components/Navbar/Navbar"
+import { Navbar } from "@/components/Navbar/Navbar"
 import { HeroSection } from "@/components/HeroSection/HeroSection";
+import { DropZoneWrapper } from "@/components/DropZone/DropZoneWrapper";
+import { CameraCapture } from "@/components/CameraCapture/CameraCapture"
 
 export default function Home() {
 
@@ -12,6 +14,7 @@ export default function Home() {
       <Navbar />
       <main className={Styles.main}>
         <HeroSection />
+        <DropZoneWrapper />
       </main>
     </>
   );

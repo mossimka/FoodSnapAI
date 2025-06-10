@@ -1,6 +1,6 @@
 .heroSection {
   position: relative;
-  width: 100vw;
+  max-width: 99vw;
   min-height: 60vh;
   margin: 0 auto;
   display: flex;

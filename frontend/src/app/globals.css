@@ -14,6 +14,10 @@
   font-display: swap;
 }
 
+html{
+  scrollbar-color: var(--border-color) var(--bg-color);
+}
+
 :root {
   --bg-color: #F8F3EC;
   --gradient: linear-gradient(to bottom right, #F48A3B, #D4657F);
@@ -22,6 +26,8 @@
   --shadow: 0 4px 12px rgba(244, 138, 59, 0.3);
   --hover-shadow: 0 6px 16px rgba(212, 101, 87, 0.4);
   --active-shadow: 0 3px 10px rgba(212, 101, 87, 0.2);
+  --accent-color: #FFAB40;
+  --border-color: #ff914d;
 }
 
 * {
@@ -39,4 +45,17 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
+}
+
+.gradientText2 {
+  background: var(--gradient2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+::selection {
+  color: white;
+  background-color: var(--border-color);
 }
