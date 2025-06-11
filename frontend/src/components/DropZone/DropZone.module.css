@@ -1,6 +1,5 @@
 .dropZone {
-  width: 75%;
-  margin: 3rem auto;
+  width: 45%;
 }
 
 .dropZoneBox {
@@ -11,10 +10,14 @@
   text-align: center;
   transition: background-color 0.2s ease;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 25vh;
 }
 
 .dropZoneBox:hover {
-  background-color: #fff0e0;
+  background-color: var(--hover-color);
 }
 
 .dropZoneInput p {

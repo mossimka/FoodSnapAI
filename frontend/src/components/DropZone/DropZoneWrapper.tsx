@@ -17,9 +17,11 @@ export const DropZoneWrapper = () => {
 
   return (
     <div className={Styles.wrapper}>
-      <DropZone setImage={handleImageSelect} />
+      <div className={Styles.wrapperActions}>
+        <DropZone setImage={handleImageSelect} />
+        <CameraCapture setImage={handleImageSelect} />
+      </div>
       {imageFile && <p className="gradientText">You chose file: {imageFile.name}</p>}
-      <CameraCapture setImage={handleImageSelect} />
     </div>
   );
 };

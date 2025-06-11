@@ -20,6 +20,7 @@ html{
 
 :root {
   --bg-color: #F8F3EC;
+  --hover-color: #FFF0E0;
   --gradient: linear-gradient(to bottom right, #F48A3B, #D4657F);
   --gradient2: linear-gradient(to right, #f48a3b, #d4657f);
   --shadow-color-active: rgb(212, 101, 87);

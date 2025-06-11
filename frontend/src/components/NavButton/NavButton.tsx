@@ -11,7 +11,7 @@ interface NavButtonProps {
 export const NavButton: React.FC<NavButtonProps> = ({ text, link }) => {
   return (
     <Link href={link}>
-      <button className={Styles.navButton}>{text}</button>
+      <button className={Styles.button}>{text}</button>
     </Link>
   );
 };

@@ -1,0 +1,92 @@
+.cameraContainer {
+    width: 45%;
+    border: 3px dashed var(--border-color);
+    background-color: var(--bg-color);
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    height: 25vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cameraContainer:hover{
+    background-color: var(--hover-color);
+}
+
+.cameraWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  flex-direction: column;
+}
+
+.cameraVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.mask {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+
+  padding: 30vh 30vw;
+  box-sizing: border-box;
+}
+
+.captureButton {
+  z-index: 3;
+  position: absolute;
+  bottom: 2rem;
+  background-color: white;
+  border: none;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  box-shadow: 0 0 10px black;
+  cursor: pointer;
+}
+
+.captureButton::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  background-color: red;
+  border-radius: 50%;
+}

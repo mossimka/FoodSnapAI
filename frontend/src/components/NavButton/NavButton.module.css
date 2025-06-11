@@ -1,4 +1,4 @@
-.navButton {
+.button {
   padding: 0.6rem 1.2rem;
   background: linear-gradient(135deg, #f48a3b, #d46557);
   color: white;
@@ -12,12 +12,12 @@
   z-index: 111;
 }
 
-.navButton:hover {
+.button:hover {
   transform: translateY(-2px);
   box-shadow: var(--hover-shadow);
 }
 
-.navButton:active {
+.button:active {
   transform: scale(0.98);
   box-shadow: var(--active-shadow);
 }

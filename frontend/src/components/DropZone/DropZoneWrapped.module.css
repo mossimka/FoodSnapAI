@@ -1,4 +1,10 @@
 .wrapper{
     width: 75%;
-    margin: 0 auto;
+    margin: 4rem auto;
+}
+
+.wrapperActions{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
 }

@@ -2,6 +2,9 @@
 
 import React, { useRef, useState } from "react";
 
+import Styles from "./CameraCapture.module.css";
+import ButtonStyles from "@/components/NavButton/NavButton.module.css"
+
 const CameraCapture = ({ setImage }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -18,14 +21,16 @@ const CameraCapture = ({ setImage }) => {
 
   const capturePhoto = () => {
     if (!videoRef.current || !canvasRef.current) return;
-    const ctx = canvasRef.current.getContext("2d");
+
     const width = videoRef.current.videoWidth;
     const height = videoRef.current.videoHeight;
+    const ctx = canvasRef.current.getContext("2d");
 
     canvasRef.current.width = width;
     canvasRef.current.height = height;
 
     ctx?.drawImage(videoRef.current, 0, 0, width, height);
+
     videoRef.current.srcObject?.getTracks().forEach(track => track.stop());
 
     canvasRef.current.toBlob(blob => {
@@ -39,19 +44,25 @@ const CameraCapture = ({ setImage }) => {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "2rem" }}>
+    <div className={Styles.cameraContainer}>
       {!capturing ? (
-        <button onClick={startCamera}>📷 Открыть камеру</button>
+        <button onClick={startCamera} className={ButtonStyles.button}>Open Camera</button>
       ) : (
-        <>
-          <video ref={videoRef} style={{ width: "100%", maxWidth: 400 }} />
-          <br />
-          <button onClick={capturePhoto} style={{ marginTop: "1rem" }}>
-            📸 Сделать снимок
-          </button>
-        </>
+        <div className={Styles.cameraWrapper}>
+          <video
+            ref={videoRef}
+            className={Styles.cameraVideo}
+            playsInline
+            autoPlay
+            muted
+          />
+          <div className={Styles.overlay}>
+            <div className={Styles.mask}></div>
+          </div>
+          <button className={Styles.captureButton} onClick={capturePhoto}></button>
+          <canvas ref={canvasRef} style={{ display: "none" }} />
+        </div>
       )}
-      <canvas ref={canvasRef} style={{ display: "none" }} />
     </div>
   );
 };
