@@ -3,7 +3,6 @@
 import React, { useRef, useState } from "react";
 
 import Styles from "./CameraCapture.module.css";
-import ButtonStyles from "@/components/NavButton/NavButton.module.css"
 
 const CameraCapture = ({ setImage }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -46,7 +45,7 @@ const CameraCapture = ({ setImage }) => {
   return (
     <div className={Styles.cameraContainer}>
       {!capturing ? (
-        <button onClick={startCamera} className={ButtonStyles.button}>Open Camera</button>
+        <button onClick={startCamera} className="button">Open Camera</button>
       ) : (
         <div className={Styles.cameraWrapper}>
           <video

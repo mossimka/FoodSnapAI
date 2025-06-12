@@ -23,6 +23,7 @@ html{
   --hover-color: #FFF0E0;
   --gradient: linear-gradient(to bottom right, #F48A3B, #D4657F);
   --gradient2: linear-gradient(to right, #f48a3b, #d4657f);
+  --gradient3: linear-gradient(135deg, #f48a3b, #d46557);
   --shadow-color-active: rgb(212, 101, 87);
   --shadow: 0 4px 12px rgba(244, 138, 59, 0.3);
   --hover-shadow: 0 6px 16px rgba(212, 101, 87, 0.4);
@@ -60,3 +61,29 @@ body {
   color: white;
   background-color: var(--border-color);
 }
+
+
+.button {
+  padding: 0.6rem 1.2rem;
+  background: var(--gradient3);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow);
+  z-index: 111;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--hover-shadow);
+}
+
+.button:active {
+  transform: scale(0.98);
+  box-shadow: var(--active-shadow);
+}
+

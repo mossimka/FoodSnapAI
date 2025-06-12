@@ -5,7 +5,7 @@ import Image from "next/image";
 import { AnimatePresence } from "framer-motion";
 
 import Styles from "./Navbar.module.css";
-import { NavButton } from "../NavButton/NavButton";
+import { NavButton } from "./NavButton/NavButton";
 import { ProfilePopup } from "../ProfilePopup/ProfilePopup";
 
 export const Navbar: React.FC = () => {

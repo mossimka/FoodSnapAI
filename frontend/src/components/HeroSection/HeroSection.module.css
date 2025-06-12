@@ -101,3 +101,34 @@
   margin-bottom: 1rem;
   cursor: pointer;
 }
+
+
+.iconContainer {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 400px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.icon {
+  position: absolute;
+  font-size: 48px;
+  color: var(--border-color);
+  opacity: 0.5;
+  filter: blur(1px);
+  transform: translate(-50%, -50%);
+  animation: orbit 25s linear infinite;
+}
+
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg) translateX(250px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(250px) rotate(-360deg);
+  }
+}

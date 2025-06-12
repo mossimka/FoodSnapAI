@@ -1,10 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState} from "react";
 import Image from "next/image";
-import { UtensilsCrossed } from 'lucide-react';
+import { UtensilsCrossed, Cookie, CookingPot, ChefHat, Hamburger, Croissant, Pizza, Salad, Dessert } from 'lucide-react';
 
 import Styles from "./HeroSection.module.css";
+
+const ICONS = [ChefHat, Cookie, CookingPot, Hamburger, Croissant, Pizza, Salad, Dessert];
 
 const foodImages1 = [
   "/images/food1.png",
@@ -45,6 +47,16 @@ const renderTrack = (
 
 
 export const HeroSection: React.FC = () => {
+  const [positions, setPositions] = useState<{ top: string; left: string }[]>([]);
+
+  useEffect(() => {
+    const newPositions = ICONS.map(() => ({
+      top: `${50 + getRandomOffset(90)}%`,
+      left: `${50 + getRandomOffset(90)}%`,
+    }));
+    setPositions(newPositions);
+  }, []);
+
   return (
     <div className={Styles.heroSection}>
       <div className={`${Styles.scrollColumn} ${Styles.left}`}>
@@ -64,6 +76,25 @@ export const HeroSection: React.FC = () => {
         {renderTrack(Styles.tiltRight, foodImages1, true)}
         {renderTrack(Styles.tiltRight, foodImages2, false)}
       </div>  
+
+      <div className={Styles.iconContainer}>
+        {ICONS.map((Icon, idx) => {
+          const angle = (360 / ICONS.length) * idx;
+          return (
+            <div
+              key={idx}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: `rotate(${angle}deg)`,
+              }}
+            >
+              <Icon className={Styles.icon} />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
