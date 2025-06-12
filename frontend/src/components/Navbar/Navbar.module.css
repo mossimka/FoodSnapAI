@@ -15,6 +15,10 @@
     justify-content: space-around;
 }
 
+.logoLink{
+    color: black;
+    text-decoration: none;
+}
 .user {
     border-radius: 50%;
 }

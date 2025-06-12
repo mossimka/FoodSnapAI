@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence } from "framer-motion";
 
@@ -13,16 +14,18 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className={Styles.header}>
-      <section className={Styles.logoSection}>
-        <Image
-          src="/images/logo.png"
-          alt="logo"
-          className={Styles.logo}
-          width={60}
-          height={60}
-        />
-        <h1>FoodSnap <span className="gradientText">AI</span></h1>
-      </section>
+      <Link href="/" className={Styles.logoLink}>      
+        <section className={Styles.logoSection}>
+          <Image
+            src="/images/logo.png"
+            alt="logo"
+            className={Styles.logo}
+            width={60}
+            height={60}
+          />
+          <h1>FoodSnap <span className="gradientText">AI</span></h1>
+        </section>
+      </Link>
       <nav className={Styles.nav}>
         <NavButton text="+ Generate a recipe" link="/generate" />
         <NavButton text="View posted" link="/posted" />
