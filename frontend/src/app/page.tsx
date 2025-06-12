@@ -4,8 +4,8 @@ import React from "react";
 import Styles from "./page.module.css";
 import { Navbar } from "@/components/Navbar/Navbar"
 import { HeroSection } from "@/components/HeroSection/HeroSection";
-import { DropZoneWrapper } from "@/components/DropZone/DropZoneWrapper";
-import { CameraCapture } from "@/components/CameraCapture/CameraCapture"
+import { DropZoneWrapper } from "@/components/DropZoneWrapper/DropZoneWrapper";
+import { Footer } from '@/components/Footer/Footer';
 
 export default function Home() {
 
@@ -16,6 +16,7 @@ export default function Home() {
         <HeroSection />
         <DropZoneWrapper />
       </main>
+      <Footer />
     </>
   );
 }

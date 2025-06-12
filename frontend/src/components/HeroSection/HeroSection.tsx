@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useEffect, useState} from "react";
+import React from "react";
 import Image from "next/image";
 import { UtensilsCrossed, Cookie, CookingPot, ChefHat, Hamburger, Croissant, Pizza, Salad, Dessert } from 'lucide-react';
 
 import Styles from "./HeroSection.module.css";
+import { NavButton } from "../Navbar/NavButton/NavButton";
 
 const ICONS = [ChefHat, Cookie, CookingPot, Hamburger, Croissant, Pizza, Salad, Dessert];
 
 const foodImages1 = [
-  "/images/food1.png",
+  "/images/food1.png", 
   "/images/food3.png",
   "/images/food5.png",
   "/images/food7.png",
@@ -47,15 +48,6 @@ const renderTrack = (
 
 
 export const HeroSection: React.FC = () => {
-  const [positions, setPositions] = useState<{ top: string; left: string }[]>([]);
-
-  useEffect(() => {
-    const newPositions = ICONS.map(() => ({
-      top: `${50 + getRandomOffset(90)}%`,
-      left: `${50 + getRandomOffset(90)}%`,
-    }));
-    setPositions(newPositions);
-  }, []);
 
   return (
     <div className={Styles.heroSection}>
@@ -66,10 +58,11 @@ export const HeroSection: React.FC = () => {
 
       <div className={Styles.centerContent}>
         <button className={Styles.ctaButton}>Cooking revolution <UtensilsCrossed /></button>
-        <p>
+        <p style={{ marginBottom: 10}}>
           Upload dish and get a{" "}
           <span className="gradientText">recipe immediately</span>
         </p>
+        <NavButton text="Try it out!" link="/generate"/>
       </div>
 
       <div className={`${Styles.scrollColumn} ${Styles.right}`}>

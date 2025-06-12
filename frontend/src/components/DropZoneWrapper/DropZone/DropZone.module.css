@@ -33,6 +33,11 @@
   width: 60px;
   height: 60px;
   color: var(--accent-color);
+  transition: transform 0.2s ease;
+}
+
+.dropZoneImage:hover {
+  transform: translateY(-2px);
 }
 
 .previewSection {

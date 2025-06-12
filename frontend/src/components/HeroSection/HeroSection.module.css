@@ -119,7 +119,6 @@
   font-size: 48px;
   color: var(--border-color);
   opacity: 0.5;
-  filter: blur(1px);
   transform: translate(-50%, -50%);
   animation: orbit 25s linear infinite;
 }

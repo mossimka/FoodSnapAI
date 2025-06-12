@@ -2,8 +2,8 @@
 "use client";
 
 import React, { useState } from "react";
-import DropZone from "./DropZone";
-import CameraCapture from "../CameraCapture/CameraCapture";
+import DropZone from "./DropZone/DropZone";
+import CameraCapture from "./CameraCapture/CameraCapture";
 
 import Styles from "./DropZoneWrapped.module.css";
 

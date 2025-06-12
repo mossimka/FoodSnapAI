@@ -6,7 +6,7 @@ import { AnimatePresence } from "framer-motion";
 
 import Styles from "./Navbar.module.css";
 import { NavButton } from "./NavButton/NavButton";
-import { ProfilePopup } from "../ProfilePopup/ProfilePopup";
+import { ProfilePopup } from "./ProfilePopup/ProfilePopup";
 
 export const Navbar: React.FC = () => {
   const [showPopup, setShowPopup] = useState(false);
