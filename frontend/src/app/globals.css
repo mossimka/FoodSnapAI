@@ -87,3 +87,8 @@ body {
   box-shadow: var(--active-shadow);
 }
 
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
