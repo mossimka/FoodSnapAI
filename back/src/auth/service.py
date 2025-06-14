@@ -16,14 +16,16 @@ bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
 
-def authenticate_user(username: str, password: str, db: Session):
-    user = db.query(Users).filter(Users.username == username).first()
-
-    if not user:
-        return None
-    if not bcrypt_context.verify(password, user.hashed_password):
+def authenticate_user(identifier: str, password: str, db: Session):
+    user = (
+        db.query(Users)
+        .filter((Users.username == identifier) | (Users.email == identifier))
+        .first()
+    )
+    if not user or not bcrypt_context.verify(password, user.hashed_password):
         return None
     return user
+
 
 def create_access_token(username: str, user_id: int, expires_delta: timedelta):
     to_encode = {"sub": username, "id": user_id}
@@ -41,3 +43,6 @@ def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
         return {'username': username, 'id': user_id}
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validtae user')
+    
+def get_users(db: Session):
+    return db.query(Users).all()

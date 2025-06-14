@@ -1,4 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+from typing import Optional
+
 
 class CreateUserRequest(BaseModel):
     username: str
@@ -8,3 +10,12 @@ class CreateUserRequest(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    email: Optional[EmailStr] = None
+
+    model_config = {
+        "from_attributes": True 
+    }
