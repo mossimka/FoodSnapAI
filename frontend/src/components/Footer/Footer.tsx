@@ -87,7 +87,7 @@ export const Footer = () => {
         <div className={Styles.subscribe}>
           <h3 className='gradientText'>Subscribe</h3>
           <div className={Styles.subscribe_box}>
-            <input type="email" placeholder="Enter your email" />
+            <input type="email" placeholder="Will come soon..." />
             <RiSendPlaneFill className={Styles.subscribe_box_send} />
           </div>
           <div className={Styles.subscribe_box_info}>

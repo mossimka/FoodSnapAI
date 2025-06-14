@@ -40,7 +40,7 @@ export const DropZoneWrapper = () => {
     setIsGenerating(true);
 
     setTimeout(() => {
-      setResponseText("Here is a recipe suggestion based on your image.");
+      setResponseText("Recip[e genration will be there soon!");
       setIsGenerating(false);
       setHasGenerated(true); 
     }, 3000);

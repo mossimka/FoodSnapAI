@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.log
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# VS Code
+.vscode/
+
+# Environment variables
+.env
+.env.*
+
+# Alembic migrations
+alembic/versions/
+
+# PostgreSQL (pg_dump, .psql scripts, etc.)
+*.sql
+*.dump
+
+# OS / Misc
+.DS_Store
+Thumbs.db
+
+# MyPy / Pyright
+.mypy_cache/
+.pyright/
+
+# Coverage / test cache
+htmlcov/
+.coverage
+.cache/
+pytest_cache/
