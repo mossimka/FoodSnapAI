@@ -4,13 +4,12 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
-import os
 from fastapi.security import OAuth2PasswordBearer
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from src.config import SECRET_KEY, ALGORITHM, GOOGLE_CLIENT_ID
 
 from .models import Users
-
-SECRET_KEY = os.getenv('SECRET_KEY')
-ALGORITHM = 'HS256'
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
@@ -46,3 +45,31 @@ def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     
 def get_users(db: Session):
     return db.query(Users).all()
+
+def google_auth_flow(token: str, db: Session):
+    try:
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), GOOGLE_CLIENT_ID)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid Google token")
+
+    email = idinfo.get("email")
+    name = idinfo.get("name") or email.split('@')[0]
+    sub = idinfo.get("sub")
+
+    if not email:
+        raise HTTPException(status_code=400, detail="Google token missing email")
+
+    user = db.query(Users).filter(Users.email == email).first()
+
+    if not user:
+        user = Users(
+            username=name,
+            email=email,
+            hashed_password=bcrypt_context.hash(sub),
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+    access_token = create_access_token(user.username, user.id, timedelta(minutes=20))
+    return access_token

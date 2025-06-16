@@ -1,18 +1,20 @@
-"use client";
+'use client';
 
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import Image from 'next/image';
 import { Upload } from 'lucide-react';
-
 import Style from './DropZone.module.css';
 
+interface DropZoneProps {
+  setImage: (file: File) => void;
+}
 
-const DropZone = ({ setImage }) => {
-  const [filePreviewUrl, setFilePreviewUrl] = useState(null);
+const DropZone: React.FC<DropZoneProps> = ({ setImage }) => {
+  const [filePreviewUrl, setFilePreviewUrl] = useState<string | null>(null);
 
-  const onDrop = useCallback((acceptedFiles) => {
+  const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
+    if (!file) return;
     const previewUrl = URL.createObjectURL(file);
     setFilePreviewUrl(previewUrl);
     setImage(file);
@@ -24,7 +26,7 @@ const DropZone = ({ setImage }) => {
       'image/png': ['.png'],
       'image/jpeg': ['.jpg', '.jpeg'],
     },
-    maxSize: 5000000, // 5MB
+    maxSize: 5 * 1024 * 1024, // 5MB
   });
 
   return (
@@ -34,9 +36,7 @@ const DropZone = ({ setImage }) => {
         <div className={Style.dropZoneInput}>
           <p>Upload your dish photo</p>
           <div className={Style.dropZoneImageWrapper}>
-            <Upload
-              className={Style.dropZoneImage}
-            />
+            <Upload className={Style.dropZoneImage} />
           </div>
           <p className="gradientText2">Drag & drop or click to select an image</p>
           <p>Supported: .jpg, .jpeg, .png (Max: 5MB)</p>

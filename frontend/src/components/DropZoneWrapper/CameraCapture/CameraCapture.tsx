@@ -4,7 +4,11 @@ import React, { useRef, useState } from "react";
 
 import Styles from "./CameraCapture.module.css";
 
-const CameraCapture = ({ setImage }) => {
+interface DropZoneProps {
+  setImage: (file: File) => void;
+}
+
+const CameraCapture: React.FC<DropZoneProps> = ({ setImage }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [capturing, setCapturing] = useState(false);
@@ -30,7 +34,7 @@ const CameraCapture = ({ setImage }) => {
 
     ctx?.drawImage(videoRef.current, 0, 0, width, height);
 
-    videoRef.current.srcObject?.getTracks().forEach(track => track.stop());
+    (videoRef.current.srcObject as MediaStream)?.getTracks().forEach(track => track.stop());
 
     canvasRef.current.toBlob(blob => {
       if (blob) {

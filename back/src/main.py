@@ -7,7 +7,8 @@ from typing import Annotated
 from starlette import status
 
 from src.dependencies import get_db
-from src.auth.router import router
+from src.auth.router import router as auth_router
+from src.ai.router import router as ai_router
 
 app = FastAPI()
 
@@ -23,7 +24,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router)
+app.include_router(auth_router)
+app.include_router(ai_router)
 
 Base.metadata.create_all(bind=engine)
 

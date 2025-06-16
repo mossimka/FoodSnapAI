@@ -1,9 +1,11 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Rubik } from 'next/font/google';
 
 import "./globals.css";
 import { Navbar } from "@/components/Navbar/Navbar";  
 import { Footer } from '@/components/Footer/Footer';
+import { GoogleProviderWrapper } from "@/components/Auth/GoogleProviderWrapper";
 
 const rubik = Rubik({
   subsets: ['latin', 'cyrillic'],
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
-}
+};
 
 export default function RootLayout({
   children,
@@ -26,10 +28,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={rubik.variable}>
-        <Navbar />
-        {children}
-        <Footer />
+        <GoogleProviderWrapper>
+          <Navbar />
+          {children}
+          <Footer />
+        </GoogleProviderWrapper>
       </body>
     </html>
   );
 }
+ 

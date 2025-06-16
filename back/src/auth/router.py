@@ -1,15 +1,16 @@
 from datetime import timedelta
 from typing import Annotated, List
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 from src.auth.models import Users
 from src.auth.schemas import CreateUserRequest, Token, UserResponse
-from src.auth.service import authenticate_user, create_access_token, get_users
+from src.auth.service import authenticate_user, create_access_token, get_users, google_auth_flow
 from src.auth.security import bcrypt_context
-from src.config import SECRET_KEY, ALGORITHM
 from src.dependencies import get_db
 
 router = APIRouter(prefix='/auth', tags=['auth'])
@@ -41,3 +42,13 @@ async def login_for_access_token(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user')
     token = create_access_token(user.username, user.id, timedelta(minutes=20))
     return {'access_token': token, 'token_type': 'bearer'}
+
+@router.post("/google")
+async def google_auth(request: Request, db: db_dependency):
+    data = await request.json()
+    token = data.get("token")
+    if not token:
+        raise HTTPException(status_code=400, detail="Missing token")
+
+    access_token = google_auth_flow(token, db)
+    return {"access_token": access_token}

@@ -30,6 +30,9 @@ html{
   --active-shadow: 0 3px 10px rgba(212, 101, 87, 0.2);
   --accent-color: #FFAB40;
   --border-color: #ff914d;
+
+  --green-shadow: 0 0 5px rgba(52, 168, 83, 0.5);
+  --green: #34a853;
 }
 
 * {

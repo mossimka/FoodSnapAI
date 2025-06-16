@@ -6,6 +6,8 @@ import Image from "next/image";
 import DropZone from "./DropZone/DropZone";
 import CameraCapture from "./CameraCapture/CameraCapture";
 import Styles from "./DropZoneWrapped.module.css";
+import { SignPopup } from "@/components/SignPopup/SignPopup";
+import { useAuthStore } from "@/stores/authStore";
 
 export const DropZoneWrapper = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -14,7 +16,10 @@ export const DropZoneWrapper = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [recipeGenerates, setRecipeGenerates] = useState(false);
   const [responseText, setResponseText] = useState<string>("");
-  const [hasGenerated, setHasGenerated] = useState(false); 
+  const [hasGenerated, setHasGenerated] = useState(false);
+  const [showPopup, setShowPopup] = useState(false); 
+
+  const { isAuthenticated } = useAuthStore();
 
   const handleImageSelect = (file: File) => {
     setImageFile(file);
@@ -24,7 +29,7 @@ export const DropZoneWrapper = () => {
     setRecipeGenerates(false);
     setIsGenerating(false);
     setResponseText("");
-    setHasGenerated(false)
+    setHasGenerated(false);
   };
 
   useEffect(() => {
@@ -36,13 +41,18 @@ export const DropZoneWrapper = () => {
   }, [imagePreview]);
 
   const generateResponse = () => {
+    if (!isAuthenticated) {
+      setShowPopup(true);
+      return;
+    }
+
     setRecipeGenerates(true);
     setIsGenerating(true);
 
     setTimeout(() => {
-      setResponseText("Recip[e genration will be there soon!");
+      setResponseText("Recipe generation will be there soon!");
       setIsGenerating(false);
-      setHasGenerated(true); 
+      setHasGenerated(true);
     }, 3000);
   };
 
@@ -98,6 +108,8 @@ export const DropZoneWrapper = () => {
           )}
         </div>
       )}
+
+      {showPopup && <SignPopup onClose={() => setShowPopup(false)} />}
     </div>
   );
 };

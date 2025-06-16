@@ -1,9 +1,84 @@
-import React from 'react';
+'use client';
 
-const page = () => {
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { signUp } from '@/services/authService';
+import Styles from './signup.module.css';
+import { GoogleLoginButton } from '@/components/Auth/GoogleLogin/GoogleLogin';
+
+const SignupPage = () => {
+  const router = useRouter();
+  const [form, setForm] = useState({ username: '', email: '', password: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      await signUp(form);
+      router.push('/');
+    } catch (err: unknown) {
+      let message = 'Sign up failed';
+      if (err instanceof Error) message = err.message;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div>page</div>
-  )
-}
+    <div className={Styles.wrapper}>
+      <div className={Styles.container}>
+        <h1 className="gradientText2">Sign Up</h1>
+        <form className={Styles.form} onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={form.username}
+            onChange={handleChange}
+            required
+            className={Styles.input}
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+            className={Styles.input}
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+            className={Styles.input}
+          />
+          <button type="submit" className="button" disabled={loading}>
+            {loading ? 'Signing up...' : 'Sign Up'}
+          </button>
+        </form>
+        
+        <p>or</p>
+                
+        <GoogleLoginButton />
+        
+        {error && <p className={Styles.error}>{error}</p>}
+      </div>
+    </div>
+  );
+};
 
-export default page;
+export default SignupPage;

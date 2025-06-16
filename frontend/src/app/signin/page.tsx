@@ -1,12 +1,74 @@
-import React from 'react';
+'use client';
 
-const page = () => {
+import React, { useState } from 'react';
+import { signIn } from '@/services/authService';
+import { useRouter } from 'next/navigation';
+import Styles from './signin.module.css';
+import { GoogleLoginButton } from '@/components/Auth/GoogleLogin/GoogleLogin'; 
+
+const SigninPage = () => {
+  const router = useRouter();
+  const [form, setForm] = useState({ username: '', password: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await signIn(form);
+      localStorage.setItem('access_token', data.access_token);
+      router.push('/');
+    } catch (err: unknown) {
+      let message = 'Sign in failed';
+      if (err instanceof Error) message = err.message;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div>
-      <h1>Sign in</h1>
-      <button onClick={() => {}}>Sign in with Google</button>
-    </div>
-  )
-}
+    <div className={Styles.wrapper}>
+      <div className={Styles.container}>
+        <h1 className="gradientText2">Sign In</h1>
+        <form className={Styles.form} onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="username"
+            placeholder="Username or Email"
+            value={form.username}
+            onChange={handleChange}
+            required
+            className={Styles.input}
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+            className={Styles.input}
+          />
+          <button type="submit" className="button" disabled={loading}>
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
+        </form>
 
-export default page;
+        <p>or</p>
+        
+        <GoogleLoginButton />
+
+        {error && <p className={Styles.error}>{error}</p>}
+      </div>
+    </div>
+  );
+};
+
+export default SigninPage;

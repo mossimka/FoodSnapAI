@@ -1,0 +1,46 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup {
+  background-color: var(--bg-color);
+  padding: 4vh;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+}
+
+.message {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  position: absolute;
+  top: 1vh;
+  right: 0;
+}
+
+.close:hover {
+  transform: translateY(-2px);
+}
+
+.close:active {
+  transform: scale(0.98);
+}
