@@ -58,3 +58,9 @@
   color: black;
 }
 
+.responseText {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+}

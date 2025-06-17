@@ -1,10 +1,14 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
-from src.gcs.uploader import upload_large_file_to_gcs, BUCKET_NAME
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.adk.agents import Agent
 from google.genai import types
 import uuid
+import json
+import re
+
+from src.auth.service import get_current_user
+from src.auth.models import Users
 
 # --- Агент ---
 root_agent = Agent(
@@ -31,7 +35,6 @@ root_agent = Agent(
 
 # --- Сервис сессий и раннер ---
 APP_NAME = "dish_analysis_app"
-USER_ID = "user_1"
 session_service = InMemorySessionService()
 runner = Runner(
     agent=root_agent,
@@ -42,11 +45,12 @@ runner = Runner(
 router = APIRouter(prefix="/dish", tags=["dish"])
 
 @router.post("/")
-async def analyze_dish(file: UploadFile = File(...)):
+async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depends(get_current_user)):
     try:
         # Считываем содержимое файла в байты
         image_data = await file.read()
 
+        USER_ID = str(current_user["id"])
         # Создаем уникальную сессию
         SESSION_ID = str(uuid.uuid4())
         await session_service.create_session(
@@ -77,9 +81,15 @@ async def analyze_dish(file: UploadFile = File(...)):
                 final_response = event.content.parts[0].text
                 break
 
+        cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", final_response.strip(), flags=re.MULTILINE)
+
+        print("👉 Cleaned final response:", cleaned)
+
+        parsed = json.loads(cleaned)
+
         return {
             "filename": file.filename,
-            "analysis": final_response,
+            "analysis": parsed
         }
 
     except Exception as e:

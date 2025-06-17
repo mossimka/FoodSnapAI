@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { AxiosError } from "axios";
 
 import DropZone from "./DropZone/DropZone";
 import CameraCapture from "./CameraCapture/CameraCapture";
 import Styles from "./DropZoneWrapped.module.css";
 import { SignPopup } from "@/components/SignPopup/SignPopup";
 import { useAuthStore } from "@/stores/authStore";
+import { generate_recipe } from "@/services/generateService";
 
 export const DropZoneWrapper = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -40,21 +42,43 @@ export const DropZoneWrapper = () => {
     };
   }, [imagePreview]);
 
-  const generateResponse = () => {
-    if (!isAuthenticated) {
-      setShowPopup(true);
-      return;
-    }
+const generateResponse = async () => {
+  if (!isAuthenticated) {
+    setShowPopup(true);
+    return;
+  }
 
+  if (!imageFile) return;
+
+  try {
     setRecipeGenerates(true);
     setIsGenerating(true);
 
-    setTimeout(() => {
-      setResponseText("Recipe generation will be there soon!");
-      setIsGenerating(false);
-      setHasGenerated(true);
-    }, 3000);
-  };
+  const res = await generate_recipe(imageFile);
+
+  console.log("👉 recipe", res.dish_name);
+  console.log("👉 recipe.ingredients", res?.ingredients);
+
+
+  const formattedText = [
+    `🍽️ Dish: ${res.dish_name}`,
+    ``,
+    `🧂 Ingredients:`,
+    ...res.ingredients.map(ing => `- ${ing}`),
+    ``,
+    `📋 Recipe:`,
+    ...res.recipe.split("\n"),
+  ].join("\n");
+
+    setResponseText(formattedText);
+    setHasGenerated(true);
+  } catch (error: unknown) {
+    const err = error as AxiosError<{ detail: string }>;
+    throw new Error(err.response?.data?.detail || "Failed to generate recipe");
+  } finally {
+    setIsGenerating(false);
+  }
+};
 
   return (
     <div className={Styles.wrapper}>
@@ -104,7 +128,10 @@ export const DropZoneWrapper = () => {
           {isGenerating ? (
             <Image src="/images/loader.gif" alt="Generating..." width={128} height={50} />
           ) : (
-            <p>{responseText}</p>
+            <pre className={Styles.responseText}>
+              {responseText}
+            </pre>
+
           )}
         </div>
       )}
