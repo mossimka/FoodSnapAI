@@ -4,12 +4,10 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm
-from google.oauth2 import id_token
-from google.auth.transport import requests
 
 from src.auth.models import Users
 from src.auth.schemas import CreateUserRequest, Token, UserResponse
-from src.auth.service import authenticate_user, create_access_token, get_users, google_auth_flow
+from src.auth.service import authenticate_user, create_access_token, get_users, google_auth_flow, get_current_user
 from src.auth.security import bcrypt_context
 from src.dependencies import get_db
 
@@ -52,3 +50,15 @@ async def google_auth(request: Request, db: db_dependency):
 
     access_token = google_auth_flow(token, db)
     return {"access_token": access_token}
+
+@router.get("/me", response_model=UserResponse)
+def read_users_me(current_user: Annotated[dict, Depends(get_current_user)], db: db_dependency):
+    print("current_user from token:", current_user)
+
+    user = db.query(Users).filter(Users.id == current_user["id"]).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    print("fetched user:", user)
+    return user

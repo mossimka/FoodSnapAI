@@ -73,3 +73,4 @@ def google_auth_flow(token: str, db: Session):
 
     access_token = create_access_token(user.username, user.id, timedelta(minutes=20))
     return access_token
+

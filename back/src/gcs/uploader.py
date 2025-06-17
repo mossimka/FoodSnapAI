@@ -3,6 +3,8 @@ from fastapi import UploadFile, HTTPException
 from google.cloud import storage
 from google.oauth2 import service_account
 import os
+from uuid import uuid4
+
 
 BUCKET_NAME = "foodsnap-bucket"
 CHUNK_SIZE = 8 * 1024 * 1024
@@ -60,3 +62,15 @@ def upload_file_in_chunks(file: UploadFile, bucket_name: str, chunk_size: int):
         return blob.public_url, chunks_uploaded, total_chunks
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Chunked upload failed: {str(e)}")
+
+
+def upload_profile_pic_to_gcs(file: UploadFile):
+    try:
+        client = storage.Client(credentials=credentials)
+        bucket = client.bucket(BUCKET_NAME)
+        blob = bucket.blob(f"profile_pics/{uuid4().hex}_{file.filename}")
+        
+        blob.upload_from_file(file.file, content_type=file.content_type)
+        return blob.public_url
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")

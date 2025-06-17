@@ -15,6 +15,7 @@ class UserResponse(BaseModel):
     id: int
     username: str
     email: Optional[EmailStr] = None
+    profile_pic: Optional[str] = None
 
     model_config = {
         "from_attributes": True 

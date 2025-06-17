@@ -2,11 +2,13 @@
 
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuthStore } from '@/stores/authStore';
+import { useUserStore } from '@/stores/userStore';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 export const GoogleLoginButton = () => {
   const { login } = useAuthStore();
+  const { setUser } = useUserStore();
   const router = useRouter();
 
   const handleGoogleLogin = async (credential: string) => {
@@ -16,7 +18,15 @@ export const GoogleLoginButton = () => {
       });
 
       const accessToken = res.data.access_token;
+
       login(accessToken);
+
+      const profileResponse = await axios.get(`${process.env.NEXT_PUBLIC_API}/auth/me`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      setUser(profileResponse.data);
+
       router.push('/');
     } catch (err) {
       console.error('Google auth failed:', err);

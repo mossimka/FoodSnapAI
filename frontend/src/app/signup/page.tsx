@@ -3,9 +3,10 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { signUp } from '@/services/authService';
+import { signUp, signIn } from '@/services/authService';
 import Styles from './signup.module.css';
 import { GoogleLoginButton } from '@/components/Auth/GoogleLogin/GoogleLogin';
+import { PasswordInput } from '@/components/Auth/PasswordInput/PasswordInput';
 
 const SignupPage = () => {
   const router = useRouter();
@@ -24,6 +25,7 @@ const SignupPage = () => {
 
     try {
       await signUp(form);
+      await signIn({ username: form.username, password: form.password });
       router.push('/');
     } catch (err: unknown) {
       let message = 'Sign up failed';
@@ -57,13 +59,10 @@ const SignupPage = () => {
             required
             className={Styles.input}
           />
-          <input
-            type="password"
+          <PasswordInput
             name="password"
-            placeholder="Password"
             value={form.password}
             onChange={handleChange}
-            required
             className={Styles.input}
           />
           <button type="submit" className="button" disabled={loading}>

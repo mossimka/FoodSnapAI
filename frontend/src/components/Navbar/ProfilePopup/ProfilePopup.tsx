@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowBigRightDash } from "lucide-react";
 
@@ -32,37 +33,39 @@ export const ProfilePopup: React.FC<ProfilePopupProps> = ({ onClose }) => {
         {isAuthenticated ? (
           <>
             <li>
-              <a href="/profile" className={Styles.link}>
+              <Link href="/profile" className={Styles.link}>
                 <span className="gradientText">View Profile</span>
                 <ArrowBigRightDash className={Styles.arrow} />
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/settings" className={Styles.link}>
+              <Link href="/settings" className={Styles.link}>
                 <span className="gradientText">Settings</span>
                 <ArrowBigRightDash className={Styles.arrow} />
-              </a>
+              </Link>
             </li>
             <li>
               <button className={Styles.link} onClick={handleLogout}>
-                <span className="gradientText">Logout</span>
-                <ArrowBigRightDash className={Styles.arrow} />
+                <Link className={Styles.link} href="/signin">
+                  <span className="gradientText">Logout</span>
+                  <ArrowBigRightDash className={Styles.arrow} />
+                </Link>
               </button>
             </li>
           </>
         ) : (
           <>
             <li>
-              <a href="/signin" className={Styles.link}>
+              <Link href="/signin" className={Styles.link}>
                 <span className="gradientText">Sign in</span>
                 <ArrowBigRightDash className={Styles.arrow} />
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/signup" className={Styles.link}>
+              <Link href="/signup" className={Styles.link}>
                 <span className="gradientText">Sign Up</span>
                 <ArrowBigRightDash className={Styles.arrow} />
-              </a>
+              </Link>
             </li>
           </>
         )}

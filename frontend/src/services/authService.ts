@@ -1,6 +1,7 @@
 import axios from '@/lib/axios';
 import { AxiosError } from 'axios';
 import { useAuthStore } from '@/stores/authStore';
+import { useUserStore } from '@/stores/userStore';
 
 interface SignUpInput {
   username: string;
@@ -31,14 +32,18 @@ export async function signIn({ username, password }: SignInInput) {
     formData.append('password', password);
 
     const response = await axios.post('/auth/token', formData, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
 
     const token = response.data.access_token;
 
     useAuthStore.getState().login(token);
+
+    const profileResponse = await axios.get('/auth/me', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log("Fetched user:", profileResponse.data); 
+    useUserStore.getState().setUser(profileResponse.data);
 
     return response.data;
   } catch (error: unknown) {
@@ -46,7 +51,6 @@ export async function signIn({ username, password }: SignInInput) {
     throw new Error(err.response?.data?.detail || 'Sign in failed');
   }
 }
-
 
 export function logout() {
   useAuthStore.getState().logout();

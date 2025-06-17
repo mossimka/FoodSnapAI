@@ -1,16 +1,19 @@
 'use client';
 
 import React, { useState } from 'react';
+
 import { signIn } from '@/services/authService';
 import { useRouter } from 'next/navigation';
 import Styles from './signin.module.css';
 import { GoogleLoginButton } from '@/components/Auth/GoogleLogin/GoogleLogin'; 
+import { PasswordInput } from '@/components/Auth/PasswordInput/PasswordInput';
 
 const SigninPage = () => {
   const router = useRouter();
   const [form, setForm] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -21,8 +24,7 @@ const SigninPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await signIn(form);
-      localStorage.setItem('access_token', data.access_token);
+      await signIn(form);
       router.push('/');
     } catch (err: unknown) {
       let message = 'Sign in failed';
@@ -47,13 +49,10 @@ const SigninPage = () => {
             required
             className={Styles.input}
           />
-          <input
-            type="password"
+          <PasswordInput
             name="password"
-            placeholder="Password"
             value={form.password}
             onChange={handleChange}
-            required
             className={Styles.input}
           />
           <button type="submit" className="button" disabled={loading}>
