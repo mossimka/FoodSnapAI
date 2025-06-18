@@ -1,14 +1,21 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form, status
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.adk.agents import Agent
 from google.genai import types
+from sqlalchemy.orm import Session
+from typing import List
 import uuid
 import json
 import re
 
 from src.auth.service import get_current_user
 from src.auth.models import Users
+from src.gcs.uploader import upload_large_file_to_gcs
+from src.dependencies import get_db
+from src.recipes.models import Recipe
+from src.recipes.schemas import RecipeResponse
+from src.recipes.service import get_recipes
 
 # --- Агент ---
 root_agent = Agent(
@@ -33,7 +40,6 @@ root_agent = Agent(
     description="Analyze the dish photo and generate recipe.",
 )
 
-# --- Сервис сессий и раннер ---
 APP_NAME = "dish_analysis_app"
 session_service = InMemorySessionService()
 runner = Runner(
@@ -43,6 +49,10 @@ runner = Runner(
 )
 
 router = APIRouter(prefix="/dish", tags=["dish"])
+
+@router.get("/", response_model=List[RecipeResponse], status_code=status.HTTP_200_OK)
+async def get_all_dishes(db: Session = Depends(get_db)):
+    return get_recipes(db)
 
 @router.post("/")
 async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depends(get_current_user)):
@@ -94,3 +104,39 @@ async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depen
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to analyze dish: {str(e)}")
+
+@router.post("/save/")
+async def save_recipe(
+    file: UploadFile = File(...),
+    recipe: str = Form(...),
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    try:
+        image_url = upload_large_file_to_gcs(file)
+
+        parsed = json.loads(recipe)
+
+        dish_name = parsed.get("dish_name")
+        ingredients = ", ".join(parsed.get("ingredients", []))
+        recipe_text = parsed.get("recipe")
+
+        if not dish_name or not recipe_text:
+            raise HTTPException(status_code=400, detail="Invalid recipe format")
+
+        db_recipe = Recipe(
+            user_id=current_user["id"],
+            dish_name=dish_name,
+            ingredients=ingredients,
+            recipe=recipe_text,
+            image_path=image_url
+        )
+
+        db.add(db_recipe)
+        db.commit()
+        db.refresh(db_recipe)
+
+        return {"message": "Recipe saved successfully", "recipe_id": db_recipe.id}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Saving failed: {str(e)}")

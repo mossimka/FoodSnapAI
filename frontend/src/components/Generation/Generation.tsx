@@ -6,12 +6,14 @@ import { AxiosError } from "axios";
 
 import DropZone from "./DropZone/DropZone";
 import CameraCapture from "./CameraCapture/CameraCapture";
-import Styles from "./DropZoneWrapped.module.css";
+import { SaveRecipeButton } from "./SaveRecipeButton/SaveRecipeButton";
+import Styles from "./Generation.module.css";
 import { SignPopup } from "@/components/SignPopup/SignPopup";
 import { useAuthStore } from "@/stores/authStore";
 import { generate_recipe } from "@/services/generateService";
+import { RecipeOutput } from "@/services/generateService";
 
-export const DropZoneWrapper = () => {
+export const Generation = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,6 +22,8 @@ export const DropZoneWrapper = () => {
   const [responseText, setResponseText] = useState<string>("");
   const [hasGenerated, setHasGenerated] = useState(false);
   const [showPopup, setShowPopup] = useState(false); 
+
+  const [generatedRecipe, setGeneratedRecipe] = useState<RecipeOutput | null>(null);
 
   const { isAuthenticated } = useAuthStore();
 
@@ -55,6 +59,7 @@ const generateResponse = async () => {
     setIsGenerating(true);
 
   const res = await generate_recipe(imageFile);
+  setGeneratedRecipe(res);
 
   console.log("👉 recipe", res.dish_name);
   console.log("👉 recipe.ingredients", res?.ingredients);
@@ -128,10 +133,15 @@ const generateResponse = async () => {
           {isGenerating ? (
             <Image src="/images/loader.gif" alt="Generating..." width={128} height={50} />
           ) : (
-            <pre className={Styles.responseText}>
-              {responseText}
-            </pre>
-
+            <div className={Styles.responseBoxContainer}>
+              <pre className={Styles.responseText}>
+                {responseText}
+              </pre>
+              <SaveRecipeButton 
+                file={imageFile!} 
+                recipePart={generatedRecipe!}
+              />
+            </div>
           )}
         </div>
       )}

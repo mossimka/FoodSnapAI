@@ -1,15 +1,14 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from src.database import SessionLocal, engine, Base
-from src import models, service, schemas
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Annotated
 from starlette import status
 
+from src.database import SessionLocal, engine, Base
 from src.dependencies import get_db
 from src.auth.router import router as auth_router
 from src.gcs.router import router as gcs_router
-from src.ai.router import router as ai_router
+from src.recipes.router import router as ai_router
 from src.profile.router import router as profile_router
 
 app = FastAPI()

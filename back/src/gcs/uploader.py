@@ -15,10 +15,10 @@ credentials = service_account.Credentials.from_service_account_file(
     SERVICE_ACCOUNT_FILE
 )
 
-def upload_large_file_to_gcs(file: UploadFile, bucket_name: str, chunk_size: int = CHUNK_SIZE):
+def upload_large_file_to_gcs(file: UploadFile, chunk_size: int = CHUNK_SIZE):
     try:
         client = storage.Client(credentials=credentials)
-        bucket = client.bucket(bucket_name)
+        bucket = client.bucket(BUCKET_NAME)
         blob = bucket.blob(f"recipes/{file.filename}")
 
         file.file.seek(0, 2)
@@ -36,10 +36,10 @@ def upload_large_file_to_gcs(file: UploadFile, bucket_name: str, chunk_size: int
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
 
-def upload_file_in_chunks(file: UploadFile, bucket_name: str, chunk_size: int):
+def upload_file_in_chunks(file: UploadFile, chunk_size: int):
     try:
         client = storage.Client(credentials=credentials)
-        bucket = client.bucket(bucket_name)
+        bucket = client.bucket(BUCKET_NAME)
         blob = bucket.blob(f"recipes/{file.filename}")
 
         file.file.seek(0, 2)

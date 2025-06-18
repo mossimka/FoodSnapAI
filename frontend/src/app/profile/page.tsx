@@ -3,7 +3,7 @@
 import React from "react";
 import Styles from "./profile.module.css";
 import { useUserStore } from "@/stores/userStore";
-import ProfilePicUploader from "@/components/DropZoneWrapper/ProfilePicUploader/ProfilePicUploader";
+import ProfilePicUploader from "@/components/Generation/ProfilePicUploader/ProfilePicUploader";
 
 export default function ProfilePage() {
   const user = useUserStore((state) => state.user);

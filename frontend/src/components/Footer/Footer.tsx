@@ -8,8 +8,8 @@ import {
   TiSocialLinkedin,
   TiSocialYoutube,
   TiSocialInstagram,
-  TiSocialTwitter,
 } from 'react-icons/ti';
+import { FaSquareXTwitter,  FaTiktok  } from "react-icons/fa6";
 import { RiSendPlaneFill } from 'react-icons/ri';
 
 import Styles from './Footer.module.css';
@@ -34,9 +34,9 @@ export const Footer = () => {
           </p>
 
           <div className={Styles.footer_social}>
-            <a href="#"><TiSocialFacebook /></a>
+            <a href="#">< FaTiktok  /></a>
             <a href="#"><TiSocialInstagram /></a>
-            <a href="#"><TiSocialTwitter /></a>
+            <a href="#"><FaSquareXTwitter /></a>
             <a href="#"><TiSocialYoutube /></a>
             <a href="#"><TiSocialLinkedin /></a>
           </div>

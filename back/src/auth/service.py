@@ -7,9 +7,9 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from google.oauth2 import id_token
 from google.auth.transport import requests
-from src.config import SECRET_KEY, ALGORITHM, GOOGLE_CLIENT_ID
 
-from .models import Users
+from src.config import SECRET_KEY, ALGORITHM, GOOGLE_CLIENT_ID
+from src.auth.models import Users
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 

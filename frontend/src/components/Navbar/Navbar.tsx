@@ -8,9 +8,11 @@ import { AnimatePresence } from "framer-motion";
 import Styles from "./Navbar.module.css";
 import { NavButton } from "./NavButton/NavButton";
 import { ProfilePopup } from "./ProfilePopup/ProfilePopup";
+import { useUserStore } from "@/stores/userStore";
 
 export const Navbar: React.FC = () => {
   const [showPopup, setShowPopup] = useState(false);
+  const user = useUserStore((state) => state.user);
 
   return (
     <header className={Styles.header}>
@@ -36,7 +38,7 @@ export const Navbar: React.FC = () => {
               className={Styles.profileButton}
             >
             <Image
-                src="/images/user.png"
+                src={user?.profile_pic || "/images/user.png"}
                 alt="user"
                 className={Styles.user}
                 width={50}

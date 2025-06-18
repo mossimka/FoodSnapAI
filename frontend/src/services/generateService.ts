@@ -1,10 +1,19 @@
 import axios from '@/lib/axios';
 import { AxiosError } from 'axios';
 
-interface RecipeOutput {
+export interface RecipeOutput {
   dish_name: string;
   ingredients: string[];
   recipe: string;
+}
+
+interface RecipeInput {
+  file: File;
+  recipePart: {
+    dish_name: string;
+    ingredients: string[];
+    recipe: string;
+  };
 }
 
 export async function generate_recipe(imageFile: File): Promise<RecipeOutput> {
@@ -32,3 +41,23 @@ export async function generate_recipe(imageFile: File): Promise<RecipeOutput> {
     throw new Error(err.response?.data?.detail || "Failed to generate recipe");
   }
 }
+
+export async function save_recipe(recipe: RecipeInput) {
+  const token = localStorage.getItem("access_token");
+
+  if (!token) {
+    throw new Error("User is not authenticated");
+  }
+
+  const formData = new FormData();
+  formData.append("file", recipe.file);
+  formData.append("recipe", JSON.stringify(recipe.recipePart));
+
+  await axios.post("/dish/save/", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
