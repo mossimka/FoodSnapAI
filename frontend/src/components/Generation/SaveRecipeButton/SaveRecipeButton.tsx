@@ -22,14 +22,9 @@ export const SaveRecipeButton: React.FC<Props> = ({ file, recipePart }) => {
     }
     };
 
-<button onClick={handleSave} disabled={isSaving}>
-  {isSaving ? "Saving..." : "Save recipe"}
-</button>
-
-
   return (
     <div>
-        <button onClick={handleSave} disabled={isSaving}>
+        <button onClick={handleSave} disabled={isSaving} className="button" style={{ marginTop: "3vh" }}>
         {isSaving ? "Saving..." : "Save recipe"}
         </button>
     </div>

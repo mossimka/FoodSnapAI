@@ -54,5 +54,7 @@ export async function signIn({ username, password }: SignInInput) {
 
 export function logout() {
   useAuthStore.getState().logout();
-  localStorage.removeItem('access_token');
+  useUserStore.persist.clearStorage?.();
+  useUserStore.setState({ user: null, hydrated: false });
+  localStorage.removeItem("access_token");
 }

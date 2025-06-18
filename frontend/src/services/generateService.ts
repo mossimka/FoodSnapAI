@@ -1,20 +1,7 @@
 import axios from '@/lib/axios';
 import { AxiosError } from 'axios';
 
-export interface RecipeOutput {
-  dish_name: string;
-  ingredients: string[];
-  recipe: string;
-}
-
-interface RecipeInput {
-  file: File;
-  recipePart: {
-    dish_name: string;
-    ingredients: string[];
-    recipe: string;
-  };
-}
+import { RecipeOutput, RecipeInput, IRecipe } from "@/interfaces/recipe"
 
 export async function generate_recipe(imageFile: File): Promise<RecipeOutput> {
   const formData = new FormData();
@@ -61,3 +48,22 @@ export async function save_recipe(recipe: RecipeInput) {
   });
 }
 
+export async function get_public_recipes(): Promise<IRecipe[]> {
+  const token = localStorage.getItem("access_token");
+  const response = await axios.get("/dish/public/", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
+export async function get_my_recipes(): Promise<IRecipe[]> {
+  const token = localStorage.getItem("access_token");
+  const response = await axios.get("/dish/my/", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}

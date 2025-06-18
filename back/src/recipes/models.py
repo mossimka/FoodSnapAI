@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from src.database import Base
 from src.auth.models import Users
@@ -12,6 +12,7 @@ class Recipe(Base):
     ingredients = Column(Text)
     recipe = Column(Text)
     image_path = Column(String)
+    is_public = Column(Boolean, default=False)
 
     user = relationship("Users", back_populates="recipes")
 

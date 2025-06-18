@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form, status
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form, status, Path
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.adk.agents import Agent
@@ -140,3 +140,54 @@ async def save_recipe(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Saving failed: {str(e)}")
+
+@router.delete("/{recipe_id}/", status_code=status.HTTP_200_OK)
+async def delete_recipe(
+    recipe_id: int = Path(..., description="ID of the recipe to delete"),
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    try:
+        recipe = db.query(Recipe).filter(Recipe.id == recipe_id, Recipe.user_id == current_user["id"]).first()
+        if not recipe:
+            raise HTTPException(status_code=404, detail="Recipe not found or unauthorized")
+
+        db.delete(recipe)
+        db.commit()
+
+        return {"message": f"Recipe with ID {recipe_id} deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete recipe: {str(e)}")
+
+@router.get("/public/", response_model=List[RecipeResponse])
+async def get_public_recipe(db: Session = Depends(get_db)):
+    recipes = db.query(Recipe).filter(Recipe.is_public == True).all()
+    return [
+        RecipeResponse(
+            user_id=r.user_id,
+            user_name=r.user.username,
+            user_avatar=r.user.profile_pic,
+            dish_name=r.dish_name,
+            ingredients=[i.strip() for i in r.ingredients.split(",")],
+            recipe=r.recipe,
+            image_path=r.image_path
+        )
+        for r in recipes
+    ]
+
+
+@router.get("/my/", response_model=List[RecipeResponse])
+async def get_my_recipes(current_user: Users = Depends(get_current_user), db: Session = Depends(get_db)):
+    recipes = db.query(Recipe).filter(Recipe.user_id == current_user["id"]).all()
+    return [
+        RecipeResponse(
+            user_id=r.user_id,
+            user_name=r.user.username,
+            user_avatar=r.user.profile_pic,
+            dish_name=r.dish_name,
+            ingredients=[i.strip() for i in r.ingredients.split(",")],
+            recipe=r.recipe,
+            image_path=r.image_path
+        )
+        for r in recipes
+    ]

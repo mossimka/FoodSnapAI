@@ -1,0 +1,67 @@
+.recipeCard {
+  display: flex;
+  align-items: center;
+  border-radius: 1rem;
+  padding: 1rem;
+  background-color: transparent;
+  width: 23rem;
+  margin: 1rem auto;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  background-color: var(--hover-color);
+}
+
+.recipeImage {
+  width: 7rem;
+  height: auto;
+  border-radius: 0.75rem;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: #333;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.recipeName {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Адаптивность */
+@media (max-width: 640px) {
+  .recipeCard {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .content {
+    align-items: center;
+  }
+
+  .author {
+    justify-content: center;
+  }
+
+  .recipeImage {
+    width: 100%;
+    max-width: 20rem;
+  }
+}

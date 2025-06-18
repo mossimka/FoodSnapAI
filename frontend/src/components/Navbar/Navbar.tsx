@@ -30,7 +30,7 @@ export const Navbar: React.FC = () => {
       </Link>
       <nav className={Styles.nav}>
         <NavButton text="+ Generate a recipe" link="/generate" />
-        <NavButton text="View posted" link="/posted" />
+        <NavButton text="View recipies" link="/posted" />
 
         <div className={Styles.profileWrapper}>
             <button
@@ -38,7 +38,7 @@ export const Navbar: React.FC = () => {
               className={Styles.profileButton}
             >
             <Image
-                src={user?.profile_pic || "/images/user.png"}
+                src={user?.profile_pic|| "/images/user.png"}
                 alt="user"
                 className={Styles.user}
                 width={50}

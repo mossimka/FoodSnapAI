@@ -1,6 +1,6 @@
 # schemas.py
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 class RecipeCreate(BaseModel):
     user_id: int
@@ -10,9 +10,12 @@ class RecipeCreate(BaseModel):
 
 class RecipeResponse(BaseModel):
     user_id: int
+    user_name: str
+    user_avatar: Optional[str] = None
     dish_name: str
     ingredients: List[str]
     recipe: str
+    image_path: str
 
     class Config:
         orm_mode = True
