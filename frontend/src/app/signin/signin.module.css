@@ -56,3 +56,8 @@
   margin-top: 10px;
   text-align: center;
 }
+
+.noUnderline {
+  text-decoration: none;
+  cursor: pointer;
+}

@@ -154,7 +154,7 @@ async def patch_recipe(
     if patch_data.dish_name is not None:
         recipe.dish_name = patch_data.dish_name
     if patch_data.publish is not None:
-        recipe.is_public = patch_data.publish
+        recipe.is_published = patch_data.publish
 
     db.commit()
     db.refresh(recipe)
@@ -162,7 +162,7 @@ async def patch_recipe(
     return {"message": "Recipe updated", "recipe": {
         "id": recipe.id,
         "name": recipe.dish_name,
-        "status": recipe.is_public
+        "status": recipe.is_published
     }}
 
 @router.delete("/{recipe_id}/", status_code=status.HTTP_200_OK)
@@ -185,7 +185,7 @@ async def delete_recipe(
 
 @router.get("/public/", response_model=List[RecipeResponse])
 async def get_public_recipe(db: Session = Depends(get_db)):
-    recipes = db.query(Recipe).filter(Recipe.is_public == True).all()
+    recipes = db.query(Recipe).filter(Recipe.is_published == True).all()
     return [
         RecipeResponse(
             id=r.id, 
@@ -195,7 +195,8 @@ async def get_public_recipe(db: Session = Depends(get_db)):
             dish_name=r.dish_name,
             ingredients=[i.strip() for i in r.ingredients.split(",")],
             recipe=r.recipe,
-            image_path=r.image_path
+            image_path=r.image_path,
+            is_published=r.is_published
         )
         for r in recipes
     ]
@@ -213,7 +214,8 @@ async def get_my_recipes(current_user: Users = Depends(get_current_user), db: Se
             dish_name=r.dish_name,
             ingredients=[i.strip() for i in r.ingredients.split(",")],
             recipe=r.recipe,
-            image_path=r.image_path
+            image_path=r.image_path,
+            is_published=r.is_published
         )
         for r in recipes
     ]

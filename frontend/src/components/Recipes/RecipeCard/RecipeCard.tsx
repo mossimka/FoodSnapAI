@@ -2,13 +2,17 @@
 
 import React from "react";
 import Image from "next/image";
-
 import { IRecipe } from "@/interfaces/recipe";
 import Styles from "./RecipeCard.module.css";
 
-export function RecipeCard({ recipe }: { recipe: IRecipe }) {
+interface RecipeCardProps {
+  recipe: IRecipe;
+  onClick?: (recipe: IRecipe) => void;
+}
+
+export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
   return (
-    <div className={Styles.recipeCard}>
+    <div className={Styles.recipeCard} onClick={() => onClick?.(recipe)}>
       <Image
         src={recipe.image_path || "/images/placeholder.png"}
         alt={recipe.dish_name}
@@ -20,7 +24,7 @@ export function RecipeCard({ recipe }: { recipe: IRecipe }) {
       <div className={Styles.content}>
         <div className={Styles.author}>
           <Image
-            src={recipe.user_avatar || "/images/default-avatar.png"}
+            src={recipe.user_avatar || "/images/user.png"}
             alt={recipe.user_name}
             width={40}
             height={40}

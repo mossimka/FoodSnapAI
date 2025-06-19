@@ -9,6 +9,17 @@
   gap: 1.5rem;
   flex-wrap: wrap;
   background-color: var(--hover-color);
+  box-shadow: var(--hover-shadow);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.recipeCard:hover{
+  transform: scale(1.01) translateY(-2px);
+}
+
+.button:active {
+  transform: scale(0.98);
 }
 
 .recipeImage {

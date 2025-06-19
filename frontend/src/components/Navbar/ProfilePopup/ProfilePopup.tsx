@@ -7,13 +7,14 @@ import { ArrowBigRightDash } from "lucide-react";
 
 import Styles from "./ProfilePopup.module.css";
 import { useAuthStore } from "@/stores/authStore";
+import { logout } from "@/services/authService";
 
 interface ProfilePopupProps {
   onClose: () => void;
 }
 
 export const ProfilePopup: React.FC<ProfilePopupProps> = ({ onClose }) => {
-  const { isAuthenticated, logout } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
 
   const handleLogout = () => {
     logout();

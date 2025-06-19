@@ -64,11 +64,11 @@ def upload_file_in_chunks(file: UploadFile, chunk_size: int):
         raise HTTPException(status_code=500, detail=f"Chunked upload failed: {str(e)}")
 
 
-def upload_profile_pic_to_gcs(file: UploadFile):
+def upload_profile_pic_to_gcs(file: UploadFile, username: str):
     try:
         client = storage.Client(credentials=credentials)
         bucket = client.bucket(BUCKET_NAME)
-        blob = bucket.blob(f"profile_pics/{uuid4().hex}_{file.filename}")
+        blob = bucket.blob(f"profile_pics/{username}")
         
         blob.upload_from_file(file.file, content_type=file.content_type)
         return blob.public_url

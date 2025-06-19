@@ -39,6 +39,20 @@
   flex-direction: column;
 }
 
+.imageWrapper {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.imageTrackImg {
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+
 
 .imageTrackUp,
 .imageTrackDown {
@@ -129,5 +143,62 @@
   }
   100% {
     transform: rotate(360deg) translateX(250px) rotate(-360deg);
+  }
+}
+
+@media (max-width: 1024px) {
+  .scrollColumn {
+    width: 250px;
+    filter: blur(2px);
+  }
+
+  .imageTrackImg {
+    width: 140px !important;
+    height: 140px !important;
+  }
+
+  .iconContainer {
+    width: 300px;
+    height: 300px;
+    top: 15%;
+  }
+
+  .icon {
+    font-size: 40px;
+  }
+  .imageWrapper {
+    width: 140px;
+    height: 140px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .scrollColumn {
+    display: none;
+  }
+
+  .centerContent {
+    width: 90vw;
+  }
+
+  .iconContainer {
+    width: 300px;
+    height: 300px;
+    top: 25%;
+  }
+
+  .icon {
+    font-size: 48px;
+    animation: orbitMobile 20s linear infinite;
+  }
+
+  @keyframes orbitMobile {
+    0% {
+      transform: rotate(0deg) translateX(160px) rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg) translateX(160px) rotate(-360deg);
+    }
   }
 }

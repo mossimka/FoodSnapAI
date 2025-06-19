@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from "next/link";
 
 import { signUp, signIn } from '@/services/authService';
 import Styles from './signup.module.css';
@@ -69,6 +70,8 @@ const SignupPage = () => {
             {loading ? 'Signing up...' : 'Sign Up'}
           </button>
         </form>
+        
+        <Link href="/signin" className={`${Styles.noUnderline} gradientText`}><small>Already have an account? <b>Sign in</b></small></Link>
         
         <p>or</p>
                 

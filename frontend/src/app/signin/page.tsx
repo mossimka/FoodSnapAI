@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from "next/link";
 
 import { signIn } from '@/services/authService';
 import { useRouter } from 'next/navigation';
@@ -59,10 +60,14 @@ const SigninPage = () => {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+        
+        <Link href="/signup" className={`${Styles.noUnderline} gradientText`}><small>Do nat havee an account? <b>Sign up</b></small></Link>
 
         <p>or</p>
         
         <GoogleLoginButton />
+
+        
 
         {error && <p className={Styles.error}>{error}</p>}
       </div>

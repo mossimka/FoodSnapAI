@@ -24,12 +24,16 @@ html{
   --gradient: linear-gradient(to bottom right, #F48A3B, #D4657F);
   --gradient2: linear-gradient(to right, #f48a3b, #d4657f);
   --gradient3: linear-gradient(135deg, #f48a3b, #d46557);
+  --gradientRed: linear-gradient(to right,  #bf0d0d, #630001);
   --shadow-color-active: rgb(212, 101, 87);
   --shadow: 0 4px 12px rgba(244, 138, 59, 0.3);
   --hover-shadow: 0 6px 16px rgba(212, 101, 87, 0.4);
   --active-shadow: 0 3px 10px rgba(212, 101, 87, 0.2);
   --accent-color: #FFAB40;
   --border-color: #ff914d;
+  --text-color: #555;
+  --text-color-sub: #666;
+  --contrast-color: white;
 
   --green-shadow: 0 0 5px rgba(52, 168, 83, 0.5);
   --green: #34a853;
@@ -69,7 +73,7 @@ body {
 .button {
   padding: 0.6rem 1.2rem;
   background: var(--gradient3);
-  color: white;
+  color: var(--contrast-color);
   border: none;
   border-radius: 0.5rem;
   font-size: 1rem;
@@ -95,3 +99,31 @@ body {
   cursor: not-allowed;
 }
 
+.buttonRed {
+  padding: 0.6rem 1.2rem;
+  background: var(--gradientRed);
+  color: var(--contrast-color);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow);
+  z-index: 111;
+}
+
+.buttonRed:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--hover-shadow);
+}
+
+.buttonRed:active {
+  transform: scale(0.98);
+  box-shadow: var(--active-shadow);
+}
+
+.buttonRed:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

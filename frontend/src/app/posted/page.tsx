@@ -6,11 +6,15 @@ import Styles from "./posted.module.css";
 import { RecipeCard } from "@/components/Recipes/RecipeCard/RecipeCard";
 import { IRecipe } from "@/interfaces/recipe";
 import { get_public_recipes, get_my_recipes } from "@/services/generateService";
+import { RecipePopup } from "@/components/Recipes/RecipePopup/RecipePopup";
+
 
 export default function PostedPage() {
   const [activeTab, setActiveTab] = useState<"public" | "my">("public");
   const [publicRecipes, setPublicRecipes] = useState<IRecipe[]>([]);
   const [myRecipes, setMyRecipes] = useState<IRecipe[]>([]);
+  const [selectedRecipe, setSelectedRecipe] = useState<IRecipe | null>(null);
+
 
   useEffect(() => {
     get_public_recipes()
@@ -44,12 +48,19 @@ export default function PostedPage() {
       <div className={Styles.recipeList}>
         {recipesToShow.length > 0 ? (
           recipesToShow.map((r) => (
-            <RecipeCard key={`${r.dish_name}-${r.user_id}`} recipe={r} />
+            <RecipeCard key={`${r.dish_name}-${r.user_id}`} recipe={r} onClick={() => setSelectedRecipe(r)} />
           ))
         ) : (
           <p className={Styles.noRecipes}>No recipes to show</p>
         )}
       </div>
+
+      {selectedRecipe && (
+        <RecipePopup
+          onClose={() => setSelectedRecipe(null)}
+          recipe={selectedRecipe}
+        />
+      )}
     </div>
   );
 }

@@ -17,6 +17,7 @@ class RecipeResponse(BaseModel):
     ingredients: List[str]
     recipe: str
     image_path: str
+    is_published: bool
 
     class Config:
         orm_mode = True

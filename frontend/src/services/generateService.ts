@@ -1,7 +1,7 @@
 import axios from '@/lib/axios';
 import { AxiosError } from 'axios';
 
-import { RecipeOutput, RecipeInput, IRecipe } from "@/interfaces/recipe"
+import { RecipeOutput, RecipeInput, IRecipe, RecipePatchRequest } from "@/interfaces/recipe"
 
 export async function generate_recipe(imageFile: File): Promise<RecipeOutput> {
   const formData = new FormData();
@@ -66,4 +66,29 @@ export async function get_my_recipes(): Promise<IRecipe[]> {
     },
   });
   return response.data;
+}
+
+export async function patchRecipe(recipeId: number, data: RecipePatchRequest) {
+  const response = await axios.patch(`/dish/patch/${recipeId}`, data);
+  return response.data;
+}
+
+
+export async function delete_recipe(recipeId: number): Promise<void> {
+  const token = localStorage.getItem("access_token");
+
+  if (!token) {
+    throw new Error("User is not authenticated");
+  }
+
+  try {
+    await axios.delete(`/dish/${recipeId}/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error: unknown) {
+    const err = error as AxiosError<{ detail: string }>;
+    throw new Error(err.response?.data?.detail || "Failed to delete recipe");
+  }
 }

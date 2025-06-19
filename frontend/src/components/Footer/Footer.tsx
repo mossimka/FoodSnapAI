@@ -4,9 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
-  TiSocialFacebook,
   TiSocialLinkedin,
-  TiSocialYoutube,
   TiSocialInstagram,
 } from 'react-icons/ti';
 import { FaSquareXTwitter,  FaTiktok  } from "react-icons/fa6";
@@ -34,11 +32,10 @@ export const Footer = () => {
           </p>
 
           <div className={Styles.footer_social}>
-            <a href="#">< FaTiktok  /></a>
-            <a href="#"><TiSocialInstagram /></a>
-            <a href="#"><FaSquareXTwitter /></a>
-            <a href="#"><TiSocialYoutube /></a>
-            <a href="#"><TiSocialLinkedin /></a>
+            <Link href="#">< FaTiktok  /></Link>
+            <Link href="https://www.instagram.com/foodsnap_ai/" target='_blank'><TiSocialInstagram /></Link>
+            <Link href="https://x.com/FoodSnapAI" target='_blank'><FaSquareXTwitter /></Link>
+            <Link href="https://www.linkedin.com/in/maxim-sarsekeyev-a133ba354/" target='_blank'><TiSocialLinkedin /></Link>
           </div>
         </div>
 

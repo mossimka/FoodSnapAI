@@ -16,7 +16,8 @@ async def upload_profile_pic(
     current_user: dict = Depends(get_current_user),
     file: UploadFile = File(...)
 ):
-    image_url = upload_profile_pic_to_gcs(file)
+    username = current_user["username"] 
+    image_url = upload_profile_pic_to_gcs(file, username)
 
     user = db.query(Users).filter(Users.id == current_user["id"]).first()
     user.profile_pic = image_url
@@ -24,4 +25,5 @@ async def upload_profile_pic(
     db.refresh(user)
 
     return {"profile_pic": image_url}
+
     
