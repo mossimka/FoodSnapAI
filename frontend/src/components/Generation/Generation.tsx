@@ -11,7 +11,7 @@ import Styles from "./Generation.module.css";
 import { SignPopup } from "@/components/SignPopup/SignPopup";
 import { useAuthStore } from "@/stores/authStore";
 import { generate_recipe } from "@/services/generateService";
-import { RecipeOutput } from "@/services/generateService";
+import { RecipeOutput } from "@/interfaces/recipe";
 
 export const Generation = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);

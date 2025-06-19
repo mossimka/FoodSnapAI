@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { save_recipe } from '@/services/generateService';
-import type { RecipeOutput } from '@/services/generateService';
+import { RecipeOutput } from '@/interfaces/recipe';
 
 interface Props {
   file: File;

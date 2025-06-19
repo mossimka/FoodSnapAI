@@ -10,7 +10,7 @@ interface DropZoneProps {
 }
 
 const DropZone: React.FC<DropZoneProps> = ({ setImage }) => {
-  const [filePreviewUrl, setFilePreviewUrl] = useState<string | null>(null);
+  const [, setFilePreviewUrl] = useState<string | null>(null);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -26,7 +26,7 @@ const DropZone: React.FC<DropZoneProps> = ({ setImage }) => {
       'image/png': ['.png'],
       'image/jpeg': ['.jpg', '.jpeg'],
     },
-    maxSize: 5 * 1024 * 1024, // 5MB
+    maxSize: 5 * 1024 * 1024,
   });
 
   return (
