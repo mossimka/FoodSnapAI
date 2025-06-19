@@ -9,6 +9,7 @@ def get_recipes(db: Session) -> List[RecipeResponse]:
     recipes = db.query(Recipe).join(Users).all()
     return [
         RecipeResponse(
+            id=r.id,
             user_id=r.user_id,
             user_name=r.user.username,
             user_avatar=r.user.profile_pic,

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form, status, Path
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form, status, Path, Body
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.adk.agents import Agent
@@ -14,7 +14,7 @@ from src.auth.models import Users
 from src.gcs.uploader import upload_large_file_to_gcs
 from src.dependencies import get_db
 from src.recipes.models import Recipe
-from src.recipes.schemas import RecipeResponse
+from src.recipes.schemas import RecipeResponse, RecipePatchRequest
 from src.recipes.service import get_recipes
 
 # --- Агент ---
@@ -140,6 +140,30 @@ async def save_recipe(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Saving failed: {str(e)}")
+    
+@router.patch("/patch/{recipe_id}")
+async def patch_recipe(
+    recipe_id: int,
+    patch_data: RecipePatchRequest = Body(...),
+    db: Session = Depends(get_db)
+):
+    recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
+    if not recipe:
+        raise HTTPException(status_code=404, detail="Recipe not found")
+    
+    if patch_data.dish_name is not None:
+        recipe.dish_name = patch_data.dish_name
+    if patch_data.publish is not None:
+        recipe.is_public = patch_data.publish
+
+    db.commit()
+    db.refresh(recipe)
+
+    return {"message": "Recipe updated", "recipe": {
+        "id": recipe.id,
+        "name": recipe.dish_name,
+        "status": recipe.is_public
+    }}
 
 @router.delete("/{recipe_id}/", status_code=status.HTTP_200_OK)
 async def delete_recipe(
@@ -164,6 +188,7 @@ async def get_public_recipe(db: Session = Depends(get_db)):
     recipes = db.query(Recipe).filter(Recipe.is_public == True).all()
     return [
         RecipeResponse(
+            id=r.id, 
             user_id=r.user_id,
             user_name=r.user.username,
             user_avatar=r.user.profile_pic,
@@ -181,6 +206,7 @@ async def get_my_recipes(current_user: Users = Depends(get_current_user), db: Se
     recipes = db.query(Recipe).filter(Recipe.user_id == current_user["id"]).all()
     return [
         RecipeResponse(
+            id=r.id, 
             user_id=r.user_id,
             user_name=r.user.username,
             user_avatar=r.user.profile_pic,

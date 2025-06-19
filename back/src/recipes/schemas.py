@@ -9,6 +9,7 @@ class RecipeCreate(BaseModel):
     recipe: str
 
 class RecipeResponse(BaseModel):
+    id: int
     user_id: int
     user_name: str
     user_avatar: Optional[str] = None
@@ -19,3 +20,7 @@ class RecipeResponse(BaseModel):
 
     class Config:
         orm_mode = True
+    
+class RecipePatchRequest(BaseModel):
+    dish_name: Optional[str] = None
+    publish: Optional[bool] = None
