@@ -4,14 +4,17 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence } from "framer-motion";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 import Styles from "./Navbar.module.css";
 import { NavButton } from "./NavButton/NavButton";
 import { ProfilePopup } from "./ProfilePopup/ProfilePopup";
 import { useUserStore } from "@/stores/userStore";
+import { BurgerMenu } from "./BurgerMenu/BurgerMenu";
 
 export const Navbar: React.FC = () => {
   const [showPopup, setShowPopup] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const user = useUserStore((state) => state.user);
 
   return (
@@ -28,6 +31,13 @@ export const Navbar: React.FC = () => {
           <h1>FoodSnap <span className="gradientText">AI</span></h1>
         </section>
       </Link>
+      <button
+        className={Styles.burger}
+        onClick={() => setMobileMenuOpen((prev) => !prev)}
+        aria-label="Open menu"
+      >
+        {mobileMenuOpen ? <FaTimes size={28} /> : <FaBars size={28} />}
+      </button>
       <nav className={Styles.nav}>
         <NavButton text="+ Generate a recipe" link="/generate" />
         <NavButton text="View recipies" link="/posted" />
@@ -52,6 +62,11 @@ export const Navbar: React.FC = () => {
             </div>
         </div>
       </nav>
+      {mobileMenuOpen && (
+        <div className={Styles.mobileNavWrapper}>
+          <BurgerMenu onClose={() => setMobileMenuOpen(false)}/>
+        </div>
+      )}
     </header>
   );
 };

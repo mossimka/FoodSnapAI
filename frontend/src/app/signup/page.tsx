@@ -23,7 +23,22 @@ const SignupPage = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+  
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[0-9])(?=.*[^A-Za-z0-9]).{6,}$/;
+  
+    if (!emailRegex.test(form.email)) {
+      setError("Incorrect email");
+      setLoading(false);
+      return;
+    }
+  
+    if (!passwordRegex.test(form.password)) {
+      setError("Password must contain at least one digit and one special character");
+      setLoading(false);
+      return;
+    }
+  
     try {
       await signUp(form);
       await signIn({ username: form.username, password: form.password });
@@ -36,7 +51,7 @@ const SignupPage = () => {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className={Styles.wrapper}>
       <div className={Styles.container}>
@@ -77,7 +92,7 @@ const SignupPage = () => {
                 
         <GoogleLoginButton />
         
-        {error && <p className={Styles.error}>{error}</p>}
+        {error && <div className={Styles.errorWrapper}><p className={Styles.error}>{error}</p></div>}
       </div>
     </div>
   );

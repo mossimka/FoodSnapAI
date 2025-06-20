@@ -90,3 +90,30 @@
   background-color: red;
   border-radius: 50%;
 }
+
+@media (max-width: 1024px) {
+  .cameraContainer {
+    width: 70%;
+    padding: 1.2rem;
+    height: 30vh;
+  }
+  .captureButton {
+    width: 2.5rem;
+    height: 2.5rem;
+    bottom: 1.2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .cameraContainer {
+    width: 100%;
+    padding: 0.8rem;
+    height: 30vh;
+    min-height: 140px;
+  }
+  .captureButton {
+    width: 2rem;
+    height: 2rem;
+    bottom: 0.8rem;
+  }
+}

@@ -59,3 +59,53 @@
   font-size: 1rem;
   font-weight: bold;
 }
+
+@media (max-width: 1024px) {
+  .dropZone {
+    width: 70%;
+  }
+
+  .dropZoneBox {
+    padding: 1.2rem;
+    height: 30vh;
+  }
+
+  .dropZoneImage {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .dropZoneInput p {
+    font-size: 0.8rem; /* уменьшено здесь */
+  }
+}
+
+@media (max-width: 600px) {
+  .dropZone {
+    width: 100%;
+  }
+
+  .dropZoneBox {
+    padding: 0.8rem;
+    height: 30vh;
+    min-height: 140px;
+  }
+
+  .dropZoneImage {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .dropZoneInput p {
+    font-size: 0.7rem; /* ещё меньше здесь */
+  }
+
+  .previewSection {
+    margin-top: 1rem;
+    padding: 0.8rem;
+  }
+
+  .previewLabel {
+    font-size: 0.8rem; /* немного уменьшено */
+  }
+}
