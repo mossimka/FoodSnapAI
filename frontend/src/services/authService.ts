@@ -58,6 +58,7 @@ export async function logout() {
   useUserStore.persist.clearStorage?.();
   useUserStore.setState({ user: null, hydrated: false });
   localStorage.removeItem("access_token");
+  window.location.href = "/signin";
 }
 
 export async function refreshToken() {

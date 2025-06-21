@@ -61,7 +61,7 @@ const SigninPage = () => {
           </button>
         </form>
         
-        <Link href="/signup" className={`${Styles.noUnderline} gradientText`}><small>Do nat havee an account? <b>Sign up</b></small></Link>
+        <Link href="/signup" className={`${Styles.noUnderline} gradientText`}><small>Do nat have an account? <b>Sign up</b></small></Link>
 
         <p>or</p>
         

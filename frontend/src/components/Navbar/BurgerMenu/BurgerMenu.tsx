@@ -105,7 +105,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({ onClose }) => {
                 className={`${Styles.link} ${pathname === "/signin" ? Styles.active : ""}`}
                 onClick={onClose}
               >
-                Login <ArrowBigRightDash className={Styles.arrow} />
+                Sign In <ArrowBigRightDash className={Styles.arrow} />
               </Link>
             </li>
             <li>

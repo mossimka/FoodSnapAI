@@ -1,7 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form, status, Path, Body
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
-from google.adk.agents import Agent
 from google.genai import types
 from sqlalchemy.orm import Session
 from typing import List
@@ -17,28 +16,8 @@ from src.recipes.models import Recipe
 from src.recipes.schemas import RecipeResponse, RecipePatchRequest
 from src.recipes.service import get_recipes
 
-# --- Агент ---
-root_agent = Agent(
-    model="gemini-2.0-flash",
-    name="root_agent",
-    instruction=(
-        """
-        You are an agent analyzing food photos.
-        You will receive an image file. Visually analyze the image and return:
-        1. Name of the dish.
-        2. List of ingredients.
-        3. Step-by-step recipe.
-        Output must be a JSON like:
-        {
-          "dish_name": "string",
-          "ingredients": ["string", ...],
-          "recipe": "string"
-        }
-        Make the recipe clear and repeatable.
-        """
-    ),
-    description="Analyze the dish photo and generate recipe.",
-)
+from src.recipes.agent import root_agent
+
 
 APP_NAME = "dish_analysis_app"
 session_service = InMemorySessionService()
