@@ -46,44 +46,44 @@ export const Generation = () => {
     };
   }, [imagePreview]);
 
-const generateResponse = async () => {
-  if (!isAuthenticated) {
-    setShowPopup(true);
-    return;
-  }
-
-  if (!imageFile) return;
-
-  try {
-    setRecipeGenerates(true);
-    setIsGenerating(true);
-
-  const res = await generate_recipe(imageFile);
-  setGeneratedRecipe(res);
-
-  console.log("👉 recipe", res.dish_name);
-  console.log("👉 recipe.ingredients", res?.ingredients);
-
-
-  const formattedText = [
-    `🍽️ Dish: ${res.dish_name}`,
-    ``,
-    `🧂 Ingredients:`,
-    ...res.ingredients.map(ing => `- ${ing}`),
-    ``,
-    `📋 Recipe:`,
-    ...res.recipe.split("\n"),
-  ].join("\n");
-
-    setResponseText(formattedText);
-    setHasGenerated(true);
-  } catch (error: unknown) {
-    const err = error as AxiosError<{ detail: string }>;
-    throw new Error(err.response?.data?.detail || "Failed to generate recipe");
-  } finally {
-    setIsGenerating(false);
-  }
-};
+  const generateResponse = async () => {
+    if (!isAuthenticated) {
+      setShowPopup(true);
+      return;
+    }
+  
+    if (!imageFile) return;
+  
+    try {
+      setRecipeGenerates(true);
+      setIsGenerating(true);
+  
+      const res = await generate_recipe(imageFile);
+      
+      setGeneratedRecipe(res);
+      
+      const formattedText = [
+        `🍽️ Dish: ${res.dish_name}`,
+        ``,
+        `🧂 Ingredients:`,
+        ...res.ingredients.map(ing => `- ${ing}`),
+        ``,
+        `📋 Recipe:`,
+        ...res.recipe.split("\n"),
+      ].join("\n");
+      
+      setResponseText(formattedText);
+      setHasGenerated(true);
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ detail: string }>;
+      console.error("Error while generating recipe", err);
+      setResponseText("❌ Failed to generate recipe. Please try again.");
+      setHasGenerated(true);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+  
 
   return (
     <div className={Styles.wrapper}>

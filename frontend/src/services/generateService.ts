@@ -92,3 +92,7 @@ export async function delete_recipe(recipeId: number): Promise<void> {
     throw new Error(err.response?.data?.detail || "Failed to delete recipe");
   }
 }
+
+export function isRecipe(obj: RecipeOutput): obj is Extract<RecipeOutput, { dish_name: string }> {
+  return "dish_name" in obj;
+}

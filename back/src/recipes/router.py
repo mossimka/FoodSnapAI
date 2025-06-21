@@ -16,8 +16,7 @@ from src.recipes.models import Recipe
 from src.recipes.schemas import RecipeResponse, RecipePatchRequest
 from src.recipes.service import get_recipes
 
-from src.recipes.agent import root_agent
-
+from src.recipes.agents import root_agent, checking_agent
 
 APP_NAME = "dish_analysis_app"
 session_service = InMemorySessionService()
@@ -26,6 +25,7 @@ runner = Runner(
     app_name=APP_NAME,
     session_service=session_service,
 )
+
 
 router = APIRouter(prefix="/dish", tags=["dish"])
 
