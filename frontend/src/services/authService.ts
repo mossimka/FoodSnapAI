@@ -52,9 +52,22 @@ export async function signIn({ username, password }: SignInInput) {
   }
 }
 
-export function logout() {
+export async function logout() {
+  await axios.post('/auth/logout', null, { withCredentials: true });
   useAuthStore.getState().logout();
   useUserStore.persist.clearStorage?.();
   useUserStore.setState({ user: null, hydrated: false });
   localStorage.removeItem("access_token");
+}
+
+export async function refreshToken() {
+  try {
+    const response = await axios.post('/auth/refresh', null, { withCredentials: true });
+    const token = response.data.access_token;
+    useAuthStore.getState().login(token);
+    return token;
+  } catch (error: unknown) {
+    logout();
+    throw new Error('Session expired. Please log in again.' + error);
+  }
 }

@@ -31,7 +31,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({ onClose }) => {
     setTimeout(() => {
       onClose();
       setIsClosing(false);
-    }, 300); // длительность анимации slideOut
+    }, 300);
   };
 
   return (

@@ -9,23 +9,25 @@ interface Props {
 
 export const SaveRecipeButton: React.FC<Props> = ({ file, recipePart }) => {
     const [isSaving, setIsSaving] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
 
     const handleSave = async () => {
-    setIsSaving(true);
-    try {
+      setIsSaving(true);
+      try {
         await save_recipe({ file, recipePart });
+        setIsSaved(true);
         alert("✅ Recipe saved successfully!");
-    } catch (err: unknown) {
+      } catch (err: unknown) {
         alert("❌ Failed to save recipe. Error:" + err);
-    } finally {
+      } finally {
         setIsSaving(false);
-    }
+      }
     };
 
   return (
     <div>
-        <button onClick={handleSave} disabled={isSaving} className="button" style={{ marginTop: "3vh" }}>
-        {isSaving ? "Saving..." : "Save recipe"}
+        <button onClick={handleSave} disabled={isSaving || isSaved} className="button" style={{ marginTop: "3vh" }}>
+        {isSaving ? "Saving..." : isSaved ? "Saved" : "Save recipe"}
         </button>
     </div>
   );
