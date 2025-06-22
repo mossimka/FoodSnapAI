@@ -11,7 +11,7 @@ export const useUserStore = create<UserState>()(
       setUser: (user) => set({ user }),
       clearUser: () => {
         localStorage.removeItem('user-storage');
-        set({ user: null });
+        set({ user: null, hydrated: false });
       },
       setHydrated: (value) => set({ hydrated: value }),
     }),

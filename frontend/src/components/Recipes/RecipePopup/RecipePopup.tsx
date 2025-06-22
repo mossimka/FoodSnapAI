@@ -37,6 +37,18 @@ export const RecipePopup: React.FC<RecipePopupProps> = ({ onClose, recipe }) => 
     setName(recipe.dish_name);
   }, [recipe.id, recipe.dish_name, recipe.is_published]);  
 
+  useEffect(() => {
+    const handleEsc = (e : KeyboardEvent) => {
+      if(e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEsc);
+    return () => {
+      document.removeEventListener("keydown", handleEsc);
+    }
+  }, [onClose]);
 
   const handlePatch = async () => {
     try {
@@ -75,7 +87,7 @@ export const RecipePopup: React.FC<RecipePopupProps> = ({ onClose, recipe }) => 
     try {
       setIsDeleting(true);
       await delete_recipe(recipe.id);
-      onClose(); // Закрываем попап после удаления
+      onClose();
     } catch (error) {
       console.error("Error deleting recipe:", error);
     } finally {
@@ -84,7 +96,11 @@ export const RecipePopup: React.FC<RecipePopupProps> = ({ onClose, recipe }) => 
   };
 
   return (
-    <div className={Styles.overlay}>
+    <div className={Styles.overlay}   onClick={(e) => {
+      if (e.target === e.currentTarget) {
+        onClose();
+      }
+    }}>
       <div className={Styles.popup}>
         <button className={Styles.closeButton} onClick={onClose}>
           &times;

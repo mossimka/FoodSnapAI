@@ -1,9 +1,15 @@
-// lib/axios.ts
-import { refreshToken } from '@/services/authService';
 import { useAuthStore } from '@/stores/authStore';
 import axios from 'axios';
 
 const axiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  withCredentials: true,
+});
+
+const refreshAxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API,
   headers: {
     'Content-Type': 'application/json',
@@ -18,7 +24,9 @@ axiosInstance.interceptors.response.use(
     if(error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const newToken = await refreshToken();
+        const response = await refreshAxiosInstance.post('/auth/refresh', null, { withCredentials: true });
+        const newToken = response.data.access_token;
+        useAuthStore.getState().login(newToken);
         originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
         return axiosInstance(originalRequest);
       } catch(err) {

@@ -55,15 +55,21 @@ export async function signIn({ username, password }: SignInInput) {
 export async function logout() {
   await axios.post('/auth/logout', null, { withCredentials: true });
   useAuthStore.getState().logout();
-  useUserStore.persist.clearStorage?.();
-  useUserStore.setState({ user: null, hydrated: false });
+  
+  useUserStore.getState().clearUser();
+  
+  localStorage.removeItem('user-storage');
   localStorage.removeItem("access_token");
+  
   window.location.href = "/signin";
 }
 
 export async function refreshToken() {
   try {
-    const response = await axios.post('/auth/refresh', null, { withCredentials: true });
+    const response = await axios.post('/auth/refresh', null, { 
+      baseURL: process.env.NEXT_PUBLIC_API,
+      withCredentials: true 
+    });
     const token = response.data.access_token;
     useAuthStore.getState().login(token);
     return token;

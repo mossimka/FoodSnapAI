@@ -1,12 +1,26 @@
 'use client';
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import Styles from "./profile.module.css";
+import RecipeStyles  from "../posted/posted.module.css"
 import { useUserStore } from "@/stores/userStore";
 import ProfilePicUploader from "@/components/Generation/ProfilePicUploader/ProfilePicUploader";
+import { IRecipe } from "@/interfaces/recipe";
+import { get_my_recipes } from "@/services/generateService";
+import { RecipeCard } from "@/components/Recipes/RecipeCard/RecipeCard";
+import { RecipePopup } from "@/components/Recipes/RecipePopup/RecipePopup";
 
 export default function ProfilePage() {
   const user = useUserStore((state) => state.user);
+  const [myRecipes, setMyRecipes] = useState<IRecipe[]>([]);
+  const [selectedRecipe, setSelectedRecipe] = useState<IRecipe | null>(null);
+
+  useEffect(()  => {
+    get_my_recipes()
+      .then(setMyRecipes)
+      .catch((err) => console.error("My error:", err));
+  }, []);
 
   if (!user) {
     return (
@@ -30,8 +44,23 @@ export default function ProfilePage() {
 
       <div className={Styles.recipesSection}>
         <h3>Loaded recipes</h3>
-        <p>There is nothing here...</p>
+        <div className={RecipeStyles.recipeList}>
+          {myRecipes.length > 0 ? (
+            myRecipes.map((r) => (
+              <RecipeCard  key={`${r.dish_name} - ${r.user_id}`} recipe={r} onClick={() => setSelectedRecipe(r)} />
+            ))
+          ) : (
+            <p className={RecipeStyles.noRecipes}>No recipes to show</p>
+          )}
+        </div>
       </div>
+
+      {selectedRecipe && (
+        <RecipePopup
+          onClose={() => setSelectedRecipe(null)}
+          recipe={selectedRecipe}
+        />
+      )}
     </div>
   );
 }
