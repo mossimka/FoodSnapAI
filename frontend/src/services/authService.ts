@@ -16,7 +16,9 @@ interface SignInInput {
 
 export async function signUp(data: SignUpInput) {
   try {
-    const response = await axios.post('/auth/', data);
+    const response = await axios.post('/auth/', data, {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error: unknown) {
     const err = error as AxiosError<{ detail: string }>;
@@ -33,6 +35,7 @@ export async function signIn({ username, password }: SignInInput) {
 
     const response = await axios.post('/auth/token', formData, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      withCredentials: true,
     });
 
     const token = response.data.access_token;
@@ -50,6 +53,28 @@ export async function signIn({ username, password }: SignInInput) {
     const err = error as AxiosError<{ detail: string }>;
     throw new Error(err.response?.data?.detail || 'Sign in failed');
   }
+}
+
+export async function handleGoogleSignIn(token: string): Promise<void> {
+  const { login } = useAuthStore.getState();
+  const { setUser } = useUserStore.getState();
+
+  const res = await axios.post(
+    `${process.env.NEXT_PUBLIC_API}/auth/google`,
+    { token },
+    { withCredentials: true }
+  );
+
+  const accessToken = res.data.access_token;
+  login(accessToken);
+
+  const profileRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/auth/me`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  setUser(profileRes.data);
 }
 
 export async function logout() {

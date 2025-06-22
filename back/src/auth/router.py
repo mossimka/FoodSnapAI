@@ -1,6 +1,7 @@
 from datetime import timedelta
 from typing import Annotated, List
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, Cookie
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -54,13 +55,14 @@ async def login_for_access_token(
     return {'access_token': access_token, 'token_type': 'bearer'}
 
 @router.post("/google")
-async def google_auth(request: Request, response: Response, db: db_dependency):
+async def google_auth(request: Request, db: db_dependency):
     data = await request.json()
     token = data.get("token")
     if not token:
         raise HTTPException(status_code=400, detail="Missing token")
 
     access_token, refresh_token = google_auth_flow(token, db)
+    response = JSONResponse(content={"access_token": access_token})
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
@@ -69,8 +71,8 @@ async def google_auth(request: Request, response: Response, db: db_dependency):
         samesite="lax",
         secure=not IS_DEV
     )
-    return {"access_token": access_token}
-
+    return response
+    
 @router.post("/refresh")
 async def refresh_token(response: Response, refresh_token: str = Cookie(None)):
     if not refresh_token:

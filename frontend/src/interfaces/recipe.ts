@@ -30,3 +30,10 @@ export interface RecipePatchRequest {
   dish_name?: string;
   publish?: boolean;
 }
+
+export interface NotFoodResponse {
+  message: "Not food";
+  description: string;
+}
+
+export type RecipeResult = RecipeOutput | NotFoodResponse;

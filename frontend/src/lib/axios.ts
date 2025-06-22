@@ -30,6 +30,7 @@ axiosInstance.interceptors.response.use(
         originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
         return axiosInstance(originalRequest);
       } catch(err) {
+        console.error("Failed to refresh token:", err);
         useAuthStore.getState().logout();
         return Promise.reject(err);
       }

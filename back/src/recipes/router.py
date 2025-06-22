@@ -25,6 +25,11 @@ runner = Runner(
     app_name=APP_NAME,
     session_service=session_service,
 )
+checking_runner = Runner(
+    agent=checking_agent,
+    app_name=APP_NAME,
+    session_service=session_service,
+)
 
 
 router = APIRouter(prefix="/dish", tags=["dish"])
@@ -36,11 +41,9 @@ async def get_all_dishes(db: Session = Depends(get_db)):
 @router.post("/")
 async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depends(get_current_user)):
     try:
-        # Считываем содержимое файла в байты
         image_data = await file.read()
 
         USER_ID = str(current_user["id"])
-        # Создаем уникальную сессию
         SESSION_ID = str(uuid.uuid4())
         await session_service.create_session(
             app_name=APP_NAME,
@@ -48,18 +51,35 @@ async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depen
             session_id=SESSION_ID,
         )
 
-        # Передаём изображение как Blob
         content = types.Content(
             role="user",
             parts=[types.Part(
                 inline_data=types.Blob(
-                    mime_type=file.content_type,  # Например, "image/png"
+                    mime_type=file.content_type,
                     data=image_data
                 )
             )]
         )
 
-        # Запускаем агента
+        checking_result = "Agent did not respond"
+        async for event in checking_runner.run_async(
+            user_id=USER_ID,
+            session_id=SESSION_ID,
+            new_message=content
+        ):
+            if event.is_final_response() and event.content and event.content.parts:
+                checking_result = event.content.parts[0].text
+                break
+
+        cleaned_checking = re.sub(r"^```(?:json)?\s*|\s*```$", "", checking_result.strip(), flags=re.MULTILINE)
+        checking_data = json.loads(cleaned_checking)
+
+        if not checking_data.get("is_food"):
+            return {
+                "message": "Not food",
+                "description": checking_data.get("description", "Unknown")
+            }
+
         final_response = "Agent did not respond"
         async for event in runner.run_async(
             user_id=USER_ID,
@@ -71,9 +91,7 @@ async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depen
                 break
 
         cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", final_response.strip(), flags=re.MULTILINE)
-
-        print("👉 Cleaned final response:", cleaned)
-
+        print(cleaned);
         parsed = json.loads(cleaned)
 
         return {

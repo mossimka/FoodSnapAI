@@ -58,7 +58,7 @@ export const ProfilePopup: React.FC<ProfilePopupProps> = ({ onClose }) => {
           <>
             <li>
               <Link href="/signin" className={Styles.link}>
-                <span className="gradientText">Sign in</span>
+                <span className="gradientText">Sign In</span>
                 <ArrowBigRightDash className={Styles.arrow} />
               </Link>
             </li>

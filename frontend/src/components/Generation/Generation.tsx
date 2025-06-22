@@ -12,6 +12,7 @@ import { SignPopup } from "@/components/SignPopup/SignPopup";
 import { useAuthStore } from "@/stores/authStore";
 import { generate_recipe } from "@/services/generateService";
 import { RecipeOutput } from "@/interfaces/recipe";
+import { NavButton } from "../Navbar/NavButton/NavButton";
 
 export const Generation = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -59,21 +60,31 @@ export const Generation = () => {
       setIsGenerating(true);
   
       const res = await generate_recipe(imageFile);
-      
-      setGeneratedRecipe(res);
-      
-      const formattedText = [
-        `🍽️ Dish: ${res.dish_name}`,
-        ``,
-        `🧂 Ingredients:`,
-        ...res.ingredients.map(ing => `- ${ing}`),
-        ``,
-        `📋 Recipe:`,
-        ...res.recipe.split("\n"),
-      ].join("\n");
-      
-      setResponseText(formattedText);
-      setHasGenerated(true);
+  
+      if ("message" in res && res.message === "Not food") {
+        const formattedText = `🚫 This doesn't look like food.\n\n🔍 Detected: ${res.description}`;
+        setResponseText(formattedText);
+        setHasGenerated(true);
+        setGeneratedRecipe(null);
+        return;
+      }
+
+      if ("dish_name" in res) {
+        setGeneratedRecipe(res);
+  
+        const formattedText = [
+          `🍽️ Dish: ${res.dish_name}`,
+          ``,
+        ` 🧂 Ingredients:`,
+          ...res.ingredients.map((ing) => `- ${ing}`),
+          ``,
+          `📋 Recipe:`,
+          ...res.recipe.split("\n"),
+        ].join("\n");
+  
+        setResponseText(formattedText);
+        setHasGenerated(true);
+      }
     } catch (error: unknown) {
       const err = error as AxiosError<{ detail: string }>;
       console.error("Error while generating recipe", err);
@@ -83,6 +94,7 @@ export const Generation = () => {
       setIsGenerating(false);
     }
   };
+  
   
 
   return (
@@ -137,10 +149,15 @@ export const Generation = () => {
               <pre className={Styles.responseText}>
                 {responseText}
               </pre>
-              <SaveRecipeButton 
-                file={imageFile!} 
-                recipePart={generatedRecipe!}
-              />
+              {generatedRecipe && (
+                <div className={Styles.action}>
+                  <SaveRecipeButton 
+                    file={imageFile!} 
+                    recipePart={generatedRecipe!}
+                  />
+                  <NavButton text="Go to my recipies" link="/posted" inputStyle={{ marginTop: "3vh" }} />
+                </div>
+              )}
             </div>
           )}
         </div>

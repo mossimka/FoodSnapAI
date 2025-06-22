@@ -86,7 +86,7 @@
 /* Tablet (до 1024px) */
 @media (max-width: 1024px) {
   .footer_box {
-    width: 95%;
+    width: 80%;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
   }
@@ -104,7 +104,7 @@
 /* Mobile (до 600px) */
 @media (max-width: 600px) {
   .footer_box {
-    width: 100%;
+    width: 90%;
     grid-template-columns: 1fr;
     gap: 1.5rem;
     padding: 0 1rem;

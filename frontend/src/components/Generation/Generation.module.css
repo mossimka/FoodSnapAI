@@ -65,6 +65,13 @@
   line-height: 1.5;
 }
 
+.action {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
 @media (max-width: 1024px) {
   .container {
     flex-direction: column;
