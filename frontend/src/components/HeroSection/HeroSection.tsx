@@ -6,6 +6,7 @@ import { UtensilsCrossed, Cookie, CookingPot, ChefHat, Hamburger, Croissant, Piz
 
 import Styles from "./HeroSection.module.css";
 import { NavButton } from "../Navbar/NavButton/NavButton";
+import { Printer } from "@/components/Anims/Printer/Printer";
 
 
 const ICONS = [ChefHat, Cookie, CookingPot, Hamburger, Croissant, Pizza, Salad, Dessert];
@@ -68,7 +69,7 @@ const foodImages1 = [
 
         <div className={Styles.centerContent}>
           <div className={Styles.ctaButton}>
-            <h1 className="gradientText">Cooking revolution</h1>
+            <Printer initialText="Cooking revolution" fontSize="2rem" className="gradientText"/>
             <UtensilsCrossed style={{color: "var(--color2)"}}/>
           </div>
 

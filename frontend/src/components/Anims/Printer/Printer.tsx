@@ -1,33 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import Styles from "./Printer.module.css";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import styles from "./Printer.module.css";
 
 interface PrinterProps {
   initialText: string;
   className?: string;
+  fontSize?: string;
 }
 
-export const Printer: React.FC<PrinterProps> = ({ initialText, className }) => {
-  const [typedText, setTypedText] = useState('');
+export const Printer: React.FC<PrinterProps> = ({ initialText, className, fontSize }) => {
+  const [displayedText, setDisplayedText] = useState("");
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
-    setTypedText('');
     let index = 0;
 
     const interval = setInterval(() => {
-      if (index < initialText.length) {
-        setTypedText((prev) => prev + initialText[index]);
-        index++;
-      } else {
+      setDisplayedText((prev) => prev + initialText[index]);
+      index++;
+
+      if (index >= initialText.length - 1) {
         clearInterval(interval);
+        setDone(true);
       }
-    }, 40);
+    }, 50);
 
     return () => clearInterval(interval);
   }, [initialText]);
 
   return (
-    <pre className={`${Styles.responseText} ${className ?? ''}`}>
-      {typedText}
-    </pre>
+    <span
+      className={`${styles.responseText} ${done ? styles.done : ""} ${className || ""}`}
+      style={fontSize ? { fontSize } : {}}
+    >
+      {displayedText}
+    </span>
   );
 };

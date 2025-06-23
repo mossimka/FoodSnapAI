@@ -7,7 +7,7 @@ import {
   TiSocialLinkedin,
   TiSocialInstagram,
 } from 'react-icons/ti';
-import { FaSquareXTwitter,  FaTiktok  } from "react-icons/fa6";
+import { FaSquareXTwitter,  FaTiktok, FaThreads  } from "react-icons/fa6";
 import { RiSendPlaneFill } from 'react-icons/ri';
 
 import Styles from './Footer.module.css';
@@ -32,10 +32,11 @@ export const Footer = () => {
           </p>
 
           <div className={Styles.footer_social}>
-            <Link href="#">< FaTiktok  /></Link>
+            <Link href="https://www.tiktok.com/@foodsnap_ai">< FaTiktok  /></Link>
             <Link href="https://www.instagram.com/foodsnap_ai/" target='_blank'><TiSocialInstagram /></Link>
             <Link href="https://x.com/FoodSnapAI" target='_blank'><FaSquareXTwitter /></Link>
             <Link href="https://www.linkedin.com/in/maxim-sarsekeyev-a133ba354/" target='_blank'><TiSocialLinkedin /></Link>
+            <Link href="#" target='_blank'><FaThreads /></Link>
           </div>
         </div>
 
@@ -43,12 +44,12 @@ export const Footer = () => {
           <h3 className='gradientText'>Explore</h3>
           <ul>
             <li>
-              <Link href="#" className={Styles.link}>
+              <Link href="/posted" className={Styles.link}>
                 Browse Recipes
               </Link>
             </li>
             <li>
-              <Link href="#" className={Styles.link}>
+              <Link href="/generate" className={Styles.link}>
                 Upload Recipe
               </Link>
             </li>

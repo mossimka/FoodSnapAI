@@ -4,11 +4,23 @@
     font-size: 1rem;
     line-height: 1.5;
     position: relative;
-}
+  }
   
-.responseText::after {
+  .responseText::after {
     content: "|";
     color: var(--border-color);
     margin-left: 5px;
-}
+    animation: blink 1s step-end infinite;
+  }
+  
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  
+  .done::after {
+    content: "";
+    animation: none;
+  }
   

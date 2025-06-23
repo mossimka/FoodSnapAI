@@ -186,6 +186,55 @@ body {
   transform: none;
 }
 
+.buttonGreen {
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: linear-gradient(135deg, #34a853, #1b7835); /* зелёный градиент */
+  color: var(--contrast-color);
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--green-shadow);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.buttonGreen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+  z-index: -1;
+}
+
+.buttonGreen:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(52, 168, 83, 0.3);
+}
+
+.buttonGreen:hover::before {
+  left: 100%;
+}
+
+.buttonGreen:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 4px 16px rgba(52, 168, 83, 0.3);
+}
+
+.buttonGreen:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+
 /* Glass morphism utility class */
 .glass {
   background: var(--glass-bg);

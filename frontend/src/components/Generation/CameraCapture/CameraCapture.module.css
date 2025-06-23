@@ -1,16 +1,29 @@
 .cameraContainer {
-    width: 45%;
-    border: 3px dashed var(--border-color);
-    background-color: var(--bg-color);
-    border-radius: 1rem;
-    padding: 2rem;
-    text-align: center;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    height: 25vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 45%;
+  border: 3px dashed var(--border-color);
+  background-color: var(--bg-color);
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  height: 25vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: dropZoneFadeIn 0.8s ease forwards;
+}
+
+
+@keyframes dropZoneFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
   
 .cameraContainer:hover {
