@@ -1,0 +1,14 @@
+.responseText {
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    position: relative;
+}
+  
+.responseText::after {
+    content: "|";
+    color: var(--border-color);
+    margin-left: 5px;
+}
+  

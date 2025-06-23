@@ -13,6 +13,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { generate_recipe } from "@/services/generateService";
 import { RecipeOutput } from "@/interfaces/recipe";
 import { NavButton } from "../Navbar/NavButton/NavButton";
+import { Printer } from "../Anims/Printer/Printer";
 
 export const Generation = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -146,9 +147,7 @@ export const Generation = () => {
             <Image src="/images/loader.gif" alt="Generating..." width={128} height={50} />
           ) : (
             <div className={Styles.responseBoxContainer}>
-              <pre className={Styles.responseText}>
-                {responseText}
-              </pre>
+              <Printer initialText={responseText} />
               {generatedRecipe && (
                 <div className={Styles.action}>
                   <SaveRecipeButton 

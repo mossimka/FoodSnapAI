@@ -1,15 +1,17 @@
-  "use client";
+"use client";
 
-  import React from "react";
-  import Image from "next/image";
-  import { UtensilsCrossed, Cookie, CookingPot, ChefHat, Hamburger, Croissant, Pizza, Salad, Dessert } from 'lucide-react';
+import React from "react";
+import Image from "next/image";
+import { UtensilsCrossed, Cookie, CookingPot, ChefHat, Hamburger, Croissant, Pizza, Salad, Dessert } from 'lucide-react';
 
-  import Styles from "./HeroSection.module.css";
-  import { NavButton } from "../Navbar/NavButton/NavButton";
+import Styles from "./HeroSection.module.css";
+import { NavButton } from "../Navbar/NavButton/NavButton";
+import { Printer } from "../Anims/Printer/Printer";
 
-  const ICONS = [ChefHat, Cookie, CookingPot, Hamburger, Croissant, Pizza, Salad, Dessert];
 
-  const foodImages1 = [
+const ICONS = [ChefHat, Cookie, CookingPot, Hamburger, Croissant, Pizza, Salad, Dessert];
+
+const foodImages1 = [
     "/images/food1.png", 
     "/images/food3.png",
     "/images/food5.png",
@@ -47,6 +49,7 @@
         ))}
       </div>
     </div>
+
   );
 
 
@@ -65,7 +68,11 @@
         </div>  
 
         <div className={Styles.centerContent}>
-          <button className={Styles.ctaButton}>Cooking revolution <UtensilsCrossed /></button>
+          <div className={Styles.ctaButton}>
+            <h1 className="gradientText">Cooking revolution</h1>
+            <UtensilsCrossed style={{color: "var(--color2)"}}/>
+          </div>
+
           <p style={{ marginBottom: 10}}>
             Upload dish and get a{" "}
             <span className="gradientText">recipe immediately</span>

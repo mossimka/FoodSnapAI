@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
 
 import Styles from "./profile.module.css";
 import RecipeStyles  from "../posted/posted.module.css"
@@ -55,12 +56,14 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {selectedRecipe && (
-        <RecipePopup
-          onClose={() => setSelectedRecipe(null)}
-          recipe={selectedRecipe}
-        />
-      )}
+      <AnimatePresence>
+        {selectedRecipe && (
+          <RecipePopup
+            onClose={() => setSelectedRecipe(null)}
+            recipe={selectedRecipe}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

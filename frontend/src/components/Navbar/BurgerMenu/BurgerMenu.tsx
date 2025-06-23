@@ -61,7 +61,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({ onClose }) => {
                 className={`${Styles.link} ${pathname === "/generate" ? Styles.active : ""}`}
                 onClick={onClose}
               >
-                + Generate a recipe
+                + Generate a recipe <ArrowBigRightDash className={Styles.arrow} />
               </Link>
             </li>
             <li>
@@ -70,7 +70,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({ onClose }) => {
                 className={`${Styles.link} ${pathname === "/posted" ? Styles.active : ""}`}
                 onClick={onClose}
               >
-                View recipes
+                View recipes <ArrowBigRightDash className={Styles.arrow} />
               </Link>
             </li>
             <li>

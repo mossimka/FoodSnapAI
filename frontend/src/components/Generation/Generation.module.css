@@ -55,20 +55,13 @@
   min-height: 80px;
   font-size: 1rem;
   font-weight: 500;
+  width: 100%;
   color: black;
-}
-
-.responseText {
-  white-space: pre-wrap;
-  font-family: inherit;
-  font-size: 1rem;
-  line-height: 1.5;
 }
 
 .action {
   display: flex;
-  width: 100%;
-  justify-content: space-between;
+  gap: 2rem;
   align-items: center;
 }
 

@@ -21,9 +21,11 @@ html{
 :root {
   --bg-color: #F8F3EC;
   --hover-color: #FFF0E0;
-  --gradient: linear-gradient(to bottom right, #F48A3B, #D4657F);
-  --gradient2: linear-gradient(to right, #f48a3b, #d4657f);
-  --gradient3: linear-gradient(135deg, #f48a3b, #d46557);
+  --color2: #D4657F;
+  --color1: #F48A3B;
+  --gradient: linear-gradient(to bottom right, var(--color1), var(--color2));
+  --gradient2: linear-gradient(to right, var(--color1), var(--color2));
+  --gradient3: linear-gradient(135deg, var(--color1), #d46557);
   --gradientRed: linear-gradient(to right,  #bf0d0d, #630001);
   --shadow-color-active: rgb(212, 101, 87);
   --shadow: 0 4px 12px rgba(244, 138, 59, 0.3);
@@ -126,4 +128,13 @@ body {
 .buttonRed:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+@media (max-width: 1025px) {
+  .button,
+  .buttonRed {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 0.4rem;
+  }
 }

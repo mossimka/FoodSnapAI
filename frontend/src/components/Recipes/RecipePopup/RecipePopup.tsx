@@ -10,6 +10,7 @@ import { useUserStore } from "@/stores/userStore";
 import { IRecipe } from "@/interfaces/recipe";
 import { patchRecipe } from "@/services/generateService";
 import { delete_recipe } from "@/services/generateService";
+import { motion } from "framer-motion";
 
 
 interface RecipePopupProps {
@@ -101,98 +102,106 @@ export const RecipePopup: React.FC<RecipePopupProps> = ({ onClose, recipe }) => 
         onClose();
       }
     }}>
-      <div className={Styles.popup}>
-        <button className={Styles.closeButton} onClick={onClose}>
-          &times;
-        </button>
+      <motion.div
+        key="recipe-popup"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.8 }}
+        transition={{ duration: 0.2, ease: "easeInOut" }}
+      >
+        <div className={Styles.popup}>
+          <button className={Styles.closeButton} onClick={onClose}>
+            &times;
+          </button>
 
-        <div className={Styles.topSection}>
-          <div>
-            <div className={Styles.imageWrapper}>
-              <Image
-                src={recipe.image_path || "/images/placeholder.png"}
-                alt={recipe.dish_name}
-                fill
-                style={{ objectFit: "cover", borderRadius: "12px" }}
-              />
-            </div>
-            {isOwner && (
-              <div className={Styles.buttons}>
-                <button
-                  onClick={handleTogglePublish}
-                  className="button"
-                  disabled={isPublishing}
-                  style={{ margin: "2vh 0" }}
-                >
-                  {isPublishing
-                    ? published
-                      ? "Unpublishing..."
-                      : "Publishing..."
-                    : published
-                    ? "Unpublish"
-                    : "Publish"}
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="buttonRed"
-                  disabled={isDeleting}
-                  style={{ margin: "2vh 0" }}
-                >
-                  {isDeleting ? "Deleting..." : "Delete"}
-                </button>
+          <div className={Styles.topSection}>
+            <div>
+              <div className={Styles.imageWrapper}>
+                <Image
+                  src={recipe.image_path || "/images/placeholder.png"}
+                  alt={recipe.dish_name}
+                  fill
+                  style={{ objectFit: "cover", borderRadius: "12px" }}
+                />
               </div>
-            )}
-          </div>
-
-          <div className={Styles.details}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              {isEditing ? (
-                <>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className={Styles.nameInput}
-                  />
-                  <button onClick={handlePatch} disabled={isLoading} className="button">
-                    {isLoading ? "Saving..." : "Save"}
+              {isOwner && (
+                <div className={Styles.buttons}>
+                  <button
+                    onClick={handleTogglePublish}
+                    className="button"
+                    disabled={isPublishing}
+                    style={{ margin: "2vh 0" }}
+                  >
+                    {isPublishing
+                      ? published
+                        ? "Unpublishing..."
+                        : "Publishing..."
+                      : published
+                      ? "Unpublish"
+                      : "Publish"}
                   </button>
-                </>
-              ) : (
-                <>
-                  <h2>{name}</h2>
-                  {isAuthenticated && isOwner && (
-                    <Pencil
-                      size={20}
-                      style={{ cursor: "pointer" }}
-                      onClick={() => setIsEditing(true)}
-                    />
-                  )}
-                </>
+                  <button
+                    onClick={handleDelete}
+                    className="buttonRed"
+                    disabled={isDeleting}
+                    style={{ margin: "2vh 0" }}
+                  >
+                    {isDeleting ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
               )}
             </div>
 
-            <p className={Styles.author}>by {recipe.user_name}</p>
+            <div className={Styles.details}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                {isEditing ? (
+                  <>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className={Styles.nameInput}
+                    />
+                    <button onClick={handlePatch} disabled={isLoading} className="button">
+                      {isLoading ? "Saving..." : "Save"}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <h2 className={Styles.recipeName}>{name}</h2>
+                    {isAuthenticated && isOwner && (
+                      <Pencil
+                        size={20}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setIsEditing(true)}
+                      />
+                    )}
+                  </>
+                )}
+              </div>
 
-            {ingredients.length > 0 && (
-              <ul className={Styles.ingredientList}>
-                {ingredients.map((item, i) => (
-                  <li key={i}>🧂 {item.trim()}</li>
-                ))}
-              </ul>
-            )}
+              <p className={Styles.author}>by {recipe.user_name}</p>
+
+              {ingredients.length > 0 && (
+                <ul className={Styles.ingredientList}>
+                  {ingredients.map((item, i) => (
+                    <li key={i}>🧂 {item.trim()}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
-        </div>
 
-        <div className={Styles.recipeBody}>
-          <h3>Recipe</h3>
-          <p>{recipe.recipe}</p>
-        </div>
+          <div className={Styles.recipeBody}>
+            <h3>Recipe</h3>
+            <p>{recipe.recipe}</p>
+          </div>
 
-        {isAuthenticated && (
-          <p className={Styles.authInfo}>You are logged in</p>
-        )}
-      </div>
+          {isAuthenticated && (
+            <p className={Styles.authInfo}>You are logged in</p>
+          )}
+        </div>
+      </motion.div>
     </div>
   );
 };
