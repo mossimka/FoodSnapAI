@@ -6,7 +6,6 @@ import { UtensilsCrossed, Cookie, CookingPot, ChefHat, Hamburger, Croissant, Piz
 
 import Styles from "./HeroSection.module.css";
 import { NavButton } from "../Navbar/NavButton/NavButton";
-import { Printer } from "../Anims/Printer/Printer";
 
 
 const ICONS = [ChefHat, Cookie, CookingPot, Hamburger, Croissant, Pizza, Salad, Dessert];
