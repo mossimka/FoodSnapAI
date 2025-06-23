@@ -39,11 +39,14 @@ const CameraCapture: React.FC<DropZoneProps> = ({ setImage }) => {
     (videoRef.current.srcObject as MediaStream)?.getTracks().forEach(track => track.stop());
 
     canvasRef.current.toBlob(blob => {
-      if (blob) {
-        const file = new File([blob], "snapshot.jpg", { type: "image/jpeg" });
-        setImage(file);
-      }
-    }, "image/jpeg");
+    if (blob) {
+      const randomId = Math.random().toString(36).substring(2, 10);
+      const randomName = `photo_${randomId}.jpg`;
+
+      const file = new File([blob], randomName, { type: "image/jpeg" });
+      setImage(file);
+    }
+  }, "image/jpeg");
 
     setCapturing(false);
   };

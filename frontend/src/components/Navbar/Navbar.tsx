@@ -28,19 +28,21 @@ export const Navbar: React.FC = () => {
             width={60}
             height={60}
           />
-          <h1>FoodSnap <span className="gradientText">AI</span></h1>
+          <h1 className={Styles.logoText}>FoodSnap <span className="gradientText">AI</span></h1>
         </section>
       </Link>
+      
       <button
         className={Styles.burger}
         onClick={() => setMobileMenuOpen((prev) => !prev)}
         aria-label="Open menu"
       >
-        {mobileMenuOpen ? <FaTimes size={28} /> : <FaBars size={28} />}
+        {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
       </button>
+      
       <nav className={Styles.nav}>
-        <NavButton text="+ Generate a recipe" link="/generate" />
-        <NavButton text="View recipies" link="/posted" />
+        <NavButton text="+ Generate Recipe" link="/generate" />
+        <NavButton text="Browse Recipes" link="/posted" />
 
         <div className={Styles.profileWrapper}>
             <button
@@ -62,6 +64,7 @@ export const Navbar: React.FC = () => {
             </div>
         </div>
       </nav>
+      
       {mobileMenuOpen && (
         <div className={Styles.mobileNavWrapper}>
           <BurgerMenu onClose={() => setMobileMenuOpen(false)}/>

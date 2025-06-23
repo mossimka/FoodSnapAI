@@ -5,24 +5,60 @@
     justify-content: space-between;
     margin: 0 auto;
     width: 75vw;
-    height: 10vh;
+    height: 12vh;
     position: relative;
+    padding: var(--spacing-md) 0;
 }
 
 .logoSection {
     display: flex;
     width: 15vw;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-start;
+    gap: var(--spacing-md);
+    transition: transform 0.3s ease;
+}
+
+.logoSection:hover {
+    transform: scale(1.05);
 }
 
 .logoLink{
-    color: black;
+    color: var(--text-color);
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
 }
+
+.logo {
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.logo:hover {
+    transform: rotate(5deg);
+}
+
+.logoText {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
 .user {
     border-radius: 50%;
     object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 3px solid transparent;
+    background: var(--gradient);
+    background-clip: padding-box;
+}
+
+.user:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .nav {
@@ -30,12 +66,38 @@
     align-items: center;
     justify-content: space-between;
     z-index: 111;
-    gap: 1rem;
+    gap: var(--spacing-xl);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius-xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .profileButton{
     background: none;
     border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 2px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.profileButton::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: var(--gradient);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.profileButton:hover::before {
+    opacity: 1;
 }
 
 .profileWrapper{
@@ -55,10 +117,20 @@
 
 .burger {
     display: none;
-    background: none;
+    background: var(--gradient);
     border: none;
     cursor: pointer;
     z-index: 1200;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    color: white;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.burger:hover {
+    transform: scale(1.05);
+    box-shadow: var(--hover-shadow);
 }
   
 @media (max-width: 900px) {
@@ -78,6 +150,10 @@
     .logoSection {
         width: 50vw;
     }
+
+    .header {
+        width: 90vw;
+    }
   }
   
 @media (min-width: 901px) {
@@ -85,4 +161,13 @@
       display: none;
     }
 }
-  
+
+@media (max-width: 600px) {
+    .logoText {
+        font-size: 1.2rem;
+    }
+    
+    .logoSection {
+        width: 60vw;
+    }
+}

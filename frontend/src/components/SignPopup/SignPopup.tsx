@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { X } from "lucide-react";
 
 import Styles from "./SignPopup.module.css";
@@ -9,6 +9,12 @@ interface SignPopupProps {
 }
 
 export const SignPopup: React.FC<SignPopupProps> = ({ onClose }) => {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
   return (
     <div className={Styles.overlay} onClick={onClose}>
       <div className={Styles.popup} onClick={(e) => e.stopPropagation()}>

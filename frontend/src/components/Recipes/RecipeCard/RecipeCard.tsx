@@ -30,10 +30,12 @@ export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
             height={40}
             className={Styles.avatar}
           />
-          <span>Author: {recipe.user_name}</span>
+          <span>{recipe.user_name}</span>
         </div>
 
-        <div className={Styles.recipeName}>Recipe Name: {recipe.dish_name}</div>
+        <div className={Styles.recipeName}>
+          {recipe.dish_name}
+        </div>
       </div>
     </div>
   );

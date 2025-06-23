@@ -26,7 +26,7 @@ export const SaveRecipeButton: React.FC<Props> = ({ file, recipePart }) => {
 
   return (
     <div>
-        <button onClick={handleSave} disabled={isSaving || isSaved} className="button" style={{ marginTop: "3vh" }}>
+        <button onClick={handleSave} disabled={isSaving || isSaved} className="buttonGreen" style={{ marginTop: "3vh" }}>
         {isSaving ? "Saving..." : isSaved ? "Saved" : "Save recipe"}
         </button>
     </div>

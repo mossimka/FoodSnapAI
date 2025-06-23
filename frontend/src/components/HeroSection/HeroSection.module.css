@@ -6,6 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
 .scrollColumn {
@@ -18,7 +19,10 @@
   flex-direction: row;
   gap: 8px;
   z-index: 2;
-  filter: blur(3px);
+  filter: blur(2px);
+  opacity: 0.8;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 
 .scrollColumn.left {

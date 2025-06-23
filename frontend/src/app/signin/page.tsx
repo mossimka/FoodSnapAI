@@ -39,7 +39,7 @@ const SigninPage = () => {
   return (
     <div className={Styles.wrapper}>
       <div className={Styles.container}>
-        <h1 className="gradientText2">Sign In</h1>
+        <h2 className="gradientText2">Welcome back!</h2>
         <form className={Styles.form} onSubmit={handleSubmit}>
           <input
             type="text"

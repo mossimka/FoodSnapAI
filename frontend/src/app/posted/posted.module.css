@@ -1,5 +1,5 @@
 .postedSection {
-  padding: 2rem;
+  padding: var(--spacing-2xl);
   width: 75%;
   margin: 0 auto;
   min-height: 65vh;
@@ -7,44 +7,100 @@
 
 .tabToggle {
   display: flex;
-  border: 0.1rem solid var(--border-color);
-  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-xl);
   overflow: hidden;
   width: fit-content;
-  margin-bottom: 2rem;
-  box-shadow: var(--shadow);
+  margin-bottom: var(--spacing-2xl);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .tabButton {
-  padding: 0.75rem 2rem;
-  background-color: white;
-  color: black;
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  background: transparent;
+  color: var(--text-color);
   border: none;
   cursor: pointer;
   font-size: 1rem;
-  transition: all 0.3s ease;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 2;
 }
 
 .tabButton:hover {
-  background-color: var(--hover-color);
-  box-shadow: var(--hover-shadow);
+  color: var(--color1);
+  transform: translateY(-2px);
 }
 
 .active {
   background: var(--gradient);
   color: white;
-  box-shadow: var(--active-shadow);
+  box-shadow: 0 4px 16px rgba(244, 138, 59, 0.3);
+}
+
+.active:hover {
+  color: white;
+  transform: none;
 }
 
 .recipeList {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: var(--spacing-2xl);
+  padding: var(--spacing-lg) 0;
 }
 
-
 .noRecipes {
-  font-size: 1.1rem;
-  color: #777;
-  padding: 1rem;
+  font-size: 1.2rem;
+  color: var(--text-color-sub);
+  padding: var(--spacing-2xl);
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin: var(--spacing-xl) 0;
+}
+
+@media (max-width: 1024px) {
+  .postedSection {
+    width: 85%;
+    padding: var(--spacing-xl);
+  }
+  
+  .recipeList {
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: var(--spacing-xl);
+  }
+  
+  .tabButton {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .postedSection {
+    width: 95%;
+    padding: var(--spacing-lg);
+  }
+  
+  .recipeList {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .tabButton {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 0.85rem;
+  }
+  
+  .noRecipes {
+    font-size: 1rem;
+    padding: var(--spacing-lg);
+  }
 }

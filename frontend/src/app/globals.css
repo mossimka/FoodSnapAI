@@ -16,6 +16,7 @@
 
 html{
   scrollbar-color: var(--border-color) var(--bg-color);
+  scroll-behavior: smooth;
 }
 
 :root {
@@ -23,31 +24,49 @@ html{
   --hover-color: #FFF0E0;
   --color2: #D4657F;
   --color1: #F48A3B;
-  --gradient: linear-gradient(to bottom right, var(--color1), var(--color2));
-  --gradient2: linear-gradient(to right, var(--color1), var(--color2));
+  --gradient: linear-gradient(135deg, var(--color1), var(--color2));
+  --gradient2: linear-gradient(45deg, var(--color1), var(--color2));
   --gradient3: linear-gradient(135deg, var(--color1), #d46557);
-  --gradientRed: linear-gradient(to right,  #bf0d0d, #630001);
+  --gradientRed: linear-gradient(135deg, #bf0d0d, #630001);
   --shadow-color-active: rgb(212, 101, 87);
-  --shadow: 0 4px 12px rgba(244, 138, 59, 0.3);
-  --hover-shadow: 0 6px 16px rgba(212, 101, 87, 0.4);
-  --active-shadow: 0 3px 10px rgba(212, 101, 87, 0.2);
+  --shadow: 0 8px 32px rgba(244, 138, 59, 0.15);
+  --hover-shadow: 0 12px 40px rgba(212, 101, 87, 0.25);
+  --active-shadow: 0 4px 16px rgba(212, 101, 87, 0.3);
   --accent-color: #FFAB40;
   --border-color: #ff914d;
-  --text-color: #555;
+  --text-color: #2c2c2c;
   --text-color-sub: #666;
   --contrast-color: white;
+  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.18);
 
-  --green-shadow: 0 0 5px rgba(52, 168, 83, 0.5);
+  --green-shadow: 0 0 20px rgba(52, 168, 83, 0.3);
   --green: #34a853;
+  
+  /* New design tokens */
+  --border-radius-sm: 0.5rem;
+  --border-radius-md: 0.75rem;
+  --border-radius-lg: 1rem;
+  --border-radius-xl: 1.5rem;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
 }
 
 * {
   margin: 0;
   font-family: 'Rubik', sans-serif;
+  box-sizing: border-box;
 }
 
 body {
-  background-color: var(--bg-color);
+  background: linear-gradient(135deg, var(--bg-color) 0%, #f5f0e8 100%);
+  min-height: 100vh;
+  color: var(--text-color);
+  line-height: 1.6;
 }
 
 .gradientText {
@@ -56,6 +75,7 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
+  font-weight: 600;
 }
 
 .gradientText2 {
@@ -64,6 +84,7 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
+  font-weight: 600;
 }
 
 ::selection {
@@ -71,70 +92,180 @@ body {
   background-color: var(--border-color);
 }
 
-
 .button {
-  padding: 0.6rem 1.2rem;
+  padding: var(--spacing-md) var(--spacing-xl);
   background: var(--gradient3);
   color: var(--contrast-color);
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--border-radius-md);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--shadow);
-  z-index: 111;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+  z-index: -1;
 }
 
 .button:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.02);
   box-shadow: var(--hover-shadow);
 }
 
+.button:hover::before {
+  left: 100%;
+}
+
 .button:active {
-  transform: scale(0.98);
+  transform: translateY(-1px) scale(0.98);
   box-shadow: var(--active-shadow);
 }
 
 .button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 .buttonRed {
-  padding: 0.6rem 1.2rem;
+  padding: var(--spacing-md) var(--spacing-xl);
   background: var(--gradientRed);
   color: var(--contrast-color);
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--border-radius-md);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--shadow);
-  z-index: 111;
+  position: relative;
+  overflow: hidden;
+}
+
+.buttonRed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
 }
 
 .buttonRed:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.02);
   box-shadow: var(--hover-shadow);
 }
 
+.buttonRed:hover::before {
+  left: 100%;
+}
+
 .buttonRed:active {
-  transform: scale(0.98);
+  transform: translateY(-1px) scale(0.98);
   box-shadow: var(--active-shadow);
 }
 
 .buttonRed:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
+}
+
+/* Glass morphism utility class */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Smooth transitions for all interactive elements */
+a, button, input, textarea, select {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced focus styles */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 168, 83, 0.2);
+  border-color: var(--green);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gradient);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gradient2);
 }
 
 @media (max-width: 1025px) {
   .button,
   .buttonRed {
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-    border-radius: 0.4rem;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 0.9rem;
+    border-radius: var(--border-radius-sm);
   }
+}
+
+@media (max-width: 600px) {
+  .button,
+  .buttonRed {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.85rem;
+  }
+}
+
+a {
+  cursor: pointer;
+}
+
+body.no-scroll {
+  overflow: hidden;
 }
