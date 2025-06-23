@@ -5,16 +5,30 @@
     border-radius: 1rem;
     padding: 2rem;
     text-align: center;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
     cursor: pointer;
     height: 25vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+  
+.cameraContainer:hover {
+  background-color: var(--hover-color);
+  animation: pulse 0.6s ease;
+  transform: scale(1.03);
+}
 
-.cameraContainer:hover{
-    background-color: var(--hover-color);
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-color, #ffb34733);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255,179,71,0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255,179,71,0);
+  }
 }
 
 .cameraWrapper {

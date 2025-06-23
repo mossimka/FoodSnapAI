@@ -1,5 +1,18 @@
 .dropZone {
   width: 45%;
+  opacity: 0;
+  animation: dropZoneFadeIn 0.8s ease forwards;
+}
+
+@keyframes dropZoneFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .dropZoneBox {
@@ -8,16 +21,31 @@
   border-radius: 1rem;
   padding: 2rem;
   text-align: center;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s, box-shadow 0.3s, transform 0.2s;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 25vh;
+  box-shadow: 0 0 0 0 rgba(0,0,0,0);
 }
 
 .dropZoneBox:hover {
   background-color: var(--hover-color);
+  animation: pulse 0.6s;
+  transform: scale(1.03);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-color, #ffb34733);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255,179,71,0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255,179,71,0);
+  }
 }
 
 .dropZoneInput p {
@@ -33,11 +61,14 @@
   width: 60px;
   height: 60px;
   color: var(--accent-color);
-  transition: transform 0.2s ease;
+  transition: 
+    transform 0.4s cubic-bezier(0.4, 0.2, 0.2, 1),
+    color 0.4s cubic-bezier(0.4, 0.2, 0.2, 1);
 }
 
 .dropZoneImage:hover {
-  transform: translateY(-2px);
+  transform: rotate(-20deg) scale(1.08);
+  color: var(--color2);
 }
 
 .previewSection {
@@ -46,6 +77,16 @@
   border: 2px dashed var(--border-color);
   border-radius: 1rem;
   background-color: var(--bg-color);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: previewFadeIn 0.6s 0.2s ease forwards;
+}
+
+@keyframes previewFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .previewImageWrapper {

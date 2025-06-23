@@ -77,9 +77,29 @@
   margin: 0;
 }
 
+.link,
+.footer_box_discover ul li a,
+.footer_box_help ul li a {
+    text-decoration: none;
+    padding: .5rem 1rem;
+    border-radius: 2rem;
+    transition: 
+        background-color 0.3s ease-in,
+        color 0.3s ease-in,
+        box-shadow 0.3s;
+    display: inline-block;
+}
 
 .link {
-    color: black;
+  color: var(--text-color);
+}
+
+.link:hover,
+.footer_box_discover ul li a:hover,
+.footer_box_help ul li a:hover {
+    background-color: var(--border-color);
+    color: var(--bg-color);
+    box-shadow: var(--shadow);
     text-decoration: none;
 }
 
