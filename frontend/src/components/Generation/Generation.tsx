@@ -37,7 +37,8 @@ export const Generation = () => {
       useWebWorker: true,
     };
     try {
-      const compressedFile = await imageCompression(file, options);
+      const compressedBlob = await imageCompression(file, options);
+      const compressedFile = new File([compressedBlob], file.name, { type: compressedBlob.type });
       setImageFile(compressedFile);
       const previewURL = URL.createObjectURL(compressedFile);
       setImagePreview(previewURL);

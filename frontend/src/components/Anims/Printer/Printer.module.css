@@ -1,17 +1,18 @@
 .responseText {
-    white-space: pre-wrap;
-    font-family: inherit;
-    font-size: 1rem;
-    line-height: 1.5;
-    position: relative;
-  }
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  position: relative;
+  text-align: left;
+}
   
-  .responseText::after {
-    content: "|";
-    color: var(--border-color);
-    margin-left: 5px;
-    animation: blink 1s step-end infinite;
-  }
+.responseText::after {
+  content: "|";
+  color: var(--border-color);
+  margin-left: 5px;
+  animation: blink 1s step-end infinite;
+}
   
   @keyframes blink {
     50% {

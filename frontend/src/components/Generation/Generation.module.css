@@ -79,8 +79,6 @@
   border-radius: 1.5rem;
   box-shadow: 0 2px 12px rgba(31, 38, 135, 0.08);
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
   min-height: 80px;
   font-size: 1.1rem;
   font-weight: 500;
@@ -91,6 +89,7 @@
 
 .responseBoxContainer {
   width: 100%;
+  text-align: left;
 }
 
 .action {
