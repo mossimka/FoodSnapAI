@@ -61,28 +61,27 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  right: 0;
+  bottom: 0;
   background-color: black;
-  z-index: 1000;
+  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  overflow: hidden;
 }
 
-.ButtonCOntainer {
+
+.ButtonContainer {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
 .cameraVideo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   z-index: 1;
 }
@@ -138,6 +137,31 @@
   background-color: red;
   border-radius: 50%;
 }
+
+.fakeButton {
+  background-color: var(--accent-color, #ff7b00);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+}
+
+.fakeButton:hover {
+  background-color: var(--accent-hover, #e96a00);
+  transform: scale(1.03);
+}
+
+.fakeButton:active {
+  transform: scale(0.98);
+}
+
 
 @media (max-width: 1024px) {
   .cameraContainer {

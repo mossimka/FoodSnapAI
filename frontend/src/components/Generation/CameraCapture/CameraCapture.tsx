@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-
+import ReactDOM from "react-dom"; // ← Добавь это
 import Styles from "./CameraCapture.module.css";
 
 interface DropZoneProps {
@@ -12,14 +12,16 @@ const CameraCapture: React.FC<DropZoneProps> = ({ setImage }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [capturing, setCapturing] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
 
   useEffect(() => {
     setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
     setTimeout(() => setVisible(true), 10);
     return () => setVisible(false);
   }, []);
+  
 
   const startCamera = async () => {
     setCapturing(true);
@@ -47,14 +49,13 @@ const CameraCapture: React.FC<DropZoneProps> = ({ setImage }) => {
     (videoRef.current.srcObject as MediaStream)?.getTracks().forEach(track => track.stop());
 
     canvasRef.current.toBlob(blob => {
-    if (blob) {
-      const randomId = Math.random().toString(36).substring(2, 10);
-      const randomName = `photo_${randomId}.jpg`;
-
-      const file = new File([blob], randomName, { type: "image/jpeg" });
-      setImage(file);
-    }
-  }, "image/jpeg");
+      if (blob) {
+        const randomId = Math.random().toString(36).substring(2, 10);
+        const randomName = `photo_${randomId}.jpg`;
+        const file = new File([blob], randomName, { type: "image/jpeg" });
+        setImage(file);
+      }
+    }, "image/jpeg");
 
     setCapturing(false);
   };
@@ -67,53 +68,56 @@ const CameraCapture: React.FC<DropZoneProps> = ({ setImage }) => {
   };
 
   return (
-    <div
-      className={
-        `${Styles.cameraContainer} ` +
-        (visible ? Styles.cameraContainerVisible : Styles.cameraContainerHidden)
-      }
-    >
-      {!capturing ? (
+    <>
+      <div
+        className={
+          `${Styles.cameraContainer} ` +
+          (visible ? Styles.cameraContainerVisible : Styles.cameraContainerHidden)
+        }
+      >
         <div className={Styles.buttonContainer}>
-          <button
-            onClick={startCamera}
-            className="button"
-            disabled={!isMobile}
-            style={!isMobile ? { opacity: 0.5, cursor: "not-allowed" } : {}}
-          >
-            Open Camera
-          </button>
-          {isMobile ? (
+        {isMobile ? (
+          <>
+            <label htmlFor="cameraInput" className={Styles.fakeButton}>
+              Open Camera
+            </label>
             <input
+              id="cameraInput"
               type="file"
               accept="image/*"
               capture="environment"
-              style={{ display: "block", margin: "1rem auto" }}
               onChange={handleFileChange}
+              style={{ display: "none" }}
             />
-          ) : (
-            <div style={{ marginTop: "1rem", color: "#888", fontSize: "0.95rem" }}>
-              Available only on mobile devices
+          </>
+        ) : (
+          <button onClick={startCamera} className={Styles.fakeButton}>
+            Open Camera
+          </button>
+        )}
+        </div>
+      </div>
+
+      {capturing &&
+        typeof window !== "undefined" &&
+        ReactDOM.createPortal(
+          <div className={Styles.cameraWrapper}>
+            <video
+              ref={videoRef}
+              className={Styles.cameraVideo}
+              playsInline
+              autoPlay
+              muted
+            />
+            <div className={Styles.overlay}>
+              <div className={Styles.mask}></div>
             </div>
-          )}
-        </div>
-      ) : (
-        <div className={Styles.cameraWrapper}>
-          <video
-            ref={videoRef}
-            className={Styles.cameraVideo}
-            playsInline
-            autoPlay
-            muted
-          />
-          <div className={Styles.overlay}>
-            <div className={Styles.mask}></div>
-          </div>
-          <button className={Styles.captureButton} onClick={capturePhoto}></button>
-          <canvas ref={canvasRef} style={{ display: "none" }} />
-        </div>
-      )}
-    </div>
+            <button className={Styles.captureButton} onClick={capturePhoto}></button>
+            <canvas ref={canvasRef} style={{ display: "none" }} />
+          </div>,
+          document.body
+        )}
+    </>
   );
 };
 
