@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 import Styles from "./profile.module.css";
 import RecipeStyles  from "../posted/posted.module.css"
 import { useUserStore } from "@/stores/userStore";
-import ProfilePicUploader from "@/components/Generation/ProfilePicUploader/ProfilePicUploader";
 import { IRecipe } from "@/interfaces/recipe";
 import { get_my_recipes } from "@/services/generateService";
 import { RecipeCard } from "@/components/Recipes/RecipeCard/RecipeCard";
@@ -35,7 +35,13 @@ export default function ProfilePage() {
     <div className={Styles.wrapper}>
       <div className={Styles.profileCard}>
         <div className={Styles.pictureWrapper}>
-          <ProfilePicUploader />
+          <Image
+            src={user?.profile_pic|| "/images/user.png"}
+            alt="user"
+            className={Styles.user}
+            width={200}
+            height={200}
+          />
         </div>
         <div className={Styles.profileInfo}>
           <h2>{user.username}</h2>

@@ -31,3 +31,8 @@
 .recipesSection {
   text-align: center;
 }
+
+.user {
+  object-fit: cover;
+  border-radius: 50%;
+}
