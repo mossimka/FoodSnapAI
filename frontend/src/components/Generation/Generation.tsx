@@ -48,20 +48,21 @@ export const Generation = () => {
     };
   }, [imagePreview]);
 
-  const generateResponse = async () => {
-    if (!isAuthenticated) {
-      setShowPopup(true);
-      return;
-    }
-  
-    if (!imageFile) return;
-  
+const generateResponse = async () => {
+  if (!isAuthenticated) {
+    setShowPopup(true);
+    return;
+  }
+
+  if (!imageFile) return;
+
+  setRecipeGenerates(true);
+  setIsGenerating(true);
+
+  setTimeout(async () => {
     try {
-      setRecipeGenerates(true);
-      setIsGenerating(true);
-  
       const res = await generate_recipe(imageFile);
-  
+
       if ("message" in res && res.message === "Not food") {
         const formattedText = `🚫 This doesn't look like food.\n\n🔍 Detected: ${res.description}`;
         setResponseText(formattedText);
@@ -72,17 +73,17 @@ export const Generation = () => {
 
       if ("dish_name" in res) {
         setGeneratedRecipe(res);
-  
+
         const formattedText = [
           `🍽️ Dish: ${res.dish_name}`,
           ``,
-        ` 🧂 Ingredients:`,
+          ` 🧂 Ingredients:`,
           ...res.ingredients.map((ing) => `- ${ing}`),
           ``,
           `📋 Recipe:`,
           ...res.recipe.split("\n"),
         ].join("\n");
-  
+
         setResponseText(formattedText);
         setHasGenerated(true);
       }
@@ -94,8 +95,9 @@ export const Generation = () => {
     } finally {
       setIsGenerating(false);
     }
-  };
-  
+  }, 0);
+};
+
   
 
   return (
