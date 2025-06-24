@@ -133,3 +133,18 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+.cameraContainer {
+  width: 45%;
+  border: 3px dashed var(--border-color);
+  background-color: var(--bg-color);
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  height: 25vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

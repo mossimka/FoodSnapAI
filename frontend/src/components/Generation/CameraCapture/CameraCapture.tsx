@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 import Styles from "./CameraCapture.module.css";
 
@@ -12,6 +12,14 @@ const CameraCapture: React.FC<DropZoneProps> = ({ setImage }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [capturing, setCapturing] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+    setTimeout(() => setVisible(true), 10);
+    return () => setVisible(false);
+  }, []);
 
   const startCamera = async () => {
     setCapturing(true);
@@ -51,10 +59,44 @@ const CameraCapture: React.FC<DropZoneProps> = ({ setImage }) => {
     setCapturing(false);
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImage(file);
+    }
+  };
+
   return (
-    <div className={Styles.cameraContainer}>
+    <div
+      className={
+        `${Styles.cameraContainer} ` +
+        (visible ? Styles.cameraContainerVisible : Styles.cameraContainerHidden)
+      }
+    >
       {!capturing ? (
-        <button onClick={startCamera} className="button">Open Camera</button>
+        <div className={Styles.buttonContainer}>
+          <button
+            onClick={startCamera}
+            className="button"
+            disabled={!isMobile}
+            style={!isMobile ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+          >
+            Open Camera
+          </button>
+          {isMobile ? (
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              style={{ display: "block", margin: "1rem auto" }}
+              onChange={handleFileChange}
+            />
+          ) : (
+            <div style={{ marginTop: "1rem", color: "#888", fontSize: "0.95rem" }}>
+              Available only on mobile devices
+            </div>
+          )}
+        </div>
       ) : (
         <div className={Styles.cameraWrapper}>
           <video

@@ -11,9 +11,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: dropZoneFadeIn 0.8s ease forwards;
 }
 
+.cameraContainerHidden {
+  opacity: 0;
+  transform: translateY(30px) scale(0.98);
+  pointer-events: none;
+}
+
+.cameraContainerVisible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: opacity 0.6s cubic-bezier(0.4,0.2,0.2,1), transform 0.6s cubic-bezier(0.4,0.2,0.2,1);
+  pointer-events: auto;
+}
 
 @keyframes dropZoneFadeIn {
   from {
@@ -35,12 +46,14 @@
 @keyframes pulse {
   0% {
     box-shadow: 0 0 0 0 var(--accent-color, #ffb34733);
+    opacity: 1;
   }
   70% {
     box-shadow: 0 0 0 10px rgba(255,179,71,0);
   }
   100% {
     box-shadow: 0 0 0 0 rgba(255,179,71,0);
+    opacity: 1;
   }
 }
 
@@ -51,20 +64,26 @@
   width: 100vw;
   height: 100vh;
   background-color: black;
+  z-index: 1000;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
   flex-direction: column;
 }
 
+.ButtonCOntainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .cameraVideo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
   position: absolute;
   top: 0;
   left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
   z-index: 1;
 }
 
@@ -72,8 +91,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   z-index: 2;
   pointer-events: none;
 }
@@ -100,7 +119,9 @@
 .captureButton {
   z-index: 3;
   position: absolute;
+  left: 50%;
   bottom: 2rem;
+  transform: translateX(-50%);
   background-color: white;
   border: none;
   border-radius: 50%;
