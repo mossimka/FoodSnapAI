@@ -19,7 +19,8 @@ origins = [
     "http://20.215.248.3:3000/",
     "http://20.215.248.3:3000",
     "http://foodsnapai.food",
-    "https://foodsnapai.food"
+    "https://foodsnapai.food",
+    "http://10.68.96.130:3000",
 ]
 
 app.add_middleware(
