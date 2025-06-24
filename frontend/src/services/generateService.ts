@@ -5,20 +5,28 @@ import { RecipeOutput, RecipeInput, IRecipe, RecipePatchRequest } from "@/interf
 import type { RecipeResult } from '@/interfaces/recipe';
 
 export async function generate_recipe(imageFile: File): Promise<RecipeResult> {
+  // Создаем копию файла
+  const fileBlob = new Blob([imageFile], { type: imageFile.type });
+  const fileCopy = new File([fileBlob], imageFile.name, { type: imageFile.type });
+  
   const formData = new FormData();
-  formData.append("file", imageFile);
+  formData.append("file", fileCopy);  // Используем копию
 
   const token = localStorage.getItem("access_token");
   if (!token) throw new Error("User is not authenticated");
 
-  const response = await axios.post("/dish/", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data.analysis || response.data;
+  try {
+    const response = await axios.post("/dish/", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    return response.data.analysis || response.data;
+  } catch (error) {
+    console.error("Upload error details:", error);
+    throw error;
+  }
 }
 
 export async function save_recipe(recipe: RecipeInput) {
