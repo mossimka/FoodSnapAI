@@ -14,10 +14,20 @@
 
 .avatarImage {
   object-fit: cover;
-  width: 100%;
-  height: 100%;
   border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 3px solid transparent;
+  background: var(--gradient);
+  background-clip: padding-box;
 }
+
+
+.avatarImage:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
 
 .loaderOverlay {
   position: absolute;

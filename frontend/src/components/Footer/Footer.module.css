@@ -1,9 +1,12 @@
 .footer{
     width: 100%;
-    padding-block: 1.5rem;
+    padding: 3rem 1.5rem 1rem 1.5rem;
     position: relative;
     background: var(--hover-color);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 100%);    
 }
+
 .footer_box{
     width: 80%;
     margin: 0 auto;

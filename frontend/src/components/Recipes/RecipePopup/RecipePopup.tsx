@@ -196,10 +196,6 @@ export const RecipePopup: React.FC<RecipePopupProps> = ({ onClose, recipe }) => 
             <h3>Recipe</h3>
             <p>{recipe.recipe}</p>
           </div>
-
-          {isAuthenticated && (
-            <p className={Styles.authInfo}>You are logged in</p>
-          )}
         </div>
       </motion.div>
     </div>

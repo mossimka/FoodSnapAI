@@ -64,7 +64,7 @@ const ProfilePicUploader = () => {
 
         {loading && <div className={Style.loaderOverlay}>Uploading...</div>}
       </div>
-      <p className={Style.uploadText}>Click to upload new</p>
+      <p className={Style.uploadText}>Upload new</p>
     </div>
   );
 };

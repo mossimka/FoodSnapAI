@@ -20,7 +20,7 @@ html{
 }
 
 :root {
-  --bg-color: #F8F3EC;
+  --bg-color: rgb(248, 243, 236);
   --hover-color: #FFF0E0;
   --color2: #D4657F;
   --color1: #F48A3B;

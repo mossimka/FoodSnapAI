@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload } from 'lucide-react';
 import Style from './DropZone.module.css';
@@ -11,6 +11,12 @@ interface DropZoneProps {
 
 const DropZone: React.FC<DropZoneProps> = ({ setImage }) => {
   const [, setFilePreviewUrl] = useState<string | null>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => setVisible(true), 10);
+    return () => setVisible(false);
+  }, []);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -30,7 +36,12 @@ const DropZone: React.FC<DropZoneProps> = ({ setImage }) => {
   });
 
   return (
-    <div className={Style.dropZone}>
+    <div
+      className={
+        `${Style.dropZone} ` +
+        (visible ? Style.dropZoneVisible : Style.dropZoneHidden)
+      }
+    >
       <div className={Style.dropZoneBox} {...getRootProps()}>
         <input {...getInputProps()} />
         <div className={Style.dropZoneInput}>

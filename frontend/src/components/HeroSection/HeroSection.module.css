@@ -45,8 +45,8 @@
 
 .imageWrapper {
   position: relative;
-  width: 220px;
-  height: 220px;
+  width: 210px;
+  height: 210px;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -62,6 +62,7 @@
 .imageTrackDown {
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 }
 
 .imageTrackUp {

@@ -23,6 +23,7 @@ export const Printer: React.FC<PrinterProps> = ({ initialText, className, fontSi
       if (index >= initialText.length - 1) {
         clearInterval(interval);
         setDone(true);
+        setDisplayedText(initialText);
       }
     }, 50);
 
