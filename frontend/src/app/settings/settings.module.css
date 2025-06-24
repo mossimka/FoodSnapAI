@@ -5,22 +5,59 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    background: var(--glass-bg);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
 }
 
-.section {
-    background: var(--bg-color);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    box-shadow: var(--block-shadow);
-    margin-bottom: 1rem;
+.columns {
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+    align-items: flex-end;
+}
+
+.left {
+    min-width: 260px;
+    max-width: 300px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    border-radius: 1rem;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    box-shadow: var(--block-shadow);
     gap: 1.5rem;
 }
 
 .sectionTitle {
     margin-bottom: 1rem;
-    color: var(--text-primary, #222);
+    color: var(--text-primary);
+    font-size: 1.3rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.username {
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin-left: 0.5rem;
+    color: #222;
+}
+
+.avatarBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
 .form {
@@ -34,7 +71,7 @@
 
 .label {
     font-weight: 500;
-    color: var(--text-secondary, #555);
+    color: var(--text-secondary);
 }
 
 .input {
@@ -46,31 +83,14 @@
     font-size: 1rem;
     background-color: var(--bg-color, #fff);
     transition: border-color 0.3s, box-shadow 0.3s;
-    color: var(--text-primary, #222);
+    color: var(--text-primary);
     margin-top: 0.25rem;
 }
 
 .input:focus {
-    border-color: var(--green, #4f8cff);
+    border-color: var(--green);
     outline: none;
-    box-shadow: 0 0 0 2px var(--green, #4f8cff33);
-}
-
-.button {
-    background: var(--accent, #4f8cff);
-    color: #fff;
-    border: none;
-    border-radius: 1rem;
-    padding: 0.5rem 1.5rem;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 0.5rem;
-    transition: background 0.2s;
-}
-
-.button:hover {
-    background: var(--accent-hover, #2563eb);
+    box-shadow: 0 0 0 2px var(--green);
 }
 
 
@@ -79,8 +99,13 @@
         width: 95vw;
         padding: 1rem;
     }
-    .section {
-        padding: 1rem;
+    .columns {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .left, .right {
+        max-width: 100%;
+        width: 100%;
     }
 }
 

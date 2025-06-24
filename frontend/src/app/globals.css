@@ -37,13 +37,12 @@ html{
   --text-color: #2c2c2c;
   --text-color-sub: #666;
   --contrast-color: white;
-  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.18);
 
   --green-shadow: 0 0 20px rgba(52, 168, 83, 0.3);
   --green: #34a853;
-  
-  /* New design tokens */
+
   --border-radius-sm: 0.5rem;
   --border-radius-md: 0.75rem;
   --border-radius-lg: 1rem;

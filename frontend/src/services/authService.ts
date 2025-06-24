@@ -2,17 +2,7 @@ import axios from '@/lib/axios';
 import { AxiosError } from 'axios';
 import { useAuthStore } from '@/stores/authStore';
 import { useUserStore } from '@/stores/userStore';
-
-interface SignUpInput {
-  username: string;
-  email: string;
-  password: string;
-}
-
-interface SignInInput {
-  username: string;
-  password: string;
-}
+import { SignInInput, SignUpInput } from '@/interfaces/user';
 
 export async function signUp(data: SignUpInput) {
   try {

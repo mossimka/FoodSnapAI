@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import axios from '@/lib/axios';
 
+import { UserPatchRequest } from '@/interfaces/user';
 
 export async function uploadProfilePic(file: File): Promise<string> {
   const formData = new FormData();
@@ -27,4 +28,9 @@ export async function uploadProfilePic(file: File): Promise<string> {
     console.error("Upload failed:", message);
     throw new Error("Failed to upload profile picture: " + message);
   }
+}
+
+export async function patchUser(userId: number, data: UserPatchRequest) {
+  const response = await axios.patch(`/auth/patch/${userId}`, data);
+  return response.data;
 }

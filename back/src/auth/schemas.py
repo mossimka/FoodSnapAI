@@ -20,3 +20,7 @@ class UserResponse(BaseModel):
     model_config = {
         "from_attributes": True 
     }
+
+class UserPatchRequest(BaseModel):
+    username: Optional[str] = None
+    password: Optional[str] = None

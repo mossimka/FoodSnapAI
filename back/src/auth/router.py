@@ -1,13 +1,13 @@
 from datetime import timedelta
 from typing import Annotated, List
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, Cookie
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, Cookie, Body
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from src.auth.models import Users
-from src.auth.schemas import CreateUserRequest, Token, UserResponse
+from src.auth.schemas import CreateUserRequest, Token, UserResponse, UserPatchRequest
 from src.auth.service import authenticate_user, create_access_token, create_refresh_token, verify_refresh_token, get_users, google_auth_flow, get_current_user
 from src.auth.security import bcrypt_context
 from src.dependencies import get_db
@@ -19,7 +19,10 @@ router = APIRouter(prefix='/auth', tags=['auth'])
 db_dependency = Annotated[Session, Depends(get_db)]
 
 @router.get("/", response_model=List[UserResponse], status_code=status.HTTP_200_OK)
-def get_all_users(db: db_dependency):
+def get_all_users(
+    db: db_dependency,
+    current_user: Annotated[dict, Depends(get_current_user)]
+):
     return get_users(db)
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
@@ -32,6 +35,34 @@ async def create_user(db: db_dependency, create_user_request: CreateUserRequest)
     db.add(create_user_model)
     db.commit()
     return {"message": "User created"}
+
+@router.patch("/patch/{user_id}")
+async def patch_user(
+    user_id: int,
+    db: db_dependency,
+    current_user: Annotated[dict, Depends(get_current_user)],
+    patch_data: UserPatchRequest = Body(...),
+):
+
+    if user_id != current_user["id"]:
+        raise HTTPException(status_code=403, detail="Not authorized to update this user")
+
+    user = db.query(Users).filter(Users.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if patch_data.username is not None:
+        user.username = patch_data.username
+    if patch_data.password is not None:
+        user.hashed_password = bcrypt_context.hash(patch_data.password)
+
+    db.commit()
+    db.refresh(user)
+
+    return {"message": "User updated", "user": {
+        "id": user.id,
+        "username": user.username,
+    }}
 
 @router.post("/token", response_model=Token)
 async def login_for_access_token(

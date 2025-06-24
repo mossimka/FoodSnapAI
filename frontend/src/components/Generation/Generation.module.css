@@ -75,7 +75,7 @@
 .responseBox {
   margin-top: 2rem;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--glass-bg);
   border-radius: 1.5rem;
   box-shadow: 0 2px 12px rgba(31, 38, 135, 0.08);
   display: flex;

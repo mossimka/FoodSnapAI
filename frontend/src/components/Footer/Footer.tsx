@@ -65,7 +65,7 @@ export const Footer = () => {
               </Link>
             </li>
             <li>
-              <Link href="#" className={Styles.link}>
+              <Link href="mailto:maksimsarsekeyev@gmail.com" className={Styles.link}>
                 Contact Support
               </Link>
             </li>

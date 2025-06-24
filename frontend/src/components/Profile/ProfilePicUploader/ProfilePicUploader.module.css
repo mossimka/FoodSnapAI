@@ -39,11 +39,11 @@
   justify-content: center;
   font-size: 0.8rem;
   border-radius: 50%;
-  color: #333;
+  color: var(--text-color);
 }
 
 .uploadText {
-  color: #333;
+  color: var(--text-color-sub);
   width: 7vw;
   text-align: center;
 }
