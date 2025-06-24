@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { save_recipe } from '@/services/generateService';
 import { RecipeOutput } from '@/interfaces/recipe';
+import { toast } from 'react-toastify';
 
 interface Props {
   file: File;
@@ -16,9 +17,9 @@ export const SaveRecipeButton: React.FC<Props> = ({ file, recipePart }) => {
       try {
         await save_recipe({ file, recipePart });
         setIsSaved(true);
-        alert("✅ Recipe saved successfully!");
+        toast.success("Recipe saved successfully!");
       } catch (err: unknown) {
-        alert("❌ Failed to save recipe. Error:" + err);
+        toast.error("Failed to save recipe. Error: " + err);
       } finally {
         setIsSaving(false);
       }

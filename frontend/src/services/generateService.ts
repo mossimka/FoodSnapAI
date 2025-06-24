@@ -5,11 +5,8 @@ import { RecipeOutput, RecipeInput, IRecipe, RecipePatchRequest } from "@/interf
 import type { RecipeResult } from '@/interfaces/recipe';
 
 export async function generate_recipe(imageFile: File): Promise<RecipeResult> {
-  const fileBlob = new Blob([imageFile], { type: imageFile.type });
-  const fileCopy = new File([fileBlob], imageFile.name, { type: imageFile.type });
-  
   const formData = new FormData();
-  formData.append("file", fileCopy);
+  formData.append("file", imageFile);
 
   const token = localStorage.getItem("access_token");
   if (!token) throw new Error("User is not authenticated");

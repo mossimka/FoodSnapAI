@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { AxiosError } from "axios";
+import imageCompression from 'browser-image-compression';
 
 import DropZone from "./DropZone/DropZone";
 import CameraCapture from "./CameraCapture/CameraCapture";
@@ -29,10 +30,23 @@ export const Generation = () => {
 
   const { isAuthenticated } = useAuthStore();
 
-  const handleImageSelect = (file: File) => {
-    setImageFile(file);
-    const previewURL = URL.createObjectURL(file);
-    setImagePreview(previewURL);
+  const handleImageSelect = async (file: File) => {
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    };
+    try {
+      const compressedFile = await imageCompression(file, options);
+      setImageFile(compressedFile);
+      const previewURL = URL.createObjectURL(compressedFile);
+      setImagePreview(previewURL);
+    } catch (error: unknown) {
+      console.error("Compression failed, using original image:", error);
+      setImageFile(file);
+      const previewURL = URL.createObjectURL(file);
+      setImagePreview(previewURL);
+    }    
     setIsLoading(true);
     setRecipeGenerates(false);
     setIsGenerating(false);
