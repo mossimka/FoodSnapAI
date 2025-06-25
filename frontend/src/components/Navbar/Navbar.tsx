@@ -11,6 +11,7 @@ import { NavButton } from "./NavButton/NavButton";
 import { ProfilePopup } from "./ProfilePopup/ProfilePopup";
 import { useUserStore } from "@/stores/userStore";
 import { BurgerMenu } from "./BurgerMenu/BurgerMenu";
+import { ThemeToggleButton } from "@/components/Style/ThemeToggle/ThemeToggle";
 
 export const Navbar: React.FC = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -49,19 +50,23 @@ export const Navbar: React.FC = () => {
               onClick={() => setShowPopup(!showPopup)}
               className={Styles.profileButton}
             >
-            <Image
-                src={user?.profile_pic|| "/images/user.png"}
-                alt="user"
-                className={Styles.user}
-                width={50}
-                height={50}
-            />
+              <Image
+                  src={user?.profile_pic|| "/images/user.png"}
+                  alt="user"
+                  className={Styles.user}
+                  width={50}
+                  height={50}
+              />
             </button>
             <div className={Styles.popup}>
               <AnimatePresence>
                   {showPopup && <ProfilePopup onClose={() => setShowPopup(false)} />}
               </AnimatePresence>
             </div>
+        </div>
+
+        <div>
+          <ThemeToggleButton></ThemeToggleButton>
         </div>
       </nav>
       

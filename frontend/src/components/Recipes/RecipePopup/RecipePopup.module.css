@@ -10,7 +10,7 @@
 }
 
 .popup {
-  background: rgba(248, 243, 236, 0.95);
+  background: var(--glass-bg);
   border-radius: 16px;
   max-width: 800px;
   width: 90%;

@@ -8,8 +8,8 @@
     width: 70vw;
     max-width: 350px;
     height: 100vh;
-    background: var(--background, #fff);
-    box-shadow: -2px 0 8px rgba(0,0,0,0.08);
+    background: var(--bg-color);
+    box-shadow: var(--hover-shadow);
     padding: 2rem 1.5rem 1rem 1.5rem;
     z-index: 1200;
     gap: 1.5rem;
@@ -66,6 +66,7 @@
     margin-bottom: 1.5rem;
     width: 100%;
     justify-content: center;
+    position: relative;
 }
 
 .user {
@@ -109,4 +110,11 @@
 
 .slideOut {
   animation: slideOut 0.3s forwards;
+}
+
+.themeToggleWrapper {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1400;
 }

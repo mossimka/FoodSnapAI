@@ -14,7 +14,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { generate_recipe } from "@/services/generateService";
 import { RecipeOutput } from "@/interfaces/recipe";
 import { NavButton } from "../Navbar/NavButton/NavButton";
-import { Printer } from "../Anims/Printer/Printer";
+import { Printer } from "../Style/Printer/Printer";
 
 export const Generation = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);

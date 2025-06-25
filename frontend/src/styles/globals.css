@@ -14,13 +14,18 @@
   font-display: swap;
 }
 
-html{
+html, body, #root {
+  height: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
   scrollbar-color: var(--border-color) var(--bg-color);
   scroll-behavior: smooth;
 }
 
 :root {
   --bg-color: rgb(248, 243, 236);
+  --bg-color2: #f5f0e8;
   --hover-color: #FFF0E0;
   --color2: #D4657F;
   --color1: #F48A3B;
@@ -37,7 +42,7 @@ html{
   --text-color: #2c2c2c;
   --text-color-sub: #666;
   --contrast-color: white;
-  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-bg: rgba(255, 255, 255, 0.8);
   --glass-border: rgba(255, 255, 255, 0.18);
 
   --green-shadow: 0 0 20px rgba(52, 168, 83, 0.3);
@@ -61,15 +66,8 @@ html{
   box-sizing: border-box;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-
 body {
-  background: linear-gradient(135deg, var(--bg-color) 0%, #f5f0e8 100%);
-  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg-color) 0%, var(--bg-color2) 100%);
   color: var(--text-color);
   line-height: 1.6;
 }
@@ -100,7 +98,7 @@ body {
 .button {
   padding: var(--spacing-md) var(--spacing-xl);
   background: var(--gradient3);
-  color: var(--contrast-color);
+  color: white;
   border: none;
   border-radius: var(--border-radius-md);
   font-size: 1rem;
@@ -148,7 +146,7 @@ body {
 .buttonRed {
   padding: var(--spacing-md) var(--spacing-xl);
   background: var(--gradientRed);
-  color: var(--contrast-color);
+  color: white;
   border: none;
   border-radius: var(--border-radius-md);
   font-size: 1rem;
@@ -193,8 +191,8 @@ body {
 
 .buttonGreen {
   padding: var(--spacing-md) var(--spacing-xl);
-  background: linear-gradient(135deg, #34a853, #1b7835); /* зелёный градиент */
-  color: var(--contrast-color);
+  background: linear-gradient(135deg, #34a853, #1b7835);
+  color: white;
   border: none;
   border-radius: var(--border-radius-md);
   font-size: 1rem;
@@ -322,4 +320,32 @@ a {
 
 body.no-scroll {
   overflow: hidden;
+}
+
+.light {
+  --bg-color: rgb(248, 243, 236);
+  --bg-color2: #f5f0e8;
+  --hover-color: #FFF0E0;
+  --text-color: #2c2c2c;
+  --text-color-sub: #666;
+  --contrast-color: white;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --shadow: 0 8px 32px rgba(244, 138, 59, 0.15);
+  --hover-shadow: 0 12px 40px rgba(212, 101, 87, 0.25);
+  --active-shadow: 0 4px 16px rgba(212, 101, 87, 0.3);
+}
+
+.dark {
+  --bg-color: #1f1f1f;
+  --bg-color2: #292929;
+  --hover-color: #2d2d2d;
+  --text-color: #eaeaea;
+  --text-color-sub: #999;
+  --contrast-color: black;
+  --glass-bg: rgba(40, 40, 40, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --shadow: 0 8px 32px rgba(212, 101, 87, 0.05);
+  --hover-shadow: 0 12px 40px rgba(212, 101, 87, 0.1);
+  --active-shadow: 0 4px 16px rgba(212, 101, 87, 0.1);
 }

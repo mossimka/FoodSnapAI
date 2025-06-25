@@ -8,6 +8,7 @@ import { FaTimes } from "react-icons/fa";
 import { useUserStore } from "@/stores/userStore";
 import { useAuthStore } from "@/stores/authStore";
 import { logout } from "@/services/authService";
+import { ThemeToggleButton } from "@/components/Style/ThemeToggle/ThemeToggle";
 
 import Styles from "./BurgerMenu.module.css";
 
@@ -49,6 +50,9 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({ onClose }) => {
             width={60}
             height={60}
           />
+          <div className={Styles.themeToggleWrapper}>
+            <ThemeToggleButton />
+          </div>
         </div>
       )}
 

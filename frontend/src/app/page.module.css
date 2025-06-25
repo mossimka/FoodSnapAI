@@ -1,4 +1,5 @@
 
 .main {
     margin: 0 auto;
+    background: linear-gradient(135deg, var(--bg-color) 0%, var(--bg-color2) 100%);
 }

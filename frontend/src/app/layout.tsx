@@ -4,10 +4,11 @@ import { Rubik } from 'next/font/google';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
-import "./globals.css";
+import "@/styles/globals.css";
 import { Navbar } from "@/components/Navbar/Navbar";  
 import { Footer } from '@/components/Footer/Footer';
 import { GoogleProviderWrapper } from "@/components/Auth/GoogleProviderWrapper";
+import { ThemeProvider } from "@/context/ThemeProvider";
 
 const rubik = Rubik({
   subsets: ['latin', 'cyrillic'],
@@ -31,21 +32,23 @@ export default function RootLayout({
     <html lang="en">
       <body className={rubik.variable}>
         <GoogleProviderWrapper>
-          <Navbar />
-          {children}
-          <Footer />
-          <ToastContainer 
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
+          <ThemeProvider>
+            <Navbar />
+            {children}
+            <Footer />
+            <ToastContainer 
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
+          </ThemeProvider>
         </GoogleProviderWrapper>
       </body>
     </html>
