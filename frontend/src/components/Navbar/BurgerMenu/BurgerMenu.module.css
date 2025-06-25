@@ -4,16 +4,17 @@
     align-items: flex-start;
     position: fixed;
     top: 0;
-    right: 0;
+    left: 0;
+    right: auto;
     width: 70vw;
     max-width: 350px;
     height: 100vh;
     background: var(--bg-color);
     box-shadow: var(--hover-shadow);
     padding: 2rem 1.5rem 1rem 1.5rem;
-    z-index: 1200;
+    z-index: 9000;
     gap: 1.5rem;
-    border-radius: 1rem 0 0 1rem;
+    border-radius: 0 1rem 1rem 0;
     animation: slideIn 0.3s;
     transition: transform 0.3s;
 }
@@ -28,24 +29,32 @@
 }
   
 @keyframes slideIn {
-    from {
+    0% {
         opacity: 0;
-        transform: translateX(100%);
+        transform: translateX(-100%);
     }
-    to {
+    20% {
+        opacity: 0.4;
+        transform: translateX(-30%);
+    }
+    100% {
         opacity: 1;
         transform: translateX(0);
     }
 }
 
 @keyframes slideOut {
-    from {
+    0% {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateX(0%);
     }
-    to {
+    80% {
+        opacity: 0.4;
+        transform: translateX(-70%);
+    }
+    100% {
         opacity: 0;
-        transform: translateX(100%);
+        transform: translateX(-100%);
     }
 }
 

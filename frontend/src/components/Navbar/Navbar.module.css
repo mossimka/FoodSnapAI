@@ -134,14 +134,31 @@
 }
 
 .burger:hover {
-    transform: scale(1.05);
     box-shadow: var(--hover-shadow);
+}
+
+@media (max-width: 1024px) {
+    .nav {
+        gap: var(--spacing-s);
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.95rem;
+    }
+    .nav button,
+    .nav a {
+        font-size: 0.95rem;
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
 }
   
 @media (max-width: 900px) {
     .burger {
       display: block;
-      margin-left: auto;
+      position: absolute;
+      left: 0rem;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-left: 0;
+      z-index: 100;
     }
   
     .mobileNavWrapper {
@@ -153,11 +170,14 @@
     }
 
     .logoSection {
-        width: 50vw;
+        justify-content: center;
+        margin: 0 auto;
+        width: 100vw;
     }
 
     .header {
-        width: 90vw;
+        justify-content: center;
+        position: relative;
     }
   }
   
@@ -168,11 +188,16 @@
 }
 
 @media (max-width: 600px) {
+    .header {
+        width: 90%;
+    }
+
     .logoText {
         font-size: 1.2rem;
     }
     
     .logoSection {
+        margin-left: 1.5rem;
         width: 60vw;
     }
 }

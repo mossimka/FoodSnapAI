@@ -20,6 +20,14 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className={Styles.header}>
+      <button
+        className={Styles.burger}
+        onClick={() => setMobileMenuOpen((prev) => !prev)}
+        aria-label="Open menu"
+      >
+        {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+      </button>
+
       <Link href="/" className={Styles.logoLink}>      
         <section className={Styles.logoSection}>
           <Image
@@ -32,14 +40,6 @@ export const Navbar: React.FC = () => {
           <h1 className={Styles.logoText}>FoodSnap <span className="gradientText">AI</span></h1>
         </section>
       </Link>
-      
-      <button
-        className={Styles.burger}
-        onClick={() => setMobileMenuOpen((prev) => !prev)}
-        aria-label="Open menu"
-      >
-        {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-      </button>
       
       <nav className={Styles.nav}>
         <NavButton text="+ Generate Recipe" link="/generate" />
