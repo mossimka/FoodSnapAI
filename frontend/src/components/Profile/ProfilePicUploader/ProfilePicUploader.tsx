@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useDropzone } from 'react-dropzone';
 import { uploadProfilePic } from '@/services/profileService';
 import { useUserStore } from '@/stores/userStore';
-import Style from './ProfilePicUploader.module.css';
+import Styles from './ProfilePicUploader.module.css';
 
 const ProfilePicUploader = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -47,24 +47,25 @@ const ProfilePicUploader = () => {
   });
 
   return (
-    <div className={Style.avatarWrapper}>
+    <div className={Styles.avatarWrapper}>
       <input {...getInputProps()} />
       <div
-        className={Style.avatarClickable}
+        className={Styles.avatarClickable}
         onClick={open}
         title="Click to change profile picture"
       >
-        <Image
-          src={user?.profile_pic || previewUrl || '/images/user.png'}
-          alt="Profile"
-          width={120}
-          height={120}
-          className={Style.avatarImage}
-        />
-
-        {loading && <div className={Style.loaderOverlay}>Uploading...</div>}
+        <div className={Styles.avatarContainer}>
+          <Image
+            src={user?.profile_pic || previewUrl || '/images/user.png'}
+            alt="Profile"
+            width={120}
+            height={120}
+            className={Styles.avatarImage}
+          />
+        </div>
+        {loading && <div className={Styles.loaderOverlay}>Uploading...</div>}
       </div>
-      <p className={Style.uploadText}>Upload new</p>
+      <p className={Styles.uploadText}>Upload new</p>
     </div>
   );
 };

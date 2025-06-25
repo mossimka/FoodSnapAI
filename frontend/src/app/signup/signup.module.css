@@ -10,7 +10,7 @@
   width: 350px;
   min-height: 400px;
   padding: 1rem;
-  border-radius: 12px;
+  border-radius: 1rem;
   background-color: white;
   box-shadow: var(--hover-shadow);
   display: grid;

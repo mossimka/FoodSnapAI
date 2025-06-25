@@ -13,6 +13,18 @@
   padding: 1rem 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.4s ease;
+}
+
+
+.profileCard:hover {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  font-weight: 500;
+  transform: scale(1.01);
 }
 
 .profileInfo {
