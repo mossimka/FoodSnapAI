@@ -52,10 +52,10 @@
 .closeBtn {
     background: none;
     border: none;
-    color: var(--primary-color, #222);
+    color: var(--text-color);
     position: absolute;
     top: 1.2rem;
-    right: 1.2rem;
+    left: 0.5rem;
     cursor: pointer;
     z-index: 1300;
 }
@@ -114,7 +114,7 @@
 
 .themeToggleWrapper {
   position: absolute;
-  top: 0.5rem;
+  top: 0;
   right: 0.5rem;
   z-index: 1400;
 }

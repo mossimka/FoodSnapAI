@@ -69,7 +69,7 @@ const foodImages1 = [
 
         <div className={Styles.centerContent}>
           <div className={Styles.ctaButton}>
-            <Printer initialText="Cooking revolution" fontSize="2rem" className="gradientText"/>
+            <Printer initialText="Cooking revolution" fontSize="2rem" textAlign="center" className="gradientText"/>
             <UtensilsCrossed style={{color: "var(--color2)"}}/>
           </div>
 

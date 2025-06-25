@@ -83,7 +83,7 @@
   font-size: 1.1rem;
   font-weight: 500;
   width: 100%;
-  color: #222;
+  color: var(--text-color);
   transition: box-shadow 0.3s;
 }
 
