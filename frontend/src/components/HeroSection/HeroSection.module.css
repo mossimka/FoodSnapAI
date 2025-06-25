@@ -221,3 +221,10 @@
     }
   }
 }
+
+@media (max-width: 480px) {
+  .ctaButton {
+    display: flex;
+    flex-direction: column;
+  }
+}
