@@ -2,7 +2,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 from src.gcs.uploader import upload_large_file_to_gcs, upload_file_in_chunks, BUCKET_NAME
 
 router = APIRouter(
-    prefix="/gsc",
+    prefix="/gcs",
     tags=["gcs"]
 )
 

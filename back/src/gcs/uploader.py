@@ -9,7 +9,7 @@ from uuid import uuid4
 BUCKET_NAME = "foodsnap-bucket"
 CHUNK_SIZE = 8 * 1024 * 1024
 
-SERVICE_ACCOUNT_FILE = os.path.join(os.getcwd(), "gsc-config.json")
+SERVICE_ACCOUNT_FILE = os.path.join(os.getcwd(), "gcs-config.json")
 
 credentials = service_account.Credentials.from_service_account_file(
     SERVICE_ACCOUNT_FILE

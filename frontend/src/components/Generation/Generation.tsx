@@ -11,7 +11,7 @@ import Styles from "./Generation.module.css";
 import { SignPopup } from "@/components/SignPopup/SignPopup";
 import { useAuthStore } from "@/stores/authStore";
 import { generate_recipe } from "@/services/generateService";
-import { RecipeOutput } from "@/interfaces/recipe";
+import { RecipeOutput, isNotFoodResponse, isGenerationOutput } from "@/interfaces/recipe";
 import { NavButton } from "../Navbar/NavButton/NavButton";
 import { Printer } from "../Style/Printer/Printer";
 import { truncateFilename } from '@/utils/stringUtils';
@@ -67,7 +67,9 @@ const generateResponse = async () => {
     try {
       const res = await generate_recipe(imageFile);
 
-      if ("message" in res && res.message === "Not food") {
+      console.log("✅ Full AI response:", res);
+
+      if (isNotFoodResponse(res)) {
         const formattedText = `🚫 This doesn't look like food.\n\n🔍 Detected: ${res.description}`;
         setResponseText(formattedText);
         setHasGenerated(true);
@@ -75,17 +77,34 @@ const generateResponse = async () => {
         return;
       }
 
-      if ("dish_name" in res) {
-        setGeneratedRecipe(res);
+      if (isGenerationOutput(res)) {
+        const ingredients_calories_array = Object.entries(res.calories.ingredients_calories).map(
+          ([ingredient, calories]) => ({
+            ingredient,
+            calories
+          })
+        );
+
+        const finalRecipe = {
+          ...res.recipe,
+          ingredients_calories: ingredients_calories_array,
+          estimated_weight_g: res.calories.estimated_weight_g ?? null,
+          total_calories_per_100g: res.calories.total_calories_per_100g ?? null,
+        };
+
+        setGeneratedRecipe(finalRecipe);
 
         const formattedText = [
-          `🍽️ Dish: ${res.dish_name}`,
+          `🍽️ Dish: ${finalRecipe.dish_name}`,
           ``,
-          ` 🧂 Ingredients:`,
-          ...res.ingredients.map((ing) => `- ${ing}`),
+          ` 🧂 Ingredients & Calories:`,
+          ...finalRecipe.ingredients_calories.map((i) => `- ${i.ingredient}: ${i.calories} kcal`),
           ``,
+          `⚖️ Estimated weight: ${finalRecipe.estimated_weight_g}g`,
+          `🔥 Calories per 100g: ${finalRecipe.total_calories_per_100g} kcal`,     
+          `🔥 Total calories: ${finalRecipe.total_calories_per_100g * (finalRecipe.estimated_weight_g / 100)} kcal`,
           `📋 Recipe:`,
-          ...res.recipe.split("\n"),
+          ...finalRecipe.recipe.split("\n"),
         ].join("\n");
 
         setResponseText(formattedText);

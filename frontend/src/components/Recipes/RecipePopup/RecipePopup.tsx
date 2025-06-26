@@ -24,7 +24,6 @@ export const RecipePopup: React.FC<RecipePopupProps> = ({ onClose, recipe }) => 
 
   const isOwner = user?.id === recipe.user_id;
 
-  const ingredients = recipe?.ingredients || [];
 
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -180,15 +179,16 @@ export const RecipePopup: React.FC<RecipePopupProps> = ({ onClose, recipe }) => 
                 )}
               </div>
 
-              <p className={Styles.author}>by {recipe.user_name}</p>
+              <p className={Styles.author}>by {recipe.user.username}</p>
 
-              {ingredients.length > 0 && (
-                <ul className={Styles.ingredientList}>
-                  {ingredients.map((item, i) => (
-                    <li key={i}>🧂 {item.trim()}</li>
-                  ))}
-                </ul>
-              )}
+              <ul className={Styles.ingredientList}>
+                {recipe.ingredients_calories.map((item, i) => (
+                  <li key={i}>
+                    🧂 {item.ingredient} — {item.calories} kcal
+                  </li>
+                ))}
+              </ul>
+
             </div>
           </div>
 

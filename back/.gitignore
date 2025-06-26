@@ -41,4 +41,8 @@ htmlcov/
 .cache/
 pytest_cache/
 
+# google cloud config
 gsc-config.json
+
+# FoodSnapAI specific
+recipe_agent/

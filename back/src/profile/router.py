@@ -1,5 +1,4 @@
 from fastapi import APIRouter, UploadFile, File, Depends
-from typing import Annotated
 from sqlalchemy.orm import Session
 
 from src.gcs.uploader import upload_profile_pic_to_gcs

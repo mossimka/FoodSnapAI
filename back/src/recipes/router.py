@@ -12,8 +12,8 @@ from src.auth.service import get_current_user
 from src.auth.models import Users
 from src.gcs.uploader import upload_large_file_to_gcs
 from src.dependencies import get_db
-from src.recipes.models import Recipe
-from src.recipes.schemas import RecipeResponse, RecipePatchRequest
+from src.recipes.models import Recipe, IngredientCalories
+from src.recipes.schemas import RecipeResponse, RecipePatchRequest, IngredientCaloriesResponse, UserResponse
 from src.recipes.service import get_recipes
 
 from src.recipes.agents import root_agent, checking_agent
@@ -86,12 +86,22 @@ async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depen
             session_id=SESSION_ID,
             new_message=content
         ):
-            if event.is_final_response() and event.content and event.content.parts:
+            print(f"EVENT FROM: {event.author if hasattr(event, 'author') else 'unknown'}")
+            print(f"EVENT CONTENT: {getattr(event.content, 'parts', None)}")
+            if (
+                event.is_final_response()
+                and event.author == "final_agent"
+                and event.content
+                and event.content.parts
+            ):
                 final_response = event.content.parts[0].text
                 break
+        
+        print("\n=== RAW FINAL RESPONSE ===")
+        print(final_response)
+        print("==========================\n")
 
         cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", final_response.strip(), flags=re.MULTILINE)
-        print(cleaned);
         parsed = json.loads(cleaned)
 
         return {
@@ -111,32 +121,50 @@ async def save_recipe(
 ):
     try:
         image_url = upload_large_file_to_gcs(file)
-
         parsed = json.loads(recipe)
 
         dish_name = parsed.get("dish_name")
-        ingredients = ", ".join(parsed.get("ingredients", []))
         recipe_text = parsed.get("recipe")
+        ingredients_calories = parsed.get("ingredients_calories", [])
+        estimated_weight_g = parsed.get("estimated_weight_g")
+        total_calories_per_100g = parsed.get("total_calories_per_100g")
 
-        if not dish_name or not recipe_text:
+
+        if not dish_name or not recipe_text or not ingredients_calories:
             raise HTTPException(status_code=400, detail="Invalid recipe format")
 
         db_recipe = Recipe(
             user_id=current_user["id"],
             dish_name=dish_name,
-            ingredients=ingredients,
             recipe=recipe_text,
-            image_path=image_url
+            image_path=image_url,
+            estimated_weight_g=estimated_weight_g,
+            total_calories_per_100g=total_calories_per_100g,
         )
-
         db.add(db_recipe)
         db.commit()
         db.refresh(db_recipe)
+
+        for item in ingredients_calories:
+            ingredient = item.get("ingredient")
+            calories = item.get("calories")
+            if not ingredient or calories is None:
+                continue
+
+            db_ingredient = IngredientCalories(
+                recipe_id=db_recipe.id,
+                ingredient=ingredient,
+                calories=calories
+            )
+            db.add(db_ingredient)
+
+        db.commit()
 
         return {"message": "Recipe saved successfully", "recipe_id": db_recipe.id}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Saving failed: {str(e)}")
+
     
 @router.patch("/patch/{recipe_id}")
 async def patch_recipe(
@@ -185,15 +213,23 @@ async def get_public_recipe(db: Session = Depends(get_db)):
     recipes = db.query(Recipe).filter(Recipe.is_published == True).all()
     return [
         RecipeResponse(
-            id=r.id, 
+            id=r.id,
             user_id=r.user_id,
-            user_name=r.user.username,
-            user_avatar=r.user.profile_pic,
+            user=UserResponse(
+                username=r.user.username,
+                profile_pic=r.user.profile_pic
+            ),
             dish_name=r.dish_name,
-            ingredients=[i.strip() for i in r.ingredients.split(",")],
+            ingredients=[i.ingredient for i in r.ingredients_calories],
             recipe=r.recipe,
             image_path=r.image_path,
-            is_published=r.is_published
+            is_published=r.is_published,
+            ingredients_calories=[
+                IngredientCaloriesResponse.model_validate(i)
+                for i in r.ingredients_calories
+            ],
+            estimated_weight_g=r.estimated_weight_g,
+            total_calories_per_100g=r.total_calories_per_100g,
         )
         for r in recipes
     ]
@@ -204,15 +240,24 @@ async def get_my_recipes(current_user: Users = Depends(get_current_user), db: Se
     recipes = db.query(Recipe).filter(Recipe.user_id == current_user["id"]).all()
     return [
         RecipeResponse(
-            id=r.id, 
+            id=r.id,
             user_id=r.user_id,
-            user_name=r.user.username,
-            user_avatar=r.user.profile_pic,
+            user=UserResponse(
+                username=r.user.username,
+                profile_pic=r.user.profile_pic
+            ),
             dish_name=r.dish_name,
-            ingredients=[i.strip() for i in r.ingredients.split(",")],
+            ingredients=[i.ingredient for i in r.ingredients_calories],
             recipe=r.recipe,
             image_path=r.image_path,
-            is_published=r.is_published
+            is_published=r.is_published,
+            ingredients_calories=[
+                IngredientCaloriesResponse.model_validate(i)
+                for i in r.ingredients_calories
+            ],
+            estimated_weight_g=r.estimated_weight_g,
+            total_calories_per_100g=r.total_calories_per_100g,
         )
         for r in recipes
     ]
+
