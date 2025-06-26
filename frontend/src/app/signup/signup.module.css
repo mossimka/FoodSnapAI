@@ -11,7 +11,7 @@
   min-height: 400px;
   padding: 1rem;
   border-radius: 1rem;
-  background-color: white;
+  background-color: var(--hover-color);
   box-shadow: var(--hover-shadow);
   display: grid;
   gap: 1rem;

@@ -48,3 +48,42 @@
   object-fit: cover;
   border-radius: 50%;
 }
+
+@media (max-width: 900px) {
+  .wrapper {
+    width: 95vw;
+    padding: 0 1rem;
+  }
+  .profileCard {
+    padding: 1rem;
+    gap: 0.7rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .wrapper {
+    width: 100vw;
+    min-width: 100vw;
+    margin: 1rem 0;
+    padding: 0 0.5rem;
+  }
+  .profileCard {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0.7rem 0.5rem;
+    gap: 0.5rem;
+  }
+  .profileInfo {
+    height: auto;
+    align-items: center;
+    text-align: center;
+  }
+  .pictureWrapper {
+    margin-bottom: 0.5rem;
+  }
+  .user {
+    width: 120px !important;
+    height: 120px !important;
+  }
+}

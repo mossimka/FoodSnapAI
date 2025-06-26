@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { AxiosError } from "axios";
-import imageCompression from 'browser-image-compression';
 
 import DropZone from "./DropZone/DropZone";
 import CameraCapture from "./CameraCapture/CameraCapture";
@@ -15,6 +14,8 @@ import { generate_recipe } from "@/services/generateService";
 import { RecipeOutput } from "@/interfaces/recipe";
 import { NavButton } from "../Navbar/NavButton/NavButton";
 import { Printer } from "../Style/Printer/Printer";
+import { truncateFilename } from '@/utils/stringUtils';
+import { compressImage } from '@/utils/imageUtils';
 
 export const Generation = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -31,23 +32,11 @@ export const Generation = () => {
   const { isAuthenticated } = useAuthStore();
 
   const handleImageSelect = async (file: File) => {
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1024,
-      useWebWorker: true,
-    };
-    try {
-      const compressedBlob = await imageCompression(file, options);
-      const compressedFile = new File([compressedBlob], file.name, { type: compressedBlob.type });
-      setImageFile(compressedFile);
-      const previewURL = URL.createObjectURL(compressedFile);
-      setImagePreview(previewURL);
-    } catch (error: unknown) {
-      console.error("Compression failed, using original image:", error);
-      setImageFile(file);
-      const previewURL = URL.createObjectURL(file);
-      setImagePreview(previewURL);
-    }    
+    const compressedFile = await compressImage(file);
+    setImageFile(compressedFile);
+    const previewURL = URL.createObjectURL(compressedFile);
+    setImagePreview(previewURL);
+  
     setIsLoading(true);
     setRecipeGenerates(false);
     setIsGenerating(false);
@@ -124,7 +113,7 @@ const generateResponse = async () => {
 
       {imagePreview && (
         <div className={Styles.preview}>
-          <p className="gradientText">You chose file: {imageFile?.name}</p>
+          <p className="gradientText">You chose file: {truncateFilename(imageFile?.name)}</p>
 
           <div className={Styles.imageContainer}>
             {isLoading && (

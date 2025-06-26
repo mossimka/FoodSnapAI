@@ -3,6 +3,8 @@
 import React, { useState, useCallback } from 'react';
 import Image from "next/image";
 import { useDropzone } from 'react-dropzone';
+import { compressImage } from '@/utils/imageUtils';
+
 import { uploadProfilePic } from '@/services/profileService';
 import { useUserStore } from '@/stores/userStore';
 import Styles from './ProfilePicUploader.module.css';
@@ -19,12 +21,21 @@ const ProfilePicUploader = () => {
       const file = acceptedFiles[0];
       if (!file || !user) return;
 
-      const preview = URL.createObjectURL(file);
-      setPreviewUrl(preview);
+      let compressedFile: File;
+
+      try {
+        compressedFile = await compressImage(file);
+        const preview = URL.createObjectURL(compressedFile);
+        setPreviewUrl(preview);
+      } catch {
+        compressedFile = file;
+        const previewURL = URL.createObjectURL(file);
+        setPreviewUrl(previewURL);
+      }
 
       try {
         setLoading(true);
-        const imageUrl = await uploadProfilePic(file);
+        const imageUrl = await uploadProfilePic(compressedFile);
         setUser({ ...user, profile_pic: imageUrl });
       } catch (err: unknown) {
         alert('Upload failed: ' + err);
