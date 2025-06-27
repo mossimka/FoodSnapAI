@@ -11,6 +11,8 @@ import { IRecipe } from "@/interfaces/recipe";
 import { patchRecipe } from "@/services/generateService";
 import { delete_recipe } from "@/services/generateService";
 import { motion } from "framer-motion";
+import { ShowCaloriesButton } from "@/components/Generation/Calories/ShowCaloriesButton/ShowCaloriesButton";
+import { Calories } from "@/components/Generation/Calories/Calories";
 
 
 interface RecipePopupProps {
@@ -24,13 +26,13 @@ export const RecipePopup: React.FC<RecipePopupProps> = ({ onClose, recipe }) => 
 
   const isOwner = user?.id === recipe.user_id;
 
-
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [published, setPublished] = useState(recipe.is_published ?? false);
   const [name, setName] = useState(recipe.dish_name);
+  const [showCalories, setShowCalories] = useState(false);
 
   useEffect(() => {
     setPublished(recipe.is_published ?? false);
@@ -180,15 +182,33 @@ export const RecipePopup: React.FC<RecipePopupProps> = ({ onClose, recipe }) => 
               </div>
 
               <p className={Styles.author}>by {recipe.user.username}</p>
-
-              <ul className={Styles.ingredientList}>
-                {recipe.ingredients_calories.map((item, i) => (
-                  <li key={i}>
-                    🧂 {item.ingredient} — {item.calories} kcal
-                  </li>
-                ))}
-              </ul>
-
+              
+              <div className={Styles.ingridients}>
+                <ul className={Styles.ingredientList}>
+                  {recipe.ingredients_calories.map((item, i) => (
+                    <li key={i}>
+                      🧂 {item.ingredient}
+                    </li>
+                  ))}
+                </ul>
+                <ShowCaloriesButton 
+                  text="Show calories"
+                  onClick={() => setShowCalories(true)}
+                  style={{ marginTop: "1rem" }}
+                />
+                <Calories
+                  open={showCalories}
+                  onClose={() => setShowCalories(false)}
+                  caloriesData={{
+                    ingredients_calories: recipe.ingredients_calories || [],
+                    estimated_weight_g: recipe.estimated_weight_g ?? null,
+                    total_calories_per_100g: recipe.total_calories_per_100g,
+                    total_calories: recipe.total_calories_per_100g && recipe.estimated_weight_g 
+                    ? Math.round((recipe.total_calories_per_100g * recipe.estimated_weight_g) / 100)
+                  : null
+                  }}
+                />
+              </div>
             </div>
           </div>
 

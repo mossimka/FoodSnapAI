@@ -17,6 +17,14 @@ export const SignPopup: React.FC<SignPopupProps> = ({ onClose }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   const popup = (
     <div className={Styles.overlay} onClick={onClose}>
       <div className={Styles.popup} onClick={(e) => e.stopPropagation()}>

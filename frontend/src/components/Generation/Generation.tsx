@@ -16,6 +16,8 @@ import { NavButton } from "../Navbar/NavButton/NavButton";
 import { Printer } from "../Style/Printer/Printer";
 import { truncateFilename } from '@/utils/stringUtils';
 import { compressImage } from '@/utils/imageUtils';
+import { Calories } from "./Calories/Calories";
+import { ShowCaloriesButton } from "./Calories/ShowCaloriesButton/ShowCaloriesButton";
 
 export const Generation = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -25,7 +27,8 @@ export const Generation = () => {
   const [recipeGenerates, setRecipeGenerates] = useState(false);
   const [responseText, setResponseText] = useState<string>("");
   const [hasGenerated, setHasGenerated] = useState(false);
-  const [showPopup, setShowPopup] = useState(false); 
+  const [showPopup, setShowPopup] = useState(false);
+  const [showCalories, setShowCalories] = useState(false);
 
   const [generatedRecipe, setGeneratedRecipe] = useState<RecipeOutput | null>(null);
 
@@ -98,7 +101,7 @@ const generateResponse = async () => {
           `🍽️ Dish: ${finalRecipe.dish_name}`,
           ``,
           ` 🧂 Ingredients & Calories:`,
-          ...finalRecipe.ingredients_calories.map((i) => `- ${i.ingredient}: ${i.calories} kcal`),
+          ...finalRecipe.ingredients_calories.map((i) => `- ${i.ingredient}`),
           ``,
           `⚖️ Estimated weight: ${finalRecipe.estimated_weight_g}g`,
           `🔥 Calories per 100g: ${finalRecipe.total_calories_per_100g} kcal`,     
@@ -175,11 +178,22 @@ const generateResponse = async () => {
               <Printer initialText={responseText} speed={10}/>
               {generatedRecipe && (
                 <div className={Styles.action}>
+                  <div>
+                    <ShowCaloriesButton
+                      onClick={() => setShowCalories(true)}
+                      style={{ marginTop: "3vh" }}
+                    />
+                  </div>
                   <SaveRecipeButton 
                     file={imageFile!} 
                     recipePart={generatedRecipe!}
                   />
                   <NavButton text="Go to my recipies" link="/posted" inputStyle={{ marginTop: "3vh" }} />
+                  <Calories
+                    open={showCalories}
+                    onClose={() => setShowCalories(false)}
+                    caloriesData={generatedRecipe}
+                  />
                 </div>
               )}
             </div>

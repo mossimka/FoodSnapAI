@@ -1,0 +1,76 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+.popup {
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  min-width: 320px;
+  max-width: 95vw;
+  position: relative;
+  animation: fadeIn 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.closeBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-color-sub);
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: color 0.2s;
+}
+.closeBtn:hover {
+  color: var(--color1);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+.table th, .table td {
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+}
+.table th {
+  background: var(--gradient);
+  color: white;
+  font-weight: 600;
+}
+.summary {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: var(--text-color-sub);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+@media (max-width: 600px) {
+  .popup {
+    padding: 1rem 0.5rem 1rem 0.5rem;
+    min-width: 0;
+    width: 98vw;
+  }
+  .table th, .table td {
+    padding: 0.4rem 0.3rem;
+    font-size: 0.95rem;
+  }
+}
