@@ -62,7 +62,7 @@ export const AddToHomeScreenPrompt: React.FC = () => {
         <div className={Styles.title}>Add FoodSnap AI to your Home Screen!</div>
         {isIos ? (
           <div className={Styles.instruction}>
-            Open the <b>Share</b> menu and tap <b>&#34Add to Home Screen&#34</b>.
+            Open the <b>Share</b> menu and tap <b>&ldquo;Add to Home Screen&rdquo;</b>.
           </div>
         ) : (
           <div className={Styles.instruction}>
