@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Styles from "./posted.module.css";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { RecipeCard } from "@/components/Recipes/RecipeCard/RecipeCard";
 import { IRecipe } from "@/interfaces/recipe";
@@ -46,13 +47,33 @@ export default function PostedPage() {
       </div>
 
       <div className={Styles.recipeList}>
-        {recipesToShow.length > 0 ? (
-          recipesToShow.map((r) => (
-            <RecipeCard key={`${r.dish_name}-${r.user_id}`} recipe={r} onClick={() => setSelectedRecipe(r)} />
-          ))
-        ) : (
-          <p className={Styles.noRecipes}>No recipes to show</p>
-        )}
+        <AnimatePresence mode="wait">
+          {recipesToShow.length > 0 ? (
+            recipesToShow.map((r) => (
+              <motion.div
+                key={`${r.dish_name}-${r.user_id}`}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -30 }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+                style={{ width: "100%" }}
+              >
+                <RecipeCard recipe={r} onClick={() => setSelectedRecipe(r)} />
+              </motion.div>
+            ))
+          ) : (
+            <motion.p
+              className={Styles.noRecipes}
+              key="no-recipes"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
+            >
+              No recipes to show
+            </motion.p>
+          )}
+        </AnimatePresence>
       </div>
 
       {selectedRecipe && (

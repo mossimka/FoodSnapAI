@@ -8,9 +8,10 @@ interface PrinterProps {
   className?: string;
   fontSize?: string;
   textAlign?: React.CSSProperties['textAlign'];
+  speed?: number;
 }
 
-export const Printer: React.FC<PrinterProps> = ({ initialText, className, fontSize, textAlign }) => {
+export const Printer: React.FC<PrinterProps> = ({ initialText, className, fontSize, textAlign, speed }) => {
   const [displayedText, setDisplayedText] = useState("");
   const [done, setDone] = useState(false);
 
@@ -26,10 +27,10 @@ export const Printer: React.FC<PrinterProps> = ({ initialText, className, fontSi
         setDone(true);
         setDisplayedText(initialText);
       }
-    }, 50);
+    }, speed || 50);
 
     return () => clearInterval(interval);
-  }, [initialText]);
+  }, [initialText, speed]);
 
   return (
     <span

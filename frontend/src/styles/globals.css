@@ -279,23 +279,7 @@ input:focus, textarea:focus, select:focus {
   border-color: var(--green);
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
 
-::-webkit-scrollbar-track {
-  background: var(--bg-color);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--gradient);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--gradient2);
-}
 
 @media (max-width: 1025px) {
   .button,

@@ -172,7 +172,7 @@ const generateResponse = async () => {
             <Image src="/images/loader.gif" alt="Generating..." width={128} height={50} />
           ) : (
             <div className={Styles.responseBoxContainer}>
-              <Printer initialText={responseText} />
+              <Printer initialText={responseText} speed={10}/>
               {generatedRecipe && (
                 <div className={Styles.action}>
                   <SaveRecipeButton 

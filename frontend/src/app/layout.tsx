@@ -17,11 +17,39 @@ const rubik = Rubik({
 
 export const metadata: Metadata = {
   title: "FoodSnap AI",
-  description: "AI-recipes and food recognition",
+  description: "AI-powered app to recognize food and generate recipes.",
   icons: {
     icon: "/favicon.ico",
+    shortcut: "/icons/icon-192.png",
+    apple: "/icons/icon-192.png"
+  },
+  manifest: "/manifest.json", // 👈 важно
+  keywords: ["AI recipes", "food recognition", "cooking", "FoodSnap AI", "AI cooking app"],
+  authors: [{ name: "FoodSnap AI Team" }],
+  openGraph: {
+    title: "FoodSnap AI",
+    description: "AI-powered app to recognize food and generate recipes.",
+    url: "https://foodsnapai.food/",
+    siteName: "FoodSnap AI",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "FoodSnap AI",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FoodSnap AI",
+    description: "AI-powered app to recognize food and generate recipes.",
+    images: ["/og-image.jpg"],
   },
 };
+
+
 
 export default function RootLayout({
   children,
