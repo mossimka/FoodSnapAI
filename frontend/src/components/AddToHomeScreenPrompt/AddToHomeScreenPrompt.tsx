@@ -1,10 +1,11 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Styles from "./AddToHomeScreenPrompt.module.css";
 
 const LOCALSTORAGE_KEY = "hideAddToHomeScreenPrompt";
 
-// Тип для beforeinstallprompt (если нет в TS)
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
