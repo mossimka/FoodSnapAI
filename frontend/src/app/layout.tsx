@@ -9,6 +9,8 @@ import { Navbar } from "@/components/Navbar/Navbar";
 import { Footer } from '@/components/Footer/Footer';
 import { GoogleProviderWrapper } from "@/components/Auth/GoogleProviderWrapper";
 import { ThemeProvider } from "@/context/ThemeProvider";
+import { AddToHomeScreenPrompt } from "@/components/AddToHomeScreenPrompt/AddToHomeScreenPrompt";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 const rubik = Rubik({
   subsets: ['latin', 'cyrillic'],
@@ -23,7 +25,7 @@ export const metadata: Metadata = {
     shortcut: "/icons/icon-192.png",
     apple: "/icons/icon-192.png"
   },
-  manifest: "/manifest.json", // 👈 важно
+  manifest: "/manifest.json",
   keywords: ["AI recipes", "food recognition", "cooking", "FoodSnap AI", "AI cooking app"],
   authors: [{ name: "FoodSnap AI Team" }],
   openGraph: {
@@ -49,8 +51,6 @@ export const metadata: Metadata = {
   },
 };
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -64,6 +64,8 @@ export default function RootLayout({
             <Navbar />
             {children}
             <Footer />
+            <ServiceWorkerRegister />
+            <AddToHomeScreenPrompt />
             <ToastContainer 
               position="top-right"
               autoClose={3000}

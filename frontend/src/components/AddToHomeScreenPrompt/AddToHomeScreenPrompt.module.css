@@ -1,0 +1,85 @@
+.promptBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--glass-bg);
+  border-top: 2px solid var(--border-color);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.08);
+  padding: 1rem 1.5rem;
+  backdrop-filter: blur(12px);
+  animation: slideUp 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.textBlock {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.instruction {
+  font-size: 0.95rem;
+  color: var(--text-color-sub);
+}
+
+.addBtn {
+  background: var(--gradient);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  padding: 0.5rem 1.2rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.addBtn:hover {
+  background: var(--gradient2);
+}
+
+.closeBtn, .neverBtn {
+  background: transparent;
+  color: var(--text-color-sub);
+  border: none;
+  font-size: 0.95rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem 0.7rem;
+  border-radius: var(--border-radius-sm);
+  transition: background 0.2s;
+}
+.closeBtn:hover, .neverBtn:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+@media (max-width: 600px) {
+  .promptBar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+    padding: 1rem 0.5rem;
+  }
+  .addBtn, .closeBtn, .neverBtn {
+    width: 100%;
+    margin: 0.2rem 0 0 0;
+  }
+  .textBlock {
+    align-items: flex-start;
+  }
+} 
