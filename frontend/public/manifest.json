@@ -1,6 +1,6 @@
 {
     "name": "FoodSnap AI",
-    "short_name": "FoodSnap",
+    "short_name": "FoodSnapAI",
     "description": "AI-powered app to recognize food and generate recipes",
     "start_url": "/",
     "display": "standalone",
