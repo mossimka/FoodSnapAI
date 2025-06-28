@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Rubik } from 'next/font/google';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import { Providers } from '@/components/Providers';
 
 import "@/styles/globals.css";
 import { Navbar } from "@/components/Navbar/Navbar";  
@@ -51,6 +52,8 @@ export const metadata: Metadata = {
   },
 };
 
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -60,25 +63,27 @@ export default function RootLayout({
     <html lang="en">
       <body className={rubik.variable}>
         <GoogleProviderWrapper>
-          <ThemeProvider>
-            <Navbar />
-            {children}
-            <Footer />
-            <ServiceWorkerRegister />
-            <AddToHomeScreenPrompt />
-            <ToastContainer 
-              position="top-right"
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="light"
-            />
-          </ThemeProvider>
+          <Providers>
+            <ThemeProvider>
+              <Navbar />
+              {children}
+              <Footer />
+              <ServiceWorkerRegister />
+              <AddToHomeScreenPrompt />
+              <ToastContainer 
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+              />
+            </ThemeProvider>
+          </Providers>
         </GoogleProviderWrapper>
       </body>
     </html>

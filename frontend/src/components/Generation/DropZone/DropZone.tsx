@@ -32,7 +32,7 @@ const DropZone: React.FC<DropZoneProps> = ({ setImage }) => {
       'image/png': ['.png'],
       'image/jpeg': ['.jpg', '.jpeg'],
     },
-    maxSize: 5 * 1024 * 1024,
+    maxSize: 10 * 1024 * 1024,
   });
 
   return (
@@ -50,7 +50,7 @@ const DropZone: React.FC<DropZoneProps> = ({ setImage }) => {
             <Upload className={Style.dropZoneImage} />
           </div>
           <p className="gradientText2">Drag & drop or click to select an image</p>
-          <p>Supported: .jpg, .jpeg, .png (Max: 5MB)</p>
+          <p>Supported: .jpg, .jpeg, .png (Max: 10MB)</p>
         </div>
       </div>
     </div>

@@ -17,6 +17,8 @@ export const GoogleLoginButton = () => {
   };
   return (
     <GoogleLogin
+      locale="en"
+      text="signin_with"
       onSuccess={(credentialResponse) => {
         const credential = credentialResponse.credential;
         if (!credential) {

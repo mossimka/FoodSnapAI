@@ -29,17 +29,34 @@ export const Generation = () => {
   const [hasGenerated, setHasGenerated] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [showCalories, setShowCalories] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const [generatedRecipe, setGeneratedRecipe] = useState<RecipeOutput | null>(null);
 
   const { isAuthenticated } = useAuthStore();
 
   const handleImageSelect = async (file: File) => {
-    const compressedFile = await compressImage(file);
-    setImageFile(compressedFile);
-    const previewURL = URL.createObjectURL(compressedFile);
-    setImagePreview(previewURL);
-  
+    try {
+      console.log('Original file:', file.name, file.size, file.type);
+      
+      const compressedFile = await compressImage(file);
+      console.log('Compressed file:', compressedFile.name, compressedFile.size, compressedFile.type);
+      
+      // Проверка валидности файла
+      if (!compressedFile.type.startsWith('image/')) {
+        throw new Error('Invalid image type after compression');
+      }
+      
+      setImageFile(compressedFile);
+      const previewURL = URL.createObjectURL(compressedFile);
+      setImagePreview(previewURL);
+      setImageError(false);
+      
+    } catch (error) {
+      console.error('Image processing failed:', error);
+      setImageError(true);
+    }
+    
     setIsLoading(true);
     setRecipeGenerates(false);
     setIsGenerating(false);

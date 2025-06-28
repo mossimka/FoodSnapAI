@@ -108,6 +108,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = ({ onClose }) => {
                 href="/signin"
                 className={`${Styles.link} ${pathname === "/signin" ? Styles.active : ""}`}
                 onClick={onClose}
+                style={{ marginTop: "3rem"}}
               >
                 Sign In <ArrowBigRightDash className={Styles.arrow} />
               </Link>
