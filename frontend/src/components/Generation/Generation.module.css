@@ -32,7 +32,9 @@
 
 .imageContainer {
   position: relative;
-  height: 25vw;
+  width: 100%;
+  max-width: 500px;
+  height: 300px;
   aspect-ratio: 3 / 4;
   border-radius: 2rem;
   overflow: hidden;
@@ -109,7 +111,8 @@
     gap: 2rem;
   }
   .imageContainer {
-    height: 40vw;
+    height: 300px;
+    width: 50%;
   }
 }
 
@@ -123,7 +126,8 @@
     gap: 1.5rem;
   }
   .imageContainer {
-    height: 55vw;
+    height: 300px;
+    width: 90%;
   }
 }
 
