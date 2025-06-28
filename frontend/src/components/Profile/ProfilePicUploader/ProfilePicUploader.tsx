@@ -5,15 +5,16 @@ import Image from "next/image";
 import { useDropzone } from 'react-dropzone';
 import { compressImage } from '@/utils/imageUtils';
 
-import { uploadProfilePic } from '@/services/profileService';
+import { uploadProfilePic } from '@/services/userService';
 import { useUserStore } from '@/stores/userStore';
 import Styles from './ProfilePicUploader.module.css';
+import { useUserQuery } from '@/hooks/useUserQuery';
 
 const ProfilePicUploader = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const user = useUserStore((state) => state.user);
+  const { data: user} = useUserQuery();
   const setUser = useUserStore((state) => state.setUser);
 
   const onDrop = useCallback(

@@ -1,7 +1,10 @@
+"use client";
+
 import React, { useState } from 'react';
 import { save_recipe } from '@/services/generateService';
 import { RecipeOutput } from '@/interfaces/recipe';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   file: File;
@@ -11,11 +14,12 @@ interface Props {
 export const SaveRecipeButton: React.FC<Props> = ({ file, recipePart }) => {
     const [isSaving, setIsSaving] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
+    const router = useRouter();
 
     const handleSave = async () => {
       setIsSaving(true);
       try {
-        await save_recipe({
+        const { slug } = await save_recipe({
           file,
           recipePart: {
             ...recipePart,
@@ -25,6 +29,9 @@ export const SaveRecipeButton: React.FC<Props> = ({ file, recipePart }) => {
         });
         setIsSaved(true);
         toast.success("Recipe saved successfully!");
+        setTimeout(() => {
+          router.push(`/recipes/${slug}`);
+        }, 1000);
       } catch (err: unknown) {
         toast.error("Failed to save recipe. Error: " + err);
       } finally {

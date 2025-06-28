@@ -3,7 +3,6 @@ import axios from '@/lib/axios';
 import { tokenService } from './tokenService';
 
 import { UserPatchRequest } from '@/interfaces/user';
-import { useUserStore } from "@/stores/userStore";
 
 export async function uploadProfilePic(file: File): Promise<string> {
   const formData = new FormData();
@@ -32,17 +31,11 @@ export async function uploadProfilePic(file: File): Promise<string> {
   }
 }
 
-export async function updateProfile(data: UserPatchRequest): Promise<void> {
-  try {
-    const response = await axios.patch("/user/", data, {
-      headers: {
-        ...tokenService.getAuthHeader(),
-      },
-    });
-
-    useUserStore.getState().setUser(response.data);
-  } catch (error) {
-    const err = error as AxiosError<{ detail: string }>;
-    throw new Error(err.response?.data?.detail || "Failed to update profile");
-  }
+export async function updateProfile(data: UserPatchRequest) {
+  const response = await axios.patch("/user/", data, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    },
+  });
+  return response.data;
 }

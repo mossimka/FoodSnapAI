@@ -6,14 +6,14 @@ import Image from "next/image";
 
 import Styles from "./profile.module.css";
 import RecipeStyles  from "../posted/posted.module.css"
-import { useUserStore } from "@/stores/userStore";
+import { useUserQuery } from "@/hooks/useUserQuery";
 import { IRecipe } from "@/interfaces/recipe";
 import { get_my_recipes } from "@/services/generateService";
 import { RecipeCard } from "@/components/Recipes/RecipeCard/RecipeCard";
 import { RecipePopup } from "@/components/Recipes/RecipePopup/RecipePopup";
 
 export default function ProfilePage() {
-  const user = useUserStore((state) => state.user);
+  const { data: user} = useUserQuery();
   const [myRecipes, setMyRecipes] = useState<IRecipe[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<IRecipe | null>(null);
 

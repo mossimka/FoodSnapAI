@@ -2,11 +2,13 @@ from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from src.database import Base
 from src.auth.models import Users
+from slugify import slugify
 
 class Recipe(Base):
     __tablename__ = "recipes"
 
     id = Column(Integer, primary_key=True, index=True)
+    slug = Column(String, unique=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     dish_name = Column(String)
     recipe = Column(Text)
@@ -22,6 +24,9 @@ class Recipe(Base):
         back_populates="recipe",
         cascade="all, delete-orphan"
     )
+
+    def generate_slug(self):
+        self.slug = slugify(self.dish_name) + "-" + str(self.id)
 
 
 class IngredientCalories(Base):

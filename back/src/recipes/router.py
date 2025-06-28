@@ -14,7 +14,7 @@ from src.gcs.uploader import upload_large_file_to_gcs
 from src.dependencies import get_db
 from src.recipes.models import Recipe, IngredientCalories
 from src.recipes.schemas import RecipeResponse, RecipePatchRequest, IngredientCaloriesResponse, UserResponse
-from src.recipes.service import get_recipes
+from src.recipes.service import get_recipes, get_recipe_by_slug_and_id
 
 from src.recipes.agents import root_agent, checking_agent
 
@@ -37,6 +37,20 @@ router = APIRouter(prefix="/dish", tags=["dish"])
 @router.get("/", response_model=List[RecipeResponse], status_code=status.HTTP_200_OK)
 async def get_all_dishes(db: Session = Depends(get_db)):
     return get_recipes(db)
+
+@router.get("/recipes/{slug_and_id}/", response_model=RecipeResponse)
+async def get_recipe(slug_and_id: str, db: Session = Depends(get_db)):
+    try:
+        *slug_parts, id_part = slug_and_id.rsplit("-", 1)
+        slug = "-".join(slug_parts)
+        recipe_id = int(id_part)
+    except (ValueError, IndexError):
+        raise HTTPException(status_code=400, detail="Invalid recipe slug format")
+
+    recipe = get_recipe_by_slug_and_id(db, slug, recipe_id)
+    if not recipe:
+        raise HTTPException(status_code=404, detail="Recipe not found")
+    return recipe
 
 @router.post("/")
 async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depends(get_current_user)):
@@ -86,8 +100,6 @@ async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depen
             session_id=SESSION_ID,
             new_message=content
         ):
-            print(f"EVENT FROM: {event.author if hasattr(event, 'author') else 'unknown'}")
-            print(f"EVENT CONTENT: {getattr(event.content, 'parts', None)}")
             if (
                 event.is_final_response()
                 and event.author == "final_agent"
@@ -97,9 +109,9 @@ async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depen
                 final_response = event.content.parts[0].text
                 break
         
-        print("\n=== RAW FINAL RESPONSE ===")
-        print(final_response)
-        print("==========================\n")
+        #print("\n=== RAW FINAL RESPONSE ===")
+        #print(final_response)
+        #print("==========================\n")
 
         cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", final_response.strip(), flags=re.MULTILINE)
         parsed = json.loads(cleaned)
@@ -141,7 +153,10 @@ async def save_recipe(
             estimated_weight_g=estimated_weight_g,
             total_calories_per_100g=total_calories_per_100g,
         )
+        
         db.add(db_recipe)
+        db.flush()
+        db_recipe.generate_slug()
         db.commit()
         db.refresh(db_recipe)
 
@@ -160,7 +175,11 @@ async def save_recipe(
 
         db.commit()
 
-        return {"message": "Recipe saved successfully", "recipe_id": db_recipe.id}
+        return {
+            "message": "Recipe saved successfully",
+            "recipe_id": db_recipe.id,
+            "slug": db_recipe.slug
+        }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Saving failed: {str(e)}")
@@ -214,6 +233,7 @@ async def get_public_recipe(db: Session = Depends(get_db)):
     return [
         RecipeResponse(
             id=r.id,
+            slug=r.slug,
             user_id=r.user_id,
             user=UserResponse(
                 username=r.user.username,
@@ -241,6 +261,7 @@ async def get_my_recipes(current_user: Users = Depends(get_current_user), db: Se
     return [
         RecipeResponse(
             id=r.id,
+            slug=r.slug,
             user_id=r.user_id,
             user=UserResponse(
                 username=r.user.username,

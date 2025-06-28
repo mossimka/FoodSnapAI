@@ -18,8 +18,8 @@ import {
 import Styles from "./settings.module.css";
 import ProfilePicUploader from "@/components/Profile/ProfilePicUploader/ProfilePicUploader";
 import { PasswordInput } from '@/components/Auth/PasswordInput/PasswordInput';
-import { updateProfile } from '@/services/profileService';
-import { useUserStore } from '@/stores/userStore';
+import { updateProfile } from '@/services/userService';
+import { useUserQuery } from '@/hooks/useUserQuery';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -91,7 +91,7 @@ const buttonVariants = {
 };
 
 export default function SettingsPage() {
-  const user = useUserStore((state) => state.user);
+  const { data: user} = useUserQuery();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);

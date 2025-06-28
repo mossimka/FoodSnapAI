@@ -30,14 +30,9 @@ class UserResponse(BaseModel):
 
     model_config = {"from_attributes": True}
 
-class IngredientCaloriesResponse(BaseModel):
-    ingredient: str
-    calories: int
-
-    model_config = {"from_attributes": True}
-
 class RecipeResponse(BaseModel):
     id: int
+    slug: str
     user_id: int
     user: UserResponse
     dish_name: str

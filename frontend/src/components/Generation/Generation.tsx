@@ -111,7 +111,7 @@ const generateResponse = async () => {
         const formattedText = [
           `🍽️ Dish: ${finalRecipe.dish_name}`,
           ``,
-          ` 🧂 Ingredients & Calories:`,
+          ` 🧂 Ingredients:`,
           ...finalRecipe.ingredients_calories.map((i) => `- ${i.ingredient}`),
           ``,
           `⚖️ Estimated weight: ${finalRecipe.estimated_weight_g}g`,

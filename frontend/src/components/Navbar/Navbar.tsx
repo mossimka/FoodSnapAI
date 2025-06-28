@@ -9,14 +9,14 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import Styles from "./Navbar.module.css";
 import { NavButton } from "./NavButton/NavButton";
 import { ProfilePopup } from "./ProfilePopup/ProfilePopup";
-import { useUserStore } from "@/stores/userStore";
+import { useUserQuery } from "@/hooks/useUserQuery";
 import { BurgerMenu } from "./BurgerMenu/BurgerMenu";
 import { ThemeToggleButton } from "@/components/Style/ThemeToggle/ThemeToggle";
 
 export const Navbar: React.FC = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const user = useUserStore((state) => state.user);
+  const { data: user} = useUserQuery();
 
   return (
     <header className={Styles.header}>

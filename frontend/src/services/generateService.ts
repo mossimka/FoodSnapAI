@@ -32,12 +32,14 @@ export async function save_recipe(recipe: RecipeInput) {
   formData.append("file", recipe.file);
   formData.append("recipe", JSON.stringify(recipe.recipePart));
 
-  await axios.post("/dish/save/", formData, {
+  const response = await axios.post("/dish/save/", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     },
   });
+
+  return { slug: response.data.slug };
 }
 
 export async function get_public_recipes(): Promise<IRecipe[]> {
