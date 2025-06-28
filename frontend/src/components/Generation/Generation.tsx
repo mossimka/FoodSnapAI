@@ -69,9 +69,7 @@ const generateResponse = async () => {
   setTimeout(async () => {
     try {
       const res = await generate_recipe(imageFile);
-
-      console.log("✅ Full AI response:", res);
-
+      
       if (isNotFoodResponse(res)) {
         const formattedText = `🚫 This doesn't look like food.\n\n🔍 Detected: ${res.description}`;
         setResponseText(formattedText);

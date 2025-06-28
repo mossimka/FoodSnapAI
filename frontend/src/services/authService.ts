@@ -74,7 +74,6 @@ export async function logout() {
   useUserStore.getState().clearUser();
   
   localStorage.removeItem('user-storage');
-  localStorage.removeItem("access_token");
   
   window.location.href = "/signin";
 }

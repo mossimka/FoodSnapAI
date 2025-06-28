@@ -18,7 +18,7 @@ import {
 import Styles from "./settings.module.css";
 import ProfilePicUploader from "@/components/Profile/ProfilePicUploader/ProfilePicUploader";
 import { PasswordInput } from '@/components/Auth/PasswordInput/PasswordInput';
-import { patchUser } from '@/services/profileService';
+import { updateProfile } from '@/services/profileService';
 import { useUserStore } from '@/stores/userStore';
 
 const containerVariants = {
@@ -128,8 +128,7 @@ export default function SettingsPage() {
 
     setIsLoading(true);
     try {
-      await patchUser(user.id, { username });
-      user.username = username;
+      await updateProfile({ username });
       toast.success('Username updated successfully!');
       setUsername('');
     } catch (err) {
@@ -146,7 +145,7 @@ export default function SettingsPage() {
 
     setIsLoading(true);
     try {
-      await patchUser(user.id, { password });
+      await updateProfile({ password });
       toast.success('Password updated successfully! 🔒');
       setPassword('');
     } catch (err) {

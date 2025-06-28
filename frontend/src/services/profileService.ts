@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import axios from '@/lib/axios';
+import { tokenService } from './tokenService';
 
 import { UserPatchRequest } from '@/interfaces/user';
 import { useUserStore } from "@/stores/userStore";
@@ -8,7 +9,7 @@ export async function uploadProfilePic(file: File): Promise<string> {
   const formData = new FormData();
   formData.append("file", file);
 
-  const token = localStorage.getItem("access_token");
+  const token = tokenService.requireAuth();
 
   try {
     const response = await axios.post("/user/upload-profile-pic", formData, {
@@ -31,18 +32,17 @@ export async function uploadProfilePic(file: File): Promise<string> {
   }
 }
 
-export async function patchUser(userId: number, data: UserPatchRequest) {
-  const response = await axios.patch(`/auth/patch/${userId}`, data);
-  if (data.username != null) {
-    const setUser = useUserStore.getState().setUser;
-    const user = useUserStore.getState().user;
-    if (user && user.id !== undefined) {
-      setUser({
-        ...user,
-        username: data.username,
-        id: user.id,
-      });
-    }
+export async function updateProfile(data: UserPatchRequest): Promise<void> {
+  try {
+    const response = await axios.patch("/user/", data, {
+      headers: {
+        ...tokenService.getAuthHeader(),
+      },
+    });
+
+    useUserStore.getState().setUser(response.data);
+  } catch (error) {
+    const err = error as AxiosError<{ detail: string }>;
+    throw new Error(err.response?.data?.detail || "Failed to update profile");
   }
-  return response.data;
 }

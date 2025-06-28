@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Pencil } from "lucide-react";
+import { toast } from "react-toastify";
 
 import Styles from "./RecipePopup.module.css";
 import { useAuthStore } from "@/stores/authStore";
@@ -60,8 +61,9 @@ export const RecipePopup: React.FC<RecipePopupProps> = ({ onClose, recipe }) => 
         publish: published,
       });
       setIsEditing(false);
+      toast.success("Recipe name changed successfully!");
     } catch (error) {
-      console.error("Error updating recipe:", error);
+      toast.error("Failed to updtae recipe. Error: " + error);
     } finally {
       setIsLoading(false);
     }

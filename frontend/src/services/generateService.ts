@@ -1,5 +1,6 @@
 import axios from '@/lib/axios';
 import { AxiosError } from 'axios';
+import { tokenService } from './tokenService';
 
 import { RecipeOutput, RecipeInput, IRecipe, RecipePatchRequest } from "@/interfaces/recipe";
 import type { RecipeResult } from '@/interfaces/recipe';
@@ -8,8 +9,7 @@ export async function generate_recipe(imageFile: File): Promise<RecipeResult> {
   const formData = new FormData();
   formData.append("file", imageFile);
 
-  const token = localStorage.getItem("access_token");
-  if (!token) throw new Error("User is not authenticated");
+  const token = tokenService.requireAuth();
 
   try {
     const response = await axios.post("/dish/", formData, {
@@ -26,11 +26,7 @@ export async function generate_recipe(imageFile: File): Promise<RecipeResult> {
 }
 
 export async function save_recipe(recipe: RecipeInput) {
-  const token = localStorage.getItem("access_token");
-
-  if (!token) {
-    throw new Error("User is not authenticated");
-  }
+  const token = tokenService.requireAuth();
 
   const formData = new FormData();
   formData.append("file", recipe.file);
@@ -45,20 +41,18 @@ export async function save_recipe(recipe: RecipeInput) {
 }
 
 export async function get_public_recipes(): Promise<IRecipe[]> {
-  const token = localStorage.getItem("access_token");
   const response = await axios.get("/dish/public/", {
     headers: {
-      Authorization: `Bearer ${token}`,
+      ...tokenService.getAuthHeader(),
     },
   });
   return response.data;
 }
 
 export async function get_my_recipes(): Promise<IRecipe[]> {
-  const token = localStorage.getItem("access_token");
   const response = await axios.get("/dish/my/", {
     headers: {
-      Authorization: `Bearer ${token}`,
+      ...tokenService.getAuthHeader(),
     },
   });
   return response.data;
@@ -71,11 +65,7 @@ export async function patchRecipe(recipeId: number, data: RecipePatchRequest) {
 
 
 export async function delete_recipe(recipeId: number): Promise<void> {
-  const token = localStorage.getItem("access_token");
-
-  if (!token) {
-    throw new Error("User is not authenticated");
-  }
+  const token = tokenService.requireAuth();
 
   try {
     await axios.delete(`/dish/${recipeId}/`, {
