@@ -1,42 +1,53 @@
-  "use client";
+"use client";
 
-  import React from "react";
-  import Image from "next/image";
-  import { IRecipe } from "@/interfaces/recipe";
-  import Styles from "./RecipeCard.module.css";
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { IRecipe } from "@/interfaces/recipe";
+import styles from "./RecipeCard.module.css";
 
-  interface RecipeCardProps {
-    recipe: IRecipe;
-    onClick?: (recipe: IRecipe) => void;
-  }
+interface RecipeCardProps {
+  recipe: IRecipe;
+  hidePublishedBadge?: boolean;
+}
 
-  export function RecipeCard({ recipe, onClick }: RecipeCardProps) {
-    return (
-      <div className={Styles.recipeCard} onClick={() => onClick?.(recipe)}>
-        <Image
-          src={recipe.image_path || "/images/placeholder.png"}
-          alt={recipe.dish_name}
-          className={Styles.recipeImage}
-          width={300}
-          height={200}
-        />
+export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, hidePublishedBadge = false }) => {
+  // Use only slug since it already contains ID
+  const recipeUrl = `/recipe/${recipe.slug}`;
 
-        <div className={Styles.content}>
-          <div className={Styles.author}>
-            <Image
-              src={recipe.user?.profile_pic || "/images/user.png"}
-              alt={recipe.user?.username || "Unknown"}
-              width={40}
-              height={40}
-              className={Styles.avatar}
-            />
-            <span>{recipe.user?.username}</span>
+  return (
+    <Link href={recipeUrl} className={styles.cardLink}>
+      <div className={styles.card}>
+        <div className={styles.imageWrapper}>
+          <Image
+            src={recipe.image_path || "/images/placeholder.png"}
+            alt={recipe.dish_name}
+            fill
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+        <div className={styles.cardContent}>
+          <h3 className={styles.title}>{recipe.dish_name}</h3>
+          <p className={styles.author}>by {recipe.user.username}</p>
+          <div className={styles.ingredients}>
+            {recipe.ingredients_calories.slice(0, 3).map((item, i) => (
+              <span key={i} className={styles.ingredient}>
+                {item.ingredient}
+              </span>
+            ))}
+            {recipe.ingredients_calories.length > 3 && (
+              <span className={styles.moreIngredients}>
+                +{recipe.ingredients_calories.length - 3} more
+              </span>
+            )}
           </div>
-
-          <div className={Styles.recipeName}>
-            {recipe.dish_name}
-          </div>
+          {recipe.is_published && !hidePublishedBadge ? (
+            <span className={styles.publishedBadge}>Published</span>
+          ) : !recipe.is_published ? (
+            <span className={styles.unpublishedBadge}>Unpublished</span>
+          ) : null}
         </div>
       </div>
-    );
-  }
+    </Link>
+  );
+};

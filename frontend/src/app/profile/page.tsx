@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
 import Styles from "./profile.module.css";
@@ -10,12 +9,10 @@ import { useUserQuery } from "@/hooks/useUserQuery";
 import { IRecipe } from "@/interfaces/recipe";
 import { get_my_recipes } from "@/services/generateService";
 import { RecipeCard } from "@/components/Recipes/RecipeCard/RecipeCard";
-import { RecipePopup } from "@/components/Recipes/RecipePopup/RecipePopup";
 
 export default function ProfilePage() {
   const { data: user} = useUserQuery();
   const [myRecipes, setMyRecipes] = useState<IRecipe[]>([]);
-  const [selectedRecipe, setSelectedRecipe] = useState<IRecipe | null>(null);
 
   useEffect(()  => {
     get_my_recipes()
@@ -54,22 +51,13 @@ export default function ProfilePage() {
         <div className={RecipeStyles.recipeList}>
           {myRecipes.length > 0 ? (
             myRecipes.map((r) => (
-              <RecipeCard  key={`${r.dish_name} - ${r.user_id}`} recipe={r} onClick={() => setSelectedRecipe(r)} />
+              <RecipeCard key={`${r.dish_name} - ${r.user_id}`} recipe={r} />
             ))
           ) : (
             <p className={RecipeStyles.noRecipes}>No recipes to show</p>
           )}
         </div>
       </div>
-
-      <AnimatePresence>
-        {selectedRecipe && (
-          <RecipePopup
-            onClose={() => setSelectedRecipe(null)}
-            recipe={selectedRecipe}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 }

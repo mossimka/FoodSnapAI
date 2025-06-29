@@ -6,6 +6,7 @@ export interface IngredientCalories {
 
 export interface IRecipe {
   id: number;
+  slug: string;
   user_id: number;
   user: {
     username: string;

@@ -14,7 +14,7 @@ from src.gcs.uploader import upload_large_file_to_gcs
 from src.dependencies import get_db
 from src.recipes.models import Recipe, IngredientCalories
 from src.recipes.schemas import RecipeResponse, RecipePatchRequest, IngredientCaloriesResponse, UserResponse
-from src.recipes.service import get_recipes, get_recipe_by_slug_and_id
+from src.recipes.service import get_recipes, get_recipe_by_slug
 
 from src.recipes.agents import root_agent, checking_agent
 
@@ -38,16 +38,9 @@ router = APIRouter(prefix="/dish", tags=["dish"])
 async def get_all_dishes(db: Session = Depends(get_db)):
     return get_recipes(db)
 
-@router.get("/recipes/{slug_and_id}/", response_model=RecipeResponse)
-async def get_recipe(slug_and_id: str, db: Session = Depends(get_db)):
-    try:
-        *slug_parts, id_part = slug_and_id.rsplit("-", 1)
-        slug = "-".join(slug_parts)
-        recipe_id = int(id_part)
-    except (ValueError, IndexError):
-        raise HTTPException(status_code=400, detail="Invalid recipe slug format")
-
-    recipe = get_recipe_by_slug_and_id(db, slug, recipe_id)
+@router.get("/recipes/{slug}/", response_model=RecipeResponse)
+async def get_recipe(slug: str, db: Session = Depends(get_db)):
+    recipe = get_recipe_by_slug(db, slug)
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
     return recipe

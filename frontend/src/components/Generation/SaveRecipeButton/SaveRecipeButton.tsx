@@ -30,8 +30,8 @@ export const SaveRecipeButton: React.FC<Props> = ({ file, recipePart }) => {
         setIsSaved(true);
         toast.success("Recipe saved successfully!");
         setTimeout(() => {
-          router.push(`/recipes/${slug}`);
-        }, 1000);
+          router.push(`/recipe/${slug}`);
+        }, 2000);
       } catch (err: unknown) {
         toast.error("Failed to save recipe. Error: " + err);
       } finally {

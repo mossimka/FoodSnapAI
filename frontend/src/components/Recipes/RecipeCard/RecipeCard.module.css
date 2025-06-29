@@ -173,3 +173,136 @@
     font-size: 0.85rem;
   }
 }
+
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.cardLink:hover {
+  transform: translateY(-4px);
+}
+
+.card {
+  background: var(--glass-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.2s ease;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardLink:hover .card {
+  box-shadow: var(--hover-shadow);
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  flex-shrink: 0;
+}
+
+.cardContent {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: var(--text-color);
+  line-height: 1.3;
+}
+
+.author {
+  font-size: 0.85rem;
+  color: var(--text-color-sub);
+  margin: 0 0 0.75rem 0;
+}
+
+.ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+  flex: 1;
+}
+
+.ingredient {
+  background: var(--green-light);
+  color: var(--green);
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.moreIngredients {
+  background: var(--gradient);
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.publishedBadge {
+  background: var(--gradientGreen);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+.unpublishedBadge {
+  background: var(--gradientRed);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+@media (max-width: 480px) {
+  .cardContent {
+    padding: 0.75rem;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .author {
+    font-size: 0.8rem;
+  }
+
+  .ingredient,
+  .moreIngredients {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.4rem;
+  }
+
+  .publishedBadge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .unpublishedBadge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+}

@@ -7,15 +7,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { RecipeCard } from "@/components/Recipes/RecipeCard/RecipeCard";
 import { IRecipe } from "@/interfaces/recipe";
 import { get_public_recipes, get_my_recipes } from "@/services/generateService";
-import { RecipePopup } from "@/components/Recipes/RecipePopup/RecipePopup";
-
 
 export default function PostedPage() {
   const [activeTab, setActiveTab] = useState<"public" | "my">("public");
   const [publicRecipes, setPublicRecipes] = useState<IRecipe[]>([]);
   const [myRecipes, setMyRecipes] = useState<IRecipe[]>([]);
-  const [selectedRecipe, setSelectedRecipe] = useState<IRecipe | null>(null);
-
 
   useEffect(() => {
     get_public_recipes()
@@ -58,7 +54,10 @@ export default function PostedPage() {
                 transition={{ duration: 0.35, ease: "easeInOut" }}
                 style={{ width: "100%" }}
               >
-                <RecipeCard recipe={r} onClick={() => setSelectedRecipe(r)} />
+                <RecipeCard 
+                  recipe={r} 
+                  hidePublishedBadge={activeTab === "public"}
+                />
               </motion.div>
             ))
           ) : (
@@ -75,13 +74,6 @@ export default function PostedPage() {
           )}
         </AnimatePresence>
       </div>
-
-      {selectedRecipe && (
-        <RecipePopup
-          onClose={() => setSelectedRecipe(null)}
-          recipe={selectedRecipe}
-        />
-      )}
     </div>
   );
 }

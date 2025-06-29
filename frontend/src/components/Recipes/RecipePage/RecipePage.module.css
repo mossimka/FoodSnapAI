@@ -1,0 +1,428 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  background: var(--hover-bg);
+  box-shadow: var(--hover-shadow);
+}
+
+.content {
+  background: var(--glass-bg);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: var(--hover-shadow);
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.error h2 {
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.error p {
+  margin-bottom: 2rem;
+  color: var(--text-color-sub);
+}
+
+.topSection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 300px;
+  height: 240px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.details {
+  flex: 1;
+  min-width: 300px;
+}
+
+.details h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  color: var(--text-color);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.recipeName {
+  width: 80%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.author {
+  font-size: 1rem;
+  color: var(--text-color-sub);
+  margin-bottom: 2rem;
+}
+
+.statusBadge {
+  margin-bottom: 1.5rem;
+}
+
+.publishedBadge {
+  background: var(--gradientGreen);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.unpublishedBadge {
+  background: var(--gradientRed);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.ingredients h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+}
+
+.ingredientList {
+  padding-left: 1.2rem;
+  margin: 0 0 1rem 0;
+  list-style: none;
+  font-size: 1rem;
+}
+
+.ingredientList li {
+  margin-bottom: 6px;
+  color: var(--text-color);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.buttons {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.buttons button {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.75rem 1rem;
+}
+
+.nameInput {
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  border: 2px solid var(--border-color, #ccc);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: #fff;
+  color: #333;
+  max-width: 300px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.nameInput:focus {
+  border-color: var(--green);
+  box-shadow: var(--green-shadow);
+}
+
+.recipeBody {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.recipeBody h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.recipeBody p {
+  white-space: pre-line;
+  line-height: 1.7;
+  font-size: 1rem;
+  color: var(--text-color);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .content {
+    padding: 1.5rem;
+  }
+
+  .header {
+    margin-bottom: 1.5rem;
+  }
+
+  .topSection {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .info {
+    width: 100%;
+  }
+
+  .imageWrapper {
+    width: 100%;
+    max-width: 400px;
+    height: 250px;
+  }
+
+  .details {
+    width: 100%;
+    text-align: center;
+    min-width: unset;
+  }
+
+  .details h1 {
+    font-size: 1.6rem;
+  }
+
+  .statusBadge {
+    text-align: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .publishedBadge,
+  .unpublishedBadge {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.7rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+    max-width: 300px;
+    margin: 1rem auto 0;
+  }
+
+  .buttons button {
+    flex: none;
+    width: 100%;
+  }
+
+  .nameInput {
+    max-width: 100%;
+  }
+
+  .recipeName {
+    width: 100%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .container {
+    padding: 0.5rem;
+  }
+  
+  .content {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .header {
+    margin-bottom: 1rem;
+  }
+
+  .backButton {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .topSection {
+    gap: 1rem;
+  }
+
+  .imageWrapper {
+    height: 200px;
+  }
+
+  .details h1 {
+    font-size: 1.3rem;
+  }
+
+  .details div {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .author {
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .statusBadge {
+    margin-bottom: 0.75rem;
+  }
+
+  .publishedBadge,
+  .unpublishedBadge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .ingredients h3 {
+    font-size: 1.1rem;
+  }
+
+  .ingredientList {
+    font-size: 0.9rem;
+    padding-left: 1rem;
+  }
+
+  .ingredientList li {
+    margin-bottom: 4px;
+  }
+
+  .recipeBody h3 {
+    font-size: 1.2rem;
+  }
+
+  .recipeBody p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .nameInput {
+    font-size: 1rem;
+    padding: 0.4rem 0.8rem;
+    max-width: 100%;
+  }
+
+  .buttons {
+    gap: 0.5rem;
+  }
+
+  .buttons button {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .container {
+    padding: 0.25rem;
+  }
+
+  .content {
+    padding: 0.75rem;
+  }
+
+  .details h1 {
+    font-size: 1.1rem;
+  }
+
+  .details div {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .imageWrapper {
+    height: 180px;
+  }
+
+  .author {
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .ingredients h3 {
+    font-size: 1rem;
+  }
+
+  .ingredientList {
+    font-size: 0.8rem;
+    padding-left: 0.5rem;
+  }
+
+  .ingredientList li {
+    font-size: 0.85rem;
+    margin-bottom: 3px;
+  }
+
+  .recipeBody {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+  }
+
+  .recipeBody h3 {
+    font-size: 1.1rem;
+  }
+
+  .recipeBody p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .nameInput {
+    font-size: 0.9rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .buttons button {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+} 

@@ -81,6 +81,15 @@ export async function delete_recipe(recipeId: number): Promise<void> {
   }
 }
 
+export async function get_recipe_by_slug(slug: string): Promise<IRecipe> {
+  const response = await axios.get(`/dish/recipes/${slug}/`, {
+    headers: {
+      ...tokenService.getAuthHeader(),
+    },
+  });
+  return response.data;
+}
+
 export function isRecipe(obj: RecipeOutput): obj is Extract<RecipeOutput, { dish_name: string }> {
   return "dish_name" in obj;
 }
