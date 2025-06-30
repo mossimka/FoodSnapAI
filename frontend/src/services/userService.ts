@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import axios from '@/lib/axios';
 import { tokenService } from './tokenService';
+import { useUserStore } from '@/stores/userStore';
 
 import { UserPatchRequest } from '@/interfaces/user';
 
@@ -32,9 +33,17 @@ export async function uploadProfilePic(file: File): Promise<string> {
 }
 
 export async function updateProfile(data: UserPatchRequest) {
-  const response = await axios.patch("/user/", data, {
+  const userId = useUserStore.getState().user?.id;
+  
+  if (!userId) {
+    throw new Error("User not found. Please log in again.");
+  }
+
+  const token = tokenService.requireAuth();
+
+  const response = await axios.patch(`/auth/patch/${userId}`, data, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      Authorization: `Bearer ${token}`,
     },
   });
   return response.data;
