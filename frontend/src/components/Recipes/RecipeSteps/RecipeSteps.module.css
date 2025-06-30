@@ -1,0 +1,231 @@
+.container {
+  width: 100%;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 1.4rem;
+  margin: 0;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.resetButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-md);
+  color: var(--text-color-sub);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.resetButton:hover {
+  background: var(--hover-color);
+  color: var(--text-color);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.resetButton:active {
+  transform: translateY(0);
+}
+
+.progressSection {
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+}
+
+.progressInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.progressText {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.completedBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--gradientGreen);
+  color: white;
+  border-radius: var(--border-radius-lg);
+  font-weight: 600;
+  font-size: 0.9rem;
+  animation: celebrateComplete 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes celebrateComplete {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.progressBar {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--gradientGreen);
+  border-radius: 4px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.progressFill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.stepsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.noSteps {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-color-sub);
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--glass-border);
+}
+
+.noSteps p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .container {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .title {
+    font-size: 1.2rem;
+  }
+  
+  .progressSection {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .progressInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .completedBadge {
+    align-self: flex-end;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .stepsList {
+    gap: 0.75rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .container {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+  
+  .header {
+    gap: 0.5rem;
+  }
+  
+  .title {
+    font-size: 1.1rem;
+  }
+  
+  .resetButton {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .progressSection {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .progressText {
+    font-size: 0.9rem;
+  }
+  
+  .completedBadge {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+  }
+  
+  .stepsList {
+    gap: 0.5rem;
+  }
+  
+  .noSteps {
+    padding: 2rem 1rem;
+  }
+  
+  .noSteps p {
+    font-size: 1rem;
+  }
+}

@@ -12,7 +12,6 @@ interface RecipeCardProps {
 }
 
 export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, hidePublishedBadge = false }) => {
-  // Use only slug since it already contains ID
   const recipeUrl = `/recipe/${recipe.slug}`;
 
   return (

@@ -7,6 +7,7 @@
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   width: 23rem;
+  height: 25rem;
   margin: var(--spacing-lg) auto;
   gap: var(--spacing-xl);
   flex-wrap: wrap;
@@ -190,21 +191,23 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: var(--card-shadow);
-  transition: box-shadow 0.2s ease;
+  transition: all 0.2s ease;
   cursor: pointer;
-  height: 100%;
+  width: 300px;
+  height: 360px;
   display: flex;
   flex-direction: column;
 }
 
 .cardLink:hover .card {
   box-shadow: var(--hover-shadow);
+  transform: scale(1.02);
 }
 
 .imageWrapper {
   position: relative;
   width: 100%;
-  height: 200px;
+  height: 180px;
   flex-shrink: 0;
 }
 
@@ -213,28 +216,34 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 }
 
 .title {
   font-size: 1.1rem;
   font-weight: 600;
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   color: var(--text-color);
   line-height: 1.3;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .author {
   font-size: 0.85rem;
   color: var(--text-color-sub);
-  margin: 0 0 0.75rem 0;
+  margin: 0;
 }
 
 .ingredients {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
-  margin-bottom: 0.75rem;
   flex: 1;
+  align-content: flex-start;
+  overflow: hidden;
 }
 
 .ingredient {
@@ -244,6 +253,7 @@
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .moreIngredients {
@@ -253,6 +263,7 @@
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .publishedBadge {
@@ -277,30 +288,37 @@
   margin-top: auto;
 }
 
-@media (max-width: 480px) {
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .card {
+    width: 100%;
+    max-width: 300px;
+    height: 320px;
+  }
+  
+  .imageWrapper {
+    height: 160px;
+  }
+  
   .cardContent {
     padding: 0.75rem;
   }
-
+  
   .title {
     font-size: 1rem;
   }
-
+  
   .author {
     font-size: 0.8rem;
   }
-
+  
   .ingredient,
   .moreIngredients {
     font-size: 0.7rem;
     padding: 0.15rem 0.4rem;
   }
-
-  .publishedBadge {
-    font-size: 0.7rem;
-    padding: 0.25rem 0.5rem;
-  }
-
+  
+  .publishedBadge,
   .unpublishedBadge {
     font-size: 0.7rem;
     padding: 0.25rem 0.5rem;

@@ -4,15 +4,19 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Pencil, ArrowLeft } from "lucide-react";
-import { toast } from "react-toastify";
 
 import Styles from "./RecipePage.module.css";
 import { useAuthStore } from "@/stores/authStore";
 import { useUserStore } from "@/stores/userStore";
-import { IRecipe } from "@/interfaces/recipe";
-import { getRecipeBySlug, patchRecipe, deleteRecipe } from "@/services/generateService";
 import { ShowCaloriesButton } from "@/components/Generation/Calories/ShowCaloriesButton/ShowCaloriesButton";
 import { Calories } from "@/components/Generation/Calories/Calories";
+import { RecipeSteps } from "../RecipeSteps/RecipeSteps";
+import { 
+  useRecipeQuery, 
+  useUpdateRecipeNameMutation, 
+  useToggleRecipePublishMutation, 
+  useDeleteRecipeMutation 
+} from "@/hooks/useRecipeQueries";
 
 interface RecipePageProps {
   slug: string;
@@ -23,111 +27,62 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
   const { isAuthenticated } = useAuthStore();
   const { user } = useUserStore();
 
-  const [recipe, setRecipe] = useState<IRecipe | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  
+  const { 
+    data: recipe, 
+    isLoading, 
+    error 
+  } = useRecipeQuery(slug);
+
+  const updateRecipeName = useUpdateRecipeNameMutation(slug);
+  const togglePublish = useToggleRecipePublishMutation(slug);
+  const deleteRecipe = useDeleteRecipeMutation();
+
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isPublishing, setIsPublishing] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [published, setPublished] = useState(false);
   const [name, setName] = useState("");
   const [showCalories, setShowCalories] = useState(false);
 
   const isOwner = user?.id === recipe?.user_id;
 
-  // Load recipe data
-  useEffect(() => {
-    const loadRecipe = async () => {
-      try {
-        setLoading(true);
-        const recipeData = await getRecipeBySlug(slug);
-        setRecipe(recipeData);
-        setPublished(recipeData.is_published ?? false);
-        setName(recipeData.dish_name);
-        setError(null);
-      } catch (err) {
-        setError("Recipe not found");
-        console.error("Error loading recipe:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (slug) {
-      loadRecipe();
-    }
-  }, [slug]);
-
-  // Update state when recipe changes
+  // Sync local state with recipe data
   useEffect(() => {
     if (recipe) {
-      setPublished(recipe.is_published ?? false);
       setName(recipe.dish_name);
     }
-  }, [recipe?.id, recipe?.dish_name, recipe?.is_published]);
+  }, [recipe?.dish_name]);
 
-  const handlePatch = async () => {
-    if (!recipe) return;
+  const handleUpdateName = () => {
+    if (!recipe || !name.trim()) return;
     
-    try {
-      setIsLoading(true);
-      await patchRecipe(recipe.id, {
-        dish_name: name,
-        publish: published,
-      });
-      setIsEditing(false);
-      setRecipe({ ...recipe, dish_name: name, is_published: published });
-      toast.success("Recipe updated successfully!");
-    } catch (error) {
-      toast.error("Failed to update recipe. Error: " + error);
-    } finally {
-      setIsLoading(false);
-    }
+    updateRecipeName.mutate(
+      { id: recipe.id, dish_name: name },
+      {
+        onSuccess: () => setIsEditing(false),
+      }
+    );
   };
 
-  const handleTogglePublish = async () => {
+  const handleTogglePublish = () => {
     if (!recipe) return;
     
-    try {
-      setIsPublishing(true);
-      const newStatus = !published;
-      await patchRecipe(recipe.id, {
-        dish_name: name,
-        publish: newStatus,
-      });
-      setPublished(newStatus);
-      setRecipe({ ...recipe, is_published: newStatus });
-    } catch (error) {
-      console.error("Error toggling publish status:", error);
-    } finally {
-      setIsPublishing(false);
-    }
+    togglePublish.mutate({
+      id: recipe.id,
+      is_published: !recipe.is_published
+    });
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!recipe) return;
     if (!confirm("Are you sure you want to delete this recipe?")) return;
-
-    try {
-      setIsDeleting(true);
-      await deleteRecipe(recipe.id);
-      toast.success("Recipe deleted successfully!");
-      router.push("/profile");
-    } catch (error) {
-      console.error("Error deleting recipe:", error);
-      toast.error("Failed to delete recipe");
-    } finally {
-      setIsDeleting(false);
-    }
+    
+    deleteRecipe.mutate(recipe.id);
   };
 
   const handleGoBack = () => {
     router.back();
   };
 
-  if (loading) {
+  // Loading state
+  if (isLoading) {
     return (
       <div className={Styles.container}>
         <div className={Styles.loading}>Loading recipe...</div>
@@ -174,22 +129,22 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
                 <button
                   onClick={handleTogglePublish}
                   className="button"
-                  disabled={isPublishing}
+                  disabled={togglePublish.isPending}
                 >
-                  {isPublishing
-                    ? published
+                  {togglePublish.isPending
+                    ? recipe.is_published
                       ? "Unpublishing..."
                       : "Publishing..."
-                    : published
+                    : recipe.is_published
                     ? "Unpublish"
                     : "Publish"}
                 </button>
                 <button
                   onClick={handleDelete}
                   className="buttonRed"
-                  disabled={isDeleting}
+                  disabled={deleteRecipe.isPending}
                 >
-                  {isDeleting ? "Deleting..." : "Delete"}
+                  {deleteRecipe.isPending ? "Deleting..." : "Delete"}
                 </button>
               </div>
             )}
@@ -205,13 +160,17 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
                     onChange={(e) => setName(e.target.value)}
                     className={Styles.nameInput}
                   />
-                  <button onClick={handlePatch} disabled={isLoading} className="button">
-                    {isLoading ? "Saving..." : "Save"}
+                  <button 
+                    onClick={handleUpdateName} 
+                    disabled={updateRecipeName.isPending || !name.trim()} 
+                    className="button"
+                  >
+                    {updateRecipeName.isPending ? "Saving..." : "Save"}
                   </button>
                 </>
               ) : (
                 <>
-                  <h1 className={Styles.recipeName}>{name}</h1>
+                  <h1 className={Styles.recipeName}>{recipe.dish_name}</h1>
                   {isAuthenticated && isOwner && (
                     <Pencil
                       size={20}
@@ -264,8 +223,11 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
         </div>
 
         <div className={Styles.recipeBody}>
-          <h3>Recipe</h3>
-          <p>{recipe.recipe}</p>
+          <RecipeSteps 
+            recipeText={recipe.recipe}
+            recipeId={recipe.id}
+            recipeName={recipe.dish_name}
+          />
         </div>
       </div>
     </div>

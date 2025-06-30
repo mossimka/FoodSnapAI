@@ -1,0 +1,212 @@
+.stepContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stepContainer:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--hover-shadow);
+  border-color: var(--border-color);
+}
+
+.stepContainer.completed {
+  background: rgba(52, 168, 83, 0.1);
+  border-color: var(--green);
+}
+
+.stepContainer.completed::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--gradientGreen);
+  border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg);
+}
+
+.stepHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.stepNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.stepNumber::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.stepNumber:hover {
+  transform: scale(1.1);
+  box-shadow: var(--hover-shadow);
+  border-color: var(--color1);
+}
+
+.stepNumber:hover::before {
+  left: 100%;
+}
+
+.stepNumber:active {
+  transform: scale(0.95);
+}
+
+.stepNumberCompleted {
+  background: var(--gradientGreen);
+  border-color: var(--green);
+  color: white;
+  animation: completeAnimation 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes completeAnimation {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.copyButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-color-sub);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.copyButton:hover {
+  opacity: 1;
+  background: var(--hover-color);
+  color: var(--text-color);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.copyButton:active {
+  transform: translateY(0);
+}
+
+.stepContent {
+  padding-left: 3.5rem;
+}
+
+.stepText {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--text-color);
+  font-size: 1rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.stepContainer.completed .stepText {
+  color: var(--text-color-sub);
+  position: relative;
+}
+
+.stepContainer.completed .stepText::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: var(--text-color-sub);
+  transform: scaleX(0);
+  animation: strikethrough 0.4s ease-in-out 0.2s forwards;
+}
+
+@keyframes strikethrough {
+  to { transform: scaleX(1); }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .stepContainer {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+  
+  .stepNumber {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.9rem;
+  }
+  
+  .copyButton {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  
+  .stepContent {
+    padding-left: 3rem;
+  }
+  
+  .stepText {
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .stepContainer {
+    padding: 0.75rem;
+  }
+  
+  .stepNumber {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.85rem;
+  }
+  
+  .copyButton {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .stepContent {
+    padding-left: 2.5rem;
+  }
+  
+  .stepText {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}
