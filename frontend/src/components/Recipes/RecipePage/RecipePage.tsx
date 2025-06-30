@@ -10,7 +10,7 @@ import Styles from "./RecipePage.module.css";
 import { useAuthStore } from "@/stores/authStore";
 import { useUserStore } from "@/stores/userStore";
 import { IRecipe } from "@/interfaces/recipe";
-import { get_recipe_by_slug, patchRecipe, delete_recipe } from "@/services/generateService";
+import { getRecipeBySlug, patchRecipe, deleteRecipe } from "@/services/generateService";
 import { ShowCaloriesButton } from "@/components/Generation/Calories/ShowCaloriesButton/ShowCaloriesButton";
 import { Calories } from "@/components/Generation/Calories/Calories";
 
@@ -42,7 +42,7 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
     const loadRecipe = async () => {
       try {
         setLoading(true);
-        const recipeData = await get_recipe_by_slug(slug);
+        const recipeData = await getRecipeBySlug(slug);
         setRecipe(recipeData);
         setPublished(recipeData.is_published ?? false);
         setName(recipeData.dish_name);
@@ -112,7 +112,7 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
 
     try {
       setIsDeleting(true);
-      await delete_recipe(recipe.id);
+      await deleteRecipe(recipe.id);
       toast.success("Recipe deleted successfully!");
       router.push("/profile");
     } catch (error) {

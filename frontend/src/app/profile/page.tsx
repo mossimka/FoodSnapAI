@@ -7,7 +7,7 @@ import Styles from "./profile.module.css";
 import RecipeStyles  from "../posted/posted.module.css"
 import { useUserQuery } from "@/hooks/useUserQuery";
 import { IRecipe } from "@/interfaces/recipe";
-import { get_my_recipes } from "@/services/generateService";
+import { getMyRecipes } from "@/services/generateService";
 import { RecipeCard } from "@/components/Recipes/RecipeCard/RecipeCard";
 
 export default function ProfilePage() {
@@ -15,7 +15,7 @@ export default function ProfilePage() {
   const [myRecipes, setMyRecipes] = useState<IRecipe[]>([]);
 
   useEffect(()  => {
-    get_my_recipes()
+    getMyRecipes()
       .then(setMyRecipes)
       .catch((err) => console.error("My error:", err));
   }, []);

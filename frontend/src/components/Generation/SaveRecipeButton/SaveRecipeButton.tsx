@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { save_recipe } from '@/services/generateService';
+import { saveRecipe } from '@/services/generateService';
 import { RecipeOutput } from '@/interfaces/recipe';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
@@ -19,7 +19,7 @@ export const SaveRecipeButton: React.FC<Props> = ({ file, recipePart }) => {
     const handleSave = async () => {
       setIsSaving(true);
       try {
-        const { slug } = await save_recipe({
+        const { slug } = await saveRecipe({
           file,
           recipePart: {
             ...recipePart,

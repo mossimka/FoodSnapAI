@@ -10,7 +10,7 @@ import { SaveRecipeButton } from "./SaveRecipeButton/SaveRecipeButton";
 import Styles from "./Generation.module.css";
 import { SignPopup } from "@/components/SignPopup/SignPopup";
 import { useAuthStore } from "@/stores/authStore";
-import { generate_recipe } from "@/services/generateService";
+import { generateRecipe } from "@/services/generateService";
 import { RecipeOutput, isNotFoodResponse, isGenerationOutput } from "@/interfaces/recipe";
 import { NavButton } from "../Navbar/NavButton/NavButton";
 import { Printer } from "../Style/Printer/Printer";
@@ -81,7 +81,7 @@ const generateResponse = async () => {
 
   setTimeout(async () => {
     try {
-      const res = await generate_recipe(imageFile);
+      const res = await generateRecipe(imageFile);
       
       if (isNotFoodResponse(res)) {
         const formattedText = `🚫 This doesn't look like food.\n\n🔍 Detected: ${res.description}`;

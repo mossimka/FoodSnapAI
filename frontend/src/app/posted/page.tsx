@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { RecipeCard } from "@/components/Recipes/RecipeCard/RecipeCard";
 import { IRecipe } from "@/interfaces/recipe";
-import { get_public_recipes, get_my_recipes } from "@/services/generateService";
+import { getPublicRecipes, getMyRecipes } from "@/services/generateService";
 
 export default function PostedPage() {
   const [activeTab, setActiveTab] = useState<"public" | "my">("public");
@@ -14,11 +14,11 @@ export default function PostedPage() {
   const [myRecipes, setMyRecipes] = useState<IRecipe[]>([]);
 
   useEffect(() => {
-    get_public_recipes()
+    getPublicRecipes()
       .then(setPublicRecipes)
       .catch((err) => console.error("Public error:", err));
 
-    get_my_recipes()
+    getMyRecipes()
       .then(setMyRecipes)
       .catch((err) => console.error("My error:", err));
   }, []);

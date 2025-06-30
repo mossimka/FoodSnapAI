@@ -91,7 +91,7 @@ const CameraCapture: React.FC<DropZoneProps> = ({ setImage }) => {
             />
           </>
         ) : (
-          <button onClick={startCamera} className={Styles.fakeButton}>
+          <button onClick={startCamera} className="button">
             Open Camera
           </button>
         )}

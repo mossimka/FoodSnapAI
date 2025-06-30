@@ -5,7 +5,7 @@ import { tokenService } from './tokenService';
 import { RecipeOutput, RecipeInput, IRecipe, RecipePatchRequest } from "@/interfaces/recipe";
 import type { RecipeResult } from '@/interfaces/recipe';
 
-export async function generate_recipe(imageFile: File): Promise<RecipeResult> {
+export async function generateRecipe(imageFile: File): Promise<RecipeResult> {
   const formData = new FormData();
   formData.append("file", imageFile);
 
@@ -25,7 +25,7 @@ export async function generate_recipe(imageFile: File): Promise<RecipeResult> {
   }
 }
 
-export async function save_recipe(recipe: RecipeInput) {
+export async function saveRecipe(recipe: RecipeInput) {
   const token = tokenService.requireAuth();
 
   const formData = new FormData();
@@ -42,7 +42,7 @@ export async function save_recipe(recipe: RecipeInput) {
   return { slug: response.data.slug };
 }
 
-export async function get_public_recipes(): Promise<IRecipe[]> {
+export async function getPublicRecipes(): Promise<IRecipe[]> {
   const response = await axios.get("/dish/public/", {
     headers: {
       ...tokenService.getAuthHeader(),
@@ -51,7 +51,7 @@ export async function get_public_recipes(): Promise<IRecipe[]> {
   return response.data;
 }
 
-export async function get_my_recipes(): Promise<IRecipe[]> {
+export async function getMyRecipes(): Promise<IRecipe[]> {
   const response = await axios.get("/dish/my/", {
     headers: {
       ...tokenService.getAuthHeader(),
@@ -66,7 +66,7 @@ export async function patchRecipe(recipeId: number, data: RecipePatchRequest) {
 }
 
 
-export async function delete_recipe(recipeId: number): Promise<void> {
+export async function deleteRecipe(recipeId: number): Promise<void> {
   const token = tokenService.requireAuth();
 
   try {
@@ -81,7 +81,7 @@ export async function delete_recipe(recipeId: number): Promise<void> {
   }
 }
 
-export async function get_recipe_by_slug(slug: string): Promise<IRecipe> {
+export async function getRecipeBySlug(slug: string): Promise<IRecipe> {
   const response = await axios.get(`/dish/recipes/${slug}/`, {
     headers: {
       ...tokenService.getAuthHeader(),

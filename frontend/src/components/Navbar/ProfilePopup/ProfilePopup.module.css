@@ -43,7 +43,7 @@
   text-shadow: var(--active-shadow);
 }
 
-.icon {
+.arrow {
   stroke-width: 1.5;
-  color: var(--);
+  color: var(--text-color);
 }
