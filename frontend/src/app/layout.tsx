@@ -12,6 +12,8 @@ import { GoogleProviderWrapper } from "@/components/Auth/GoogleProviderWrapper";
 import { ThemeProvider } from "@/context/ThemeProvider";
 import { AddToHomeScreenPrompt } from "@/components/AddToHomeScreenPrompt/AddToHomeScreenPrompt";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { GoogleAnalytics } from "../analytics/GoogleAnalytics";
+
 
 const rubik = Rubik({
   subsets: ['latin', 'cyrillic'],
@@ -65,6 +67,7 @@ export default function RootLayout({
         <GoogleProviderWrapper>
           <Providers>
             <ThemeProvider>
+              <GoogleAnalytics />
               <Navbar />
               {children}
               <Footer />
