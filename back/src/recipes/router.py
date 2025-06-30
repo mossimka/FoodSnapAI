@@ -175,6 +175,13 @@ async def save_recipe(
         }
 
     except Exception as e:
+        import traceback
+        print(f"=== SAVE RECIPE ERROR ===")
+        print(f"Error type: {type(e).__name__}")
+        print(f"Error message: {str(e)}")
+        print(f"Full traceback:")
+        traceback.print_exc()
+        print(f"========================")
         raise HTTPException(status_code=500, detail=f"Saving failed: {str(e)}")
 
     
