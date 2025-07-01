@@ -50,7 +50,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 2rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--glass-bg);
   border-bottom: 1px solid var(--glass-border);
   flex-shrink: 0;
 }
@@ -132,7 +132,7 @@
 
 .summaryCard {
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.3);
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--glass-border);
   display: flex;
@@ -217,7 +217,7 @@
   overflow-y: auto;
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--glass-bg);
 }
 
 .table {
