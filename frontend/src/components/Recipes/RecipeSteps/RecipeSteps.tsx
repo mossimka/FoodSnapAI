@@ -20,11 +20,9 @@ export const RecipeSteps: React.FC<RecipeStepsProps> = ({
   const [steps, setSteps] = useState<RecipeStepData[]>([]);
   const storageKey = `recipe-progress-${recipeId}`;
 
-  // Парсинг текста рецепта в шаги
   const parseRecipeSteps = useCallback((text: string): RecipeStepData[] => {
     if (!text?.trim()) return [];
     
-    // Разделяем по переносам строк и фильтруем пустые строки
     const lines = text.split('\n').filter(line => line.trim().length > 0);
     
     return lines.map((line, index) => ({
@@ -34,7 +32,6 @@ export const RecipeSteps: React.FC<RecipeStepsProps> = ({
     }));
   }, []);
 
-  // Загрузка прогресса из localStorage
   const loadProgress = useCallback(() => {
     try {
       const savedProgress = localStorage.getItem(storageKey);
@@ -48,7 +45,6 @@ export const RecipeSteps: React.FC<RecipeStepsProps> = ({
     return [];
   }, [storageKey]);
 
-  // Сохранение прогресса в localStorage
   const saveProgress = useCallback((completedStepIds: number[]) => {
     try {
       const progressData = {
@@ -63,7 +59,6 @@ export const RecipeSteps: React.FC<RecipeStepsProps> = ({
     }
   }, [storageKey, recipeId, recipeName]);
 
-  // Инициализация шагов
   useEffect(() => {
     const parsedSteps = parseRecipeSteps(recipeText);
     const completedStepIds = loadProgress();
@@ -76,7 +71,6 @@ export const RecipeSteps: React.FC<RecipeStepsProps> = ({
     setSteps(stepsWithProgress);
   }, [recipeText, parseRecipeSteps, loadProgress]);
 
-  // Переключение состояния шага
   const toggleStep = useCallback((stepId: number) => {
     setSteps(prevSteps => {
       const updatedSteps = prevSteps.map(step =>
@@ -92,7 +86,6 @@ export const RecipeSteps: React.FC<RecipeStepsProps> = ({
     });
   }, [saveProgress]);
 
-  // Сброс прогресса
   const resetProgress = useCallback(() => {
     setSteps(prevSteps => 
       prevSteps.map(step => ({ ...step, completed: false }))
@@ -101,7 +94,6 @@ export const RecipeSteps: React.FC<RecipeStepsProps> = ({
     toast.success("Progress reset!");
   }, [storageKey]);
 
-  // Копирование текста шага
   const handleCopyStep = useCallback((text: string) => {
     navigator.clipboard.writeText(text).then(() => {
       toast.success("Step copied to clipboard!");
@@ -110,7 +102,6 @@ export const RecipeSteps: React.FC<RecipeStepsProps> = ({
     });
   }, []);
 
-  // Подсчет прогресса
   const completedCount = steps.filter(step => step.completed).length;
   const totalCount = steps.length;
   const progressPercentage = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;

@@ -53,7 +53,7 @@ export const RecipeStep: React.FC<RecipeStepProps> = ({
       </div>
       
       <div className={styles.stepContent}>
-        <p className={styles.stepText}>{step.text}</p>
+        <p className={styles.stepText}>{step.text.slice(2)}</p>
       </div>
     </div>
   );

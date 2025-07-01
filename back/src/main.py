@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.database import engine, Base
@@ -37,4 +37,20 @@ Base.metadata.create_all(bind=engine)
 @app.get("/")
 def root():
     return {"message": "Welcome to the FoodSnap AI!!"}
+
+
+@app.get("/sitemap.xml", response_class=Response)
+def sitemap():
+    content = """<?xml version="1.0" encoding="UTF-8"?>
+        <urlset 
+            xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url>
+            <loc>https://foodsnapai.food/</loc>
+            <changefreq>daily</changefreq>
+            <priority>1.0</priority>
+        </url>
+        </urlset>
+        """
+    return Response(content=content, media_type="application/xml")
+
 
