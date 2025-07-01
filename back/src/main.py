@@ -3,7 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from datetime import datetime
 
-from src.database import engine, Base, get_db
+from src.database import engine, Base
+from src.dependencies import get_db
 from src.auth.router import router as auth_router
 from src.gcs.router import router as gcs_router
 from src.recipes.router import router as ai_router
