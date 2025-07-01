@@ -10,7 +10,7 @@ interface ShowCaloriesButtonProps {
 
 export const ShowCaloriesButton: React.FC<ShowCaloriesButtonProps> = ({
   onClick,
-  text = "Show calories",
+  text = "Nutrition info",
   style,
   className = "buttonGreen",
 }) => (

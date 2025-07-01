@@ -7,6 +7,7 @@ import { AxiosError } from "axios";
 import DropZone from "./DropZone/DropZone";
 import CameraCapture from "./CameraCapture/CameraCapture";
 import { SaveRecipeButton } from "./SaveRecipeButton/SaveRecipeButton";
+import { RecipeDisplay } from "./RecipeDisplay/RecipeDisplay";
 import Styles from "./Generation.module.css";
 import { SignPopup } from "@/components/SignPopup/SignPopup";
 import { useAuthStore } from "@/stores/authStore";
@@ -16,8 +17,6 @@ import { NavButton } from "../Navbar/NavButton/NavButton";
 import { Printer } from "../Style/Printer/Printer";
 import { truncateFilename } from '@/utils/stringUtils';
 import { compressImage } from '@/utils/imageUtils';
-import { Calories } from "./Calories/Calories";
-import { ShowCaloriesButton } from "./Calories/ShowCaloriesButton/ShowCaloriesButton";
 
 export const Generation = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -28,7 +27,7 @@ export const Generation = () => {
   const [responseText, setResponseText] = useState<string>("");
   const [hasGenerated, setHasGenerated] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [showCalories, setShowCalories] = useState(false);
+  const [isNotFood, setIsNotFood] = useState(false);
 
   const [generatedRecipe, setGeneratedRecipe] = useState<RecipeOutput | null>(null);
 
@@ -58,6 +57,7 @@ export const Generation = () => {
     setIsGenerating(false);
     setResponseText("");
     setHasGenerated(false);
+    setIsNotFood(false);
   };
 
   useEffect(() => {
@@ -88,6 +88,7 @@ const generateResponse = async () => {
         setResponseText(formattedText);
         setHasGenerated(true);
         setGeneratedRecipe(null);
+        setIsNotFood(true);
         return;
       }
 
@@ -107,28 +108,15 @@ const generateResponse = async () => {
         };
 
         setGeneratedRecipe(finalRecipe);
-
-        const formattedText = [
-          `🍽️ Dish: ${finalRecipe.dish_name}`,
-          ``,
-          ` 🧂 Ingredients:`,
-          ...finalRecipe.ingredients_calories.map((i) => `- ${i.ingredient}`),
-          ``,
-          `⚖️ Estimated weight: ${finalRecipe.estimated_weight_g}g`,
-          `🔥 Calories per 100g: ${finalRecipe.total_calories_per_100g} kcal`,     
-          `🔥 Total calories: ${finalRecipe.total_calories_per_100g * (finalRecipe.estimated_weight_g / 100)} kcal`,
-          `📋 Recipe:`,
-          ...finalRecipe.recipe.split("\n"),
-        ].join("\n");
-
-        setResponseText(formattedText);
         setHasGenerated(true);
+        setIsNotFood(false);
       }
     } catch (error: unknown) {
       const err = error as AxiosError<{ detail: string }>;
       console.error("Error while generating recipe", err);
       setResponseText("❌ Failed to generate recipe. Please try again.");
       setHasGenerated(true);
+      setIsNotFood(true);
     } finally {
       setIsGenerating(false);
     }
@@ -186,26 +174,26 @@ const generateResponse = async () => {
             <Image src="/images/loader.gif" alt="Generating..." width={128} height={50} />
           ) : (
             <div className={Styles.responseBoxContainer}>
-              <Printer initialText={responseText} speed={10}/>
-              {generatedRecipe && (
-                <div className={Styles.action}>
-                  <div>
-                    <ShowCaloriesButton
-                      onClick={() => setShowCalories(true)}
-                      style={{ marginTop: "3vh" }}
+              {/* Show not food response or error with Printer */}
+              {isNotFood && (
+                <Printer initialText={responseText} speed={10}/>
+              )}
+              
+              {/* Show beautiful recipe display */}
+              {generatedRecipe && !isNotFood && (
+                <>
+                  <RecipeDisplay 
+                    recipe={generatedRecipe} 
+                    isAnimating={isGenerating}
+                  />
+                  <div className={Styles.action}>
+                    <SaveRecipeButton 
+                      file={imageFile!} 
+                      recipePart={generatedRecipe!}
                     />
+                    <NavButton text="Go to my recipies" link="/posted" inputStyle={{ marginTop: "3vh" }} />
                   </div>
-                  <SaveRecipeButton 
-                    file={imageFile!} 
-                    recipePart={generatedRecipe!}
-                  />
-                  <NavButton text="Go to my recipies" link="/posted" inputStyle={{ marginTop: "3vh" }} />
-                  <Calories
-                    open={showCalories}
-                    onClose={() => setShowCalories(false)}
-                    caloriesData={generatedRecipe}
-                  />
-                </div>
+                </>
               )}
             </div>
           )}

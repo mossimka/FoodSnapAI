@@ -1,0 +1,272 @@
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 2rem;
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow);
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--glass-border);
+  border-top: 3px solid var(--color1);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading p {
+  color: var(--text-color-sub);
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+}
+
+.dishTitle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.titleIcon {
+  color: var(--color1);
+  width: 32px;
+  height: 32px;
+}
+
+.dishName {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.copyButton {
+  padding: 0.5rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-md);
+  color: var(--text-color-sub);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copyButton:hover {
+  background: var(--hover-color);
+  color: var(--text-color);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Quick Nutrition Preview */
+.quickNutrition {
+  padding: 1rem 1.5rem;
+  background: rgba(52, 168, 83, 0.1);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(52, 168, 83, 0.2);
+}
+
+.nutritionPreview {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.nutritionItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nutritionLabel {
+  font-size: 0.8rem;
+  color: var(--text-color-sub);
+  font-weight: 500;
+}
+
+.nutritionValue {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--green);
+}
+
+/* Sections */
+.section {
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.emoji {
+  font-size: 1.5rem;
+}
+
+/* Ingredients */
+.ingredientsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.ingredientCard {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--glass-border);
+  transition: all 0.2s ease;
+}
+
+.ingredientCard:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
+}
+
+.ingredientName {
+  font-weight: 500;
+  color: var(--text-color);
+  text-align: center;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .dishTitle {
+    width: 100%;
+  }
+  
+  .headerActions {
+    align-self: flex-end;
+  }
+  
+  .dishName {
+    font-size: 1.5rem;
+  }
+  
+  .nutritionPreview {
+    justify-content: space-between;
+  }
+  
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .ingredientsList {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    gap: 1rem;
+  }
+  
+  .section {
+    padding: 1rem;
+  }
+  
+  .header {
+    padding: 1rem;
+  }
+  
+  .dishName {
+    font-size: 1.3rem;
+  }
+  
+  .nutritionPreview {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .nutritionItem {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+  
+  .ingredientsList {
+    grid-template-columns: 1fr;
+  }
+} 

@@ -1,76 +1,424 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 99999;
+  animation: overlayFadeIn 0.3s ease-out;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .popup {
   background: var(--glass-bg);
-  border-radius: var(--border-radius-lg);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  border-radius: var(--border-radius-xl);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  padding: 0;
   min-width: 320px;
-  max-width: 95vw;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 800px;
   position: relative;
-  animation: fadeIn 0.3s cubic-bezier(0.4,0,0.2,1);
+  animation: popupSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes popupSlideIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(40px) scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--glass-border);
+  flex-shrink: 0;
+}
+
+.titleSection {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.titleIcon {
+  color: var(--color1);
+  width: 24px;
+  height: 24px;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.headerButtons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.copyButton {
+  padding: 0.5rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-md);
+  color: var(--text-color-sub);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copyButton:hover {
+  background: var(--hover-color);
+  color: var(--text-color);
+  transform: translateY(-1px);
 }
 
 .closeBtn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
+  padding: 0.5rem;
   background: transparent;
   border: none;
   color: var(--text-color-sub);
   cursor: pointer;
-  font-size: 1.2rem;
-  transition: color 0.2s;
+  transition: all 0.2s ease;
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 .closeBtn:hover {
+  background: rgba(255, 0, 0, 0.1);
+  color: #dc2626;
+}
+
+/* Summary Cards */
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.summaryCard {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.summaryCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.cardIcon {
+  width: 20px;
+  height: 20px;
   color: var(--color1);
+  flex-shrink: 0;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.cardLabel {
+  font-size: 0.8rem;
+  color: var(--text-color-sub);
+  font-weight: 500;
+}
+
+.cardValue {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.table tr {
+  z-index: 1000;
+}
+/* Table Section */
+.tableSection {
+  flex: 1;
+  padding: 1.5rem 2rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tableHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.tableTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.emoji {
+  font-size: 1.2rem;
+}
+
+.ingredientCount {
+  font-size: 0.9rem;
+  color: var(--text-color-sub);
+  padding: 0.25rem 0.75rem;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: var(--border-radius-md);
+}
+
+.tableContainer {
+  flex: 1;
+  overflow-y: auto;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.4);
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1rem 0;
 }
-.table th, .table td {
-  padding: 0.5rem 0.7rem;
-  border-bottom: 1px solid var(--border-color);
-  text-align: left;
-}
+
 .table th {
+  padding: 1rem 0.75rem;
   background: var(--gradient);
   color: white;
   font-weight: 600;
-}
-.summary {
-  margin-top: 1rem;
-  font-size: 1rem;
-  color: var(--text-color-sub);
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  text-align: left;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-@media (max-width: 600px) {
+.table th:first-child {
+  width: 50px;
+  text-align: center;
+}
+
+.table th:last-child {
+  width: 120px;
+}
+
+.tableRow {
+  transition: background-color 0.2s ease;
+}
+
+.tableRow:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.indexCell {
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-color-sub);
+  font-size: 0.9rem;
+}
+
+.ingredientCell {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.ingredientName {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.caloriesCell {
+  text-align: right;
+}
+
+.caloriesValue {
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.caloriesUnit {
+  font-size: 0.8rem;
+  color: var(--text-color-sub);
+  margin-left: 0.25rem;
+}
+
+.percentageCell {
+  padding: 0.75rem;
+}
+
+.percentageBar {
+  position: relative;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.percentageFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--gradientGreen);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.percentageText {
+  position: relative;
+  z-index: 1;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-left: 0.5rem;
+}
+
+/* Footer */
+.footer {
+  padding: 1rem 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--glass-border);
+  flex-shrink: 0;
+}
+
+.totalSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.totalLabel {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.totalValue {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .popup {
-    padding: 1rem 0.5rem 1rem 0.5rem;
-    min-width: 0;
-    width: 98vw;
+    width: 95vw;
+    max-height: 85vh;
   }
-  .table th, .table td {
-    padding: 0.4rem 0.3rem;
-    font-size: 0.95rem;
+  
+  .header {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .headerButtons {
+    align-self: flex-end;
+  }
+  
+  .title {
+    font-size: 1.1rem;
+  }
+  
+  .summaryGrid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+  
+  .summaryCard {
+    padding: 0.75rem;
+  }
+  
+  .tableSection {
+    padding: 1rem;
+  }
+  
+  .table th,
+  .table td {
+    padding: 0.5rem 0.4rem;
+    font-size: 0.9rem;
+  }
+  
+  .footer {
+    padding: 1rem;
+  }
+  
+  .totalSection {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .popup {
+    width: 98vw;
+    max-height: 90vh;
+  }
+  
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .table th:first-child,
+  .table td:first-child {
+    display: none;
+  }
+  
+  .tableHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
 }
