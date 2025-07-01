@@ -1,0 +1,108 @@
+.searchContainer {
+  display: flex;
+  align-items: center;
+}
+
+.searchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-lg);
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.searchWrapper:focus-within {
+  border-color: var(--color1);
+  box-shadow: 0 0 0 2px rgba(244, 138, 59, 0.2);
+}
+
+.searchIcon {
+  position: absolute;
+  left: var(--spacing-md);
+  color: var(--text-color-sub);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.searchInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: var(--spacing-md) var(--spacing-lg) var(--spacing-md) calc(var(--spacing-md) + 24px + var(--spacing-sm));
+  color: var(--text-color);
+  font-size: 0.9rem;
+  width: 300px;
+  transition: all 0.3s ease;
+}
+
+.searchInput::placeholder {
+  color: var(--text-color-sub);
+  opacity: 0.7;
+}
+
+.searchInput:focus {
+  width: 320px;
+}
+
+.clearButton {
+  position: absolute;
+  right: var(--spacing-sm);
+  background: transparent;
+  border: none;
+  color: var(--text-color-sub);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.clearButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+  .searchContainer {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .searchWrapper {
+    width: 100%;
+  }
+  
+  .searchInput {
+    width: 100%;
+    padding-right: 40px;
+  }
+  
+  .searchInput:focus {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .searchInput {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: var(--spacing-sm) 40px var(--spacing-sm) calc(var(--spacing-sm) + 24px + var(--spacing-xs));
+  }
+  
+  .searchIcon {
+    left: var(--spacing-sm);
+  }
+  
+  .clearButton {
+    right: var(--spacing-xs);
+  }
+}

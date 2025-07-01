@@ -43,7 +43,6 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
 
   const isOwner = user?.id === recipe?.user_id;
 
-  // Sync local state with recipe data
   useEffect(() => {
     if (recipe) {
       setName(recipe.dish_name);
@@ -81,7 +80,6 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
     router.back();
   };
 
-  // Loading state
   if (isLoading) {
     return (
       <div className={Styles.container}>

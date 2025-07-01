@@ -5,6 +5,14 @@
   min-height: 65vh;
 }
 
+.controlsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+}
+
 .tabToggle {
   display: flex;
   background: rgba(255, 255, 255, 0.1);
@@ -13,9 +21,13 @@
   border-radius: var(--border-radius-xl);
   overflow: hidden;
   width: fit-content;
-  margin-bottom: var(--spacing-2xl);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   position: relative;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
 }
 
 .tabButton {
@@ -80,6 +92,23 @@
   .tabButton {
     padding: var(--spacing-md) var(--spacing-xl);
     font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .controlsContainer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-md);
+  }
+  
+  .searchContainer {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .tabToggle {
+    align-self: center;
   }
 }
 
