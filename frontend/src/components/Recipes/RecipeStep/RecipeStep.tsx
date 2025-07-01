@@ -53,7 +53,9 @@ export const RecipeStep: React.FC<RecipeStepProps> = ({
       </div>
       
       <div className={styles.stepContent}>
-        <p className={styles.stepText}>{step.text.slice(2)}</p>
+        <p className={styles.stepText}>
+          {step.text.replace(/^\d+\.\s*/, '')}
+        </p>
       </div>
     </div>
   );
