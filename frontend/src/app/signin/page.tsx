@@ -8,12 +8,12 @@ import { useRouter } from 'next/navigation';
 import Styles from './signin.module.css';
 import { GoogleLoginButton } from '@/components/Auth/GoogleLogin/GoogleLogin'; 
 import { PasswordInput } from '@/components/Auth/PasswordInput/PasswordInput';
+import { toast } from 'react-toastify';
 
 const SigninPage = () => {
   const router = useRouter();
   const [form, setForm] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,14 +23,13 @@ const SigninPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
     try {
       await signIn(form);
       router.push('/');
     } catch (err: unknown) {
       let message = 'Sign in failed';
       if (err instanceof Error) message = err.message;
-      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -61,15 +60,11 @@ const SigninPage = () => {
           </button>
         </form>
         
-        <Link href="/signup" className={`${Styles.noUnderline} gradientText`}><small>Do nat have an account? <b>Sign up</b></small></Link>
+        <Link href="/signup" className={`${Styles.noUnderline} gradientText`}><small>Do not have an account? <b>Sign up</b></small></Link>
 
         <p>or</p>
         
         <GoogleLoginButton />
-
-        
-
-        {error && <p className={Styles.error}>{error}</p>}
       </div>
     </div>
   );

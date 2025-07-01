@@ -17,6 +17,7 @@ from src.config import (
     REFRESH_TOKEN_EXPIRE_DAYS
 )
 from src.auth.models import Users
+from src.dependencies import get_db
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
@@ -60,6 +61,18 @@ def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
         return {'username': username, 'id': user_id}
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user')
+
+def get_current_admin_user(
+    token: Annotated[str, Depends(oauth2_bearer)],
+    db: Annotated[Session, Depends(get_db)]
+):
+    current_user = get_current_user(token)
+    user = db.query(Users).filter(Users.id == current_user['id']).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User not found')
+    if not user.is_admin:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Admin access required')
+    return {'username': user.username, 'id': user.id, 'is_admin': user.is_admin}
 
 def verify_refresh_token(token: str):
     try:

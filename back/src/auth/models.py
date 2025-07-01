@@ -1,5 +1,5 @@
 from src.database import Base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 
 class Users(Base):
@@ -9,6 +9,7 @@ class Users(Base):
     username = Column(String, unique=True)
     email = Column(String, unique=True)
     hashed_password = Column(String)
+    is_admin = Column(Boolean, default=False, nullable=False)
     profile_pic = Column(String, nullable=True)
 
     recipes = relationship("Recipe", back_populates="user")

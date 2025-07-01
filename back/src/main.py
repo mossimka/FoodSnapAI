@@ -9,6 +9,7 @@ from src.auth.router import router as auth_router
 from src.gcs.router import router as gcs_router
 from src.recipes.router import router as ai_router
 from src.profile.router import router as profile_router
+from src.admin.router import router as admin_router
 from src.recipes.models import Recipe
 
 app = FastAPI()
@@ -34,6 +35,7 @@ app.include_router(auth_router)
 app.include_router(gcs_router)
 app.include_router(ai_router)
 app.include_router(profile_router)
+app.include_router(admin_router)
 
 Base.metadata.create_all(bind=engine)
 
