@@ -10,7 +10,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { useUserStore } from "@/stores/userStore";
 import { ShowCaloriesButton } from "@/components/Generation/Calories/ShowCaloriesButton/ShowCaloriesButton";
 import { Calories } from "@/components/Generation/Calories/Calories";
-import { RecipeSteps } from "../RecipeSteps/RecipeSteps";
+import { RecipeSteps } from "@/components/Recipes/RecipeSteps/RecipeSteps";
 import { 
   useRecipeQuery, 
   useUpdateRecipeNameMutation, 
