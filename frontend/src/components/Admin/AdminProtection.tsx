@@ -70,10 +70,11 @@ export default function AdminProtection({ children }: AdminProtectionProps) {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
-        backgroundColor: '#1a1a1a',
-        color: '#4ecdc4',
+        background: 'linear-gradient(135deg, var(--bg-color) 0%, var(--bg-color2) 100%)',
+        color: 'var(--color1)',
         fontSize: '1.5rem',
-        fontFamily: 'Monaco, monospace'
+        fontFamily: 'Rubik, Monaco, monospace',
+        fontWeight: '600'
       }}>
         Checking admin access...
       </div>
@@ -88,28 +89,40 @@ export default function AdminProtection({ children }: AdminProtectionProps) {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
-        backgroundColor: '#1a1a1a',
-        color: '#e74c3c',
-        fontFamily: 'Monaco, monospace',
+        background: 'linear-gradient(135deg, var(--bg-color) 0%, var(--bg-color2) 100%)',
+        color: 'var(--text-color)',
+        fontFamily: 'Rubik, Monaco, monospace',
         textAlign: 'center',
         padding: '20px'
       }}>
-        <h1 style={{ fontSize: '3rem', marginBottom: '20px' }}>🚫</h1>
-        <h2 style={{ marginBottom: '10px' }}>Access Denied</h2>
-        <p style={{ marginBottom: '30px', color: '#888' }}>
+        <h1 style={{ 
+          fontSize: '3rem', 
+          marginBottom: '20px',
+          background: 'var(--gradientRed)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text'
+        }}>🚫</h1>
+        <h2 style={{ 
+          marginBottom: '10px',
+          background: 'var(--gradient)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          fontWeight: '700'
+        }}>Access Denied</h2>
+        <p style={{ 
+          marginBottom: '30px', 
+          color: 'var(--text-color-sub)',
+          fontSize: '1.1rem'
+        }}>
           You need admin privileges to access this page.
         </p>
         <button
           onClick={() => router.push('/')}
+          className="button"
           style={{
-            padding: '12px 24px',
-            backgroundColor: '#4ecdc4',
-            color: '#1a1a1a',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            fontWeight: 'bold'
+            fontSize: '16px'
           }}
         >
           Go Home

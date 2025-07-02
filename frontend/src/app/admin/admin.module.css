@@ -2,138 +2,259 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background-color: var(--bg-color);
-  color: #e0e0e0;
+  background: linear-gradient(135deg, var(--bg-color) 0%, var(--bg-color2) 100%);
+  color: var(--text-color);
   min-height: 100vh;
 }
 
 .adminContainer h1 {
-  color: #ff6b35;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
   text-align: center;
   margin-bottom: 30px;
   font-size: 2.5rem;
 }
 
 .adminContainer h2 {
-  color: #4ecdc4;
-  border-bottom: 2px solid #4ecdc4;
+  color: var(--color1);
+  border-bottom: 2px solid var(--color1);
   padding-bottom: 10px;
   margin-top: 40px;
   margin-bottom: 20px;
+  font-weight: 600;
 }
 
 .adminContainer h3 {
-  color: #ffe66d;
+  color: var(--color2);
   margin-bottom: 15px;
   font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .loading {
   text-align: center;
-  color: #4ecdc4;
+  color: var(--color1);
   font-size: 1.2rem;
   padding: 20px;
-  background-color: var(--hover-color);
-  border-radius: 8px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-lg);
   margin-bottom: 20px;
+  box-shadow: var(--shadow);
 }
 
 .message {
   padding: 15px;
   margin-bottom: 20px;
-  border-radius: 8px;
-  background-color: #2a4a2a;
-  color: #90ee90;
-  border-left: 4px solid #4ecdc4;
-  font-weight: bold;
+  border-radius: var(--border-radius-lg);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--green);
+  border-left: 4px solid var(--green);
+  border: 1px solid var(--glass-border);
+  font-weight: 600;
+  box-shadow: var(--green-shadow);
 }
 
 .actionsSection {
-  background-color: var(--hover-color);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
   padding: 25px;
-  border-radius: 12px;
+  border-radius: var(--border-radius-xl);
   margin-bottom: 30px;
-  border: 2px solid #444;
+  box-shadow: var(--shadow);
 }
 
 .actionGroup {
   margin-bottom: 25px;
   padding: 20px;
-  background-color: var(--glass-bg);
-  border-radius: 8px;
-  border-left: 4px solid #ff6b35;
+  background: var(--hover-color);
+  border-radius: var(--border-radius-lg);
+  border-left: 4px solid;
+  border-image: var(--gradient) 1;
+  border-left-style: solid;
+  border-left-width: 4px;
+  border-left-color: var(--color1);
+  box-shadow: var(--shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.actionGroup:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--hover-shadow);
 }
 
 .input {
   padding: 12px;
   margin: 8px 10px 8px 0;
-  border: 2px solid #555;
-  border-radius: 6px;
-  background-color: #1a1a1a;
-  color: #e0e0e0;
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: var(--contrast-color);
+  color: var(--text-color);
   font-size: 16px;
   width: 150px;
-  transition: border-color 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow);
 }
 
 .input:focus {
   outline: none;
-  border-color: #4ecdc4;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(52, 168, 83, 0.2);
 }
 
 .input::placeholder {
-  color: #888;
+  color: var(--text-color-sub);
 }
 
 .deleteButton {
-  padding: 12px 20px;
-  background-color: #e74c3c;
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--gradientRed);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: background-color 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
   margin-left: 10px;
+}
+
+.deleteButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
 }
 
 .deleteButton:hover {
-  background-color: #c0392b;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--hover-shadow);
+}
+
+.deleteButton:hover::before {
+  left: 100%;
+}
+
+.deleteButton:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: var(--active-shadow);
+}
+
+.deleteButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .actionButton {
-  padding: 12px 20px;
-  background-color: #4ecdc4;
-  color: #1a1a1a;
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--gradient3);
+  color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: background-color 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
   margin-left: 10px;
 }
 
+.actionButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
 .actionButton:hover {
-  background-color: #45b7aa;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--hover-shadow);
+}
+
+.actionButton:hover::before {
+  left: 100%;
+}
+
+.actionButton:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: var(--active-shadow);
+}
+
+.actionButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .refreshButton {
   padding: 15px 30px;
-  background-color: #ffe66d;
-  color: #1a1a1a;
+  background: var(--gradientGreen);
+  color: white;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
+  border-radius: var(--border-radius-md);
   font-size: 18px;
-  font-weight: bold;
-  transition: background-color 0.3s;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 100%;
+  box-shadow: var(--green-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.refreshButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
 }
 
 .refreshButton:hover {
-  background-color: #ffd93d;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(52, 168, 83, 0.3);
+}
+
+.refreshButton:hover::before {
+  left: 100%;
+}
+
+.refreshButton:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 4px 16px rgba(52, 168, 83, 0.3);
+}
+
+.refreshButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .checkbox {
@@ -141,37 +262,48 @@
   align-items: center;
   margin: 10px 0;
   cursor: pointer;
-  color: #e0e0e0;
+  color: var(--text-color);
   font-size: 16px;
+  font-weight: 500;
 }
 
 .checkbox input[type="checkbox"] {
   margin-right: 10px;
   width: 18px;
   height: 18px;
-  accent-color: #4ecdc4;
+  accent-color: var(--green);
 }
 
 .section {
   margin-bottom: 40px;
-  background-color: #2a2a2a;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
   padding: 25px;
-  border-radius: 12px;
-  border: 2px solid #444;
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.section:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--hover-shadow);
 }
 
 .jsonBlock {
-  background-color: #1a1a1a;
-  border: 2px solid #555;
-  border-radius: 8px;
+  background: var(--bg-color2);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
   padding: 20px;
   overflow-x: auto;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   font-size: 14px;
   line-height: 1.6;
-  color: #e0e0e0;
+  color: var(--text-color);
   max-height: 500px;
   overflow-y: auto;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .jsonBlock::-webkit-scrollbar {
@@ -180,17 +312,17 @@
 }
 
 .jsonBlock::-webkit-scrollbar-track {
-  background: #2a2a2a;
+  background: var(--bg-color);
   border-radius: 4px;
 }
 
 .jsonBlock::-webkit-scrollbar-thumb {
-  background: #555;
+  background: var(--border-color);
   border-radius: 4px;
 }
 
 .jsonBlock::-webkit-scrollbar-thumb:hover {
-  background: #777;
+  background: var(--color1);
 }
 
 /* Responsive design */
@@ -216,6 +348,8 @@
   .actionButton {
     width: 100%;
     margin: 10px 0;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 0.9rem;
   }
   
   .jsonBlock {
