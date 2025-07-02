@@ -13,6 +13,7 @@ import { ThemeProvider } from "@/context/ThemeProvider";
 import { AddToHomeScreenPrompt } from "@/components/AddToHomeScreenPrompt/AddToHomeScreenPrompt";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { GoogleAnalytics } from "../analytics/GoogleAnalytics";
+import { CookieWrapper } from "@/components/CookieConsent";
 
 
 const rubik = Rubik({
@@ -64,30 +65,32 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={rubik.variable}>
-        <GoogleProviderWrapper>
-          <Providers>
-            <ThemeProvider>
-              <GoogleAnalytics />
-              <Navbar />
-              {children}
-              <Footer />
-              <ServiceWorkerRegister />
-              <AddToHomeScreenPrompt />
-              <ToastContainer 
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-              />
-            </ThemeProvider>
-          </Providers>
-        </GoogleProviderWrapper>
+        <CookieWrapper>
+          <GoogleProviderWrapper>
+            <Providers>
+              <ThemeProvider>
+                <GoogleAnalytics />
+                <Navbar />
+                {children}
+                <Footer />
+                <ServiceWorkerRegister />
+                <AddToHomeScreenPrompt />
+                <ToastContainer 
+                  position="top-right"
+                  autoClose={3000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="light"
+                />
+              </ThemeProvider>
+            </Providers>
+          </GoogleProviderWrapper>
+        </CookieWrapper>
       </body>
     </html>
   );

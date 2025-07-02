@@ -81,7 +81,8 @@ async def login_for_access_token(
         httponly=True,
         max_age=REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60,
         samesite="lax",
-        secure=not IS_DEV 
+        secure=not IS_DEV,
+        path="/"
     )
     return {'access_token': access_token, 'token_type': 'bearer'}
 
@@ -100,7 +101,8 @@ async def google_auth(request: Request, db: db_dependency):
         httponly=True,
         max_age=REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60,
         samesite="lax",
-        secure=not IS_DEV
+        secure=not IS_DEV,
+        path="/"
     )
     return response
     
