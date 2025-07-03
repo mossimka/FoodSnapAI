@@ -168,10 +168,10 @@ export default function AdminPage() {
         </div>
 
         <div className={styles.actionGroup}>
-          <h3>Настройки загрузки</h3>
+          <h3>Load settings</h3>
           <div style={{ marginBottom: '10px' }}>
             <label style={{ display: 'block', marginBottom: '5px', color: 'var(--text-color)', fontWeight: '500' }}>
-              Количество пользователей (1-100):
+              Users (1-100):
             </label>
             <input
               type="number"
@@ -195,7 +195,7 @@ export default function AdminPage() {
           </div>
           <div style={{ marginBottom: '15px' }}>
             <label style={{ display: 'block', marginBottom: '5px', color: 'var(--text-color)', fontWeight: '500' }}>
-              Количество рецептов (1-100):
+              Recipes (1-100):
             </label>
             <input
               type="number"
@@ -222,7 +222,7 @@ export default function AdminPage() {
             className={styles.actionButton}
             disabled={!usersPageSize || !recipesPageSize || usersPageSize === '' || recipesPageSize === ''}
           >
-            Применить настройки
+            Apply configuration
           </button>
         </div>
 
