@@ -1,8 +1,8 @@
-"""add ingredient_calories table
+"""New base migration
 
-Revision ID: 66565584b153
-Revises: 0b6f1ae41198
-Create Date: 2025-06-26 16:06:33.355430
+Revision ID: cd6b2e508ae0
+Revises: 
+Create Date: 2025-07-03 12:13:07.365934
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '66565584b153'
-down_revision: Union[str, None] = '0b6f1ae41198'
+revision: str = 'cd6b2e508ae0'
+down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
