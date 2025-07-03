@@ -16,6 +16,8 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const { token } = useAuthStore();
+  const [usersPageSize, setUsersPageSize] = useState<number | string>(20);
+  const [recipesPageSize, setRecipesPageSize] = useState<number | string>(20);
 
   useEffect(() => {
     loadAllData();
@@ -24,14 +26,18 @@ export default function AdminPage() {
   const loadAllData = async () => {
     setLoading(true);
     try {
+      // Используем значения по умолчанию если поля пустые
+      const userPageSize = usersPageSize || 20;
+      const recipePageSize = recipesPageSize || 20;
+      
       // Load users
-      const usersResponse = await axios.get('/admin/users', {
+      const usersResponse = await axios.get(`/admin/users?page=1&page_size=${userPageSize}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setUsers(usersResponse.data.users || []);
 
       // Load recipes
-      const recipesResponse = await axios.get('/admin/recipes', {
+      const recipesResponse = await axios.get(`/admin/recipes?page=1&page_size=${recipePageSize}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       setRecipes(recipesResponse.data.recipes || []);
@@ -162,6 +168,65 @@ export default function AdminPage() {
         </div>
 
         <div className={styles.actionGroup}>
+          <h3>Настройки загрузки</h3>
+          <div style={{ marginBottom: '10px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', color: 'var(--text-color)', fontWeight: '500' }}>
+              Количество пользователей (1-100):
+            </label>
+            <input
+              type="number"
+              placeholder="Кол-во пользователей"
+              value={usersPageSize}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === '') {
+                  setUsersPageSize('');
+                } else {
+                  const numValue = parseInt(value);
+                  if (numValue >= 1 && numValue <= 100) {
+                    setUsersPageSize(numValue);
+                  }
+                }
+              }}
+              min="1"
+              max="100"
+              className={styles.input}
+            />
+          </div>
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', color: 'var(--text-color)', fontWeight: '500' }}>
+              Количество рецептов (1-100):
+            </label>
+            <input
+              type="number"
+              placeholder="Кол-во рецептов"
+              value={recipesPageSize}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === '') {
+                  setRecipesPageSize('');
+                } else {
+                  const numValue = parseInt(value);
+                  if (numValue >= 1 && numValue <= 100) {
+                    setRecipesPageSize(numValue);
+                  }
+                }
+              }}
+              min="1"
+              max="100"
+              className={styles.input}
+            />
+          </div>
+          <button 
+            onClick={loadAllData} 
+            className={styles.actionButton}
+            disabled={!usersPageSize || !recipesPageSize || usersPageSize === '' || recipesPageSize === ''}
+          >
+            Применить настройки
+          </button>
+        </div>
+
+        <div className={styles.actionGroup}>
           <button onClick={loadAllData} className={styles.refreshButton}>
             Refresh All Data
           </button>
@@ -180,7 +245,7 @@ export default function AdminPage() {
 
       {/* Users Section */}
       <div className={styles.section}>
-        <h2>Users ({users.length})</h2>
+        <h2>Users ({users.length}{users.length === (usersPageSize || 20) ? ' - максимум' : ''})</h2>
         <pre className={styles.jsonBlock}>
           {JSON.stringify(users, null, 2)}
         </pre>
@@ -188,7 +253,7 @@ export default function AdminPage() {
 
       {/* Recipes Section */}
       <div className={styles.section}>
-        <h2>Recipes ({recipes.length})</h2>
+        <h2>Recipes ({recipes.length}{recipes.length === (recipesPageSize || 20) ? ' - максимум' : ''})</h2>
         <pre className={styles.jsonBlock}>
           {JSON.stringify(recipes, null, 2)}
         </pre>
