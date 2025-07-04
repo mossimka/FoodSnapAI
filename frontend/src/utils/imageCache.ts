@@ -57,9 +57,8 @@ const isCacheExpired = (timestamp: number): boolean => {
  */
 const getAvailableSpace = (): number => {
   try {
-    const test = 'test';
-    let storage = localStorage.getItem(CACHE_KEY);
-    let used = storage ? new Blob([storage]).size : 0;
+    const storage = localStorage.getItem(CACHE_KEY);
+    const used = storage ? new Blob([storage]).size : 0;
     
     // Rough estimate of available space
     return MAX_CACHE_SIZE - used;
