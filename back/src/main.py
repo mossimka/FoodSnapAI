@@ -175,21 +175,26 @@ User-agent: MJ12bot
 Disallow: /
 
 # Social media crawlers
+# Social media crawlers
 User-agent: facebookexternalhit
 Allow: /
 Allow: /recipe/*
+Allow: /og-image.jpg
 
 User-agent: Twitterbot
 Allow: /
 Allow: /recipe/*
+Allow: /og-image.jpg
 
 User-agent: LinkedInBot
 Allow: /
 Allow: /recipe/*
+Allow: /og-image.jpg
 
 User-agent: WhatsApp
 Allow: /
 Allow: /recipe/*
+Allow: /og-image.jpg
 """
     return Response(content=content, media_type="text/plain")
 
