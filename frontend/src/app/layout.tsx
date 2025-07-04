@@ -32,6 +32,27 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   keywords: ["AI recipes", "food recognition", "cooking", "FoodSnap AI", "AI cooking app"],
   authors: [{ name: "FoodSnap AI Team" }],
+  openGraph: {
+    title: "FoodSnap AI – AI Food Recognition & Recipes",
+    description: "Upload food photos to get AI-generated recipes instantly. FoodSnap AI recognizes ingredients and helps you cook smart.",
+    url: "https://foodsnapai.food/",
+    siteName: "FoodSnap AI",
+    images: [
+      {
+        url: "https://foodsnapai.food/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "FoodSnap AI OpenGraph Image",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FoodSnap AI – AI Food Recognition & Recipes",
+    description: "Upload food photos to get AI-generated recipes instantly. FoodSnap AI recognizes ingredients and helps you cook smart.",
+    images: ["https://foodsnapai.food/og-image.jpg"],
+  },
 };
 
 

@@ -1,7 +1,5 @@
 import React from "react";
 import type { Metadata } from "next";
-import Head from 'next/head';
-//import Image from "next/image";
 
 import Styles from "./page.module.css";
 import { HeroSection } from "@/components/HeroSection/HeroSection";
@@ -38,24 +36,6 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>FoodSnap AI</title>
-        <meta name="description" content="AI-powered app to recognize food and generate recipes." />
-
-        <meta property="og:title" content="FoodSnap AI" />
-        <meta property="og:description" content="AI-powered app to recognize food and generate recipes." />
-        <meta property="og:image:url" content="https://foodsnapai.food/og-image.jpg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:url" content="https://foodsnapai.food/" />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="FoodSnap AI" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="FoodSnap AI" />
-        <meta name="twitter:description" content="AI-powered app to recognize food and generate recipes." />
-        <meta name="twitter:image" content="https://foodsnapai.food/og-image.jpg" />
-      </Head>
       <main className={Styles.main}>
         <HeroSection />
         <Generation />
