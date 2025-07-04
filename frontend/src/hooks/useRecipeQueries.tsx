@@ -144,7 +144,6 @@ const invalidateRecipeQueries = (queryClient: QueryClient, recipeId?: number) =>
     }
     
     queryClient.invalidateQueries({ queryKey: ["recipes"] });
-    queryClient.invalidateQueries({ queryKey: ["my-recipes"] });
     
     queryClient.invalidateQueries({ queryKey: ["user"] });
 };

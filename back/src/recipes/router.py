@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form, status, Path, Body
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form, status, Path, Body, Query
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
@@ -13,8 +13,8 @@ from src.auth.models import Users
 from src.gcs.uploader import upload_large_file_to_gcs
 from src.dependencies import get_db
 from src.recipes.models import Recipe, IngredientCalories
-from src.recipes.schemas import RecipeResponse, RecipePatchRequest, IngredientCaloriesResponse, UserResponse
-from src.recipes.service import get_recipes, get_recipe_by_slug
+from src.recipes.schemas import RecipeResponse, RecipePatchRequest, PaginatedRecipesResponse
+from src.recipes.service import get_recipe_by_slug, get_recipes_paginated, get_public_recipes_paginated, get_my_recipes_paginated
 
 from src.recipes.agents import root_agent, checking_agent
 
@@ -34,9 +34,13 @@ checking_runner = Runner(
 
 router = APIRouter(prefix="/dish", tags=["dish"])
 
-@router.get("/", response_model=List[RecipeResponse], status_code=status.HTTP_200_OK)
-async def get_all_dishes(db: Session = Depends(get_db)):
-    return get_recipes(db)
+@router.get("/", response_model=PaginatedRecipesResponse, status_code=status.HTTP_200_OK)
+async def get_all_dishes(
+    db: Session = Depends(get_db),
+    page: int = Query(1, ge=1, description="Page number"),
+    page_size: int = Query(20, ge=1, le=100, description="Number of items per page")
+):
+    return get_recipes_paginated(db, page=page, page_size=page_size)
 
 @router.get("/recipes/{slug}/", response_model=RecipeResponse)
 async def get_recipe(slug: str, db: Session = Depends(get_db)):
@@ -227,58 +231,21 @@ async def delete_recipe(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete recipe: {str(e)}")
 
-@router.get("/public/", response_model=List[RecipeResponse])
-async def get_public_recipe(db: Session = Depends(get_db)):
-    recipes = db.query(Recipe).filter(Recipe.is_published == True).all()
-    return [
-        RecipeResponse(
-            id=r.id,
-            slug=r.slug,
-            user_id=r.user_id,
-            user=UserResponse(
-                username=r.user.username,
-                profile_pic=r.user.profile_pic
-            ),
-            dish_name=r.dish_name,
-            ingredients=[i.ingredient for i in r.ingredients_calories],
-            recipe=r.recipe,
-            image_path=r.image_path,
-            is_published=r.is_published,
-            ingredients_calories=[
-                IngredientCaloriesResponse.model_validate(i)
-                for i in r.ingredients_calories
-            ],
-            estimated_weight_g=r.estimated_weight_g,
-            total_calories_per_100g=r.total_calories_per_100g,
-        )
-        for r in recipes
-    ]
+@router.get("/public/", response_model=PaginatedRecipesResponse)
+async def get_public_recipe(
+    db: Session = Depends(get_db),
+    page: int = Query(1, ge=1, description="Page number"),
+    page_size: int = Query(20, ge=1, le=100, description="Number of items per page")
+):
+    return get_public_recipes_paginated(db, page=page, page_size=page_size)
 
 
-@router.get("/my/", response_model=List[RecipeResponse])
-async def get_my_recipes(current_user: Users = Depends(get_current_user), db: Session = Depends(get_db)):
-    recipes = db.query(Recipe).filter(Recipe.user_id == current_user["id"]).all()
-    return [
-        RecipeResponse(
-            id=r.id,
-            slug=r.slug,
-            user_id=r.user_id,
-            user=UserResponse(
-                username=r.user.username,
-                profile_pic=r.user.profile_pic
-            ),
-            dish_name=r.dish_name,
-            ingredients=[i.ingredient for i in r.ingredients_calories],
-            recipe=r.recipe,
-            image_path=r.image_path,
-            is_published=r.is_published,
-            ingredients_calories=[
-                IngredientCaloriesResponse.model_validate(i)
-                for i in r.ingredients_calories
-            ],
-            estimated_weight_g=r.estimated_weight_g,
-            total_calories_per_100g=r.total_calories_per_100g,
-        )
-        for r in recipes
-    ]
+@router.get("/my/", response_model=PaginatedRecipesResponse)
+async def get_my_recipes(
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+    page: int = Query(1, ge=1, description="Page number"),
+    page_size: int = Query(20, ge=1, le=100, description="Number of items per page")
+):
+    return get_my_recipes_paginated(db, current_user["id"], page=page, page_size=page_size)
 

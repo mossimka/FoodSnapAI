@@ -49,3 +49,11 @@ class RecipeResponse(BaseModel):
 class RecipePatchRequest(BaseModel):
     dish_name: Optional[str] = None
     publish: Optional[bool] = None
+
+
+class PaginatedRecipesResponse(BaseModel):
+    recipes: List[RecipeResponse]
+    total: int
+    page: int
+    page_size: int
+    total_pages: int

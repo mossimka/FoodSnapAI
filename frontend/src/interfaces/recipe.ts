@@ -21,6 +21,13 @@ export interface IRecipe {
   total_calories_per_100g: number;
 }
 
+export interface PaginatedRecipesResponse {
+  recipes: IRecipe[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+}
 
 export interface RecipeOutput {
   dish_name: string;
@@ -29,7 +36,6 @@ export interface RecipeOutput {
   estimated_weight_g: number | null;
   total_calories_per_100g: number | null;
 }
-
 
 export interface RecipeInput {
   file: File;
@@ -41,7 +47,6 @@ export interface RecipeInput {
     total_calories_per_100g: number;
   };
 }
-
 
 export interface RecipePatchRequest {
   dish_name?: string;

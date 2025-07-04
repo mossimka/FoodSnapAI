@@ -8,8 +8,8 @@ import { RecipeCard } from "@/components/Recipes/RecipeCard/RecipeCard";
 import { usePublicRecipesQuery, useMyRecipesQuery } from "@/hooks/useRecipesQueries";
 import { IRecipe } from "@/interfaces/recipe";
 import { Search } from "@/components/Recipes/Search/Search";
+import { Pagination } from "@/components/Pagination/Pagination";
 
-// Search utility function
 const filterRecipes = (recipes: IRecipe[], query: string): IRecipe[] => {
   if (!query.trim()) return recipes;
   
@@ -31,20 +31,26 @@ const filterRecipes = (recipes: IRecipe[], query: string): IRecipe[] => {
 export default function PostedPage() {
   const [activeTab, setActiveTab] = useState<"public" | "my">("public");
   const [searchQuery, setSearchQuery] = useState("");
-  
+  const [publicPage, setPublicPage] = useState(1);
+  const [myPage, setMyPage] = useState(1);
+  const pageSize = 12; // Reduced for better UX
+
   const { 
-    data: publicRecipes = [], 
+    data: publicRecipesData, 
     isLoading: publicLoading, 
     error: publicError 
-  } = usePublicRecipesQuery();
+  } = usePublicRecipesQuery(publicPage, pageSize);
   
   const { 
-    data: myRecipes = [], 
+    data: myRecipesData, 
     isLoading: myLoading, 
     error: myError 
-  } = useMyRecipesQuery();
+  } = useMyRecipesQuery(myPage, pageSize);
 
-  // Filter recipes based on search query
+  const publicRecipes = publicRecipesData?.recipes || [];
+  const myRecipes = myRecipesData?.recipes || [];
+
+  // For search, we need to get filtered results from current page
   const filteredPublicRecipes = useMemo(() => 
     filterRecipes(publicRecipes, searchQuery), 
     [publicRecipes, searchQuery]
@@ -56,18 +62,41 @@ export default function PostedPage() {
   );
 
   const recipesToShow = activeTab === "public" ? filteredPublicRecipes : filteredMyRecipes;
+  const currentData = activeTab === "public" ? publicRecipesData : myRecipesData;
   const isLoading = publicLoading || myLoading;
   const hasError = publicError || myError;
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
+    // Reset to first page when searching
+    if (activeTab === "public") {
+      setPublicPage(1);
+    } else {
+      setMyPage(1);
+    }
   };
 
   const handleSearchClear = () => {
     setSearchQuery("");
   };
 
-  if (isLoading) {
+  const handlePageChange = (page: number) => {
+    if (activeTab === "public") {
+      setPublicPage(page);
+    } else {
+      setMyPage(page);
+    }
+    
+    // Scroll to top when changing pages
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleTabChange = (tab: "public" | "my") => {
+    setActiveTab(tab);
+    setSearchQuery(""); // Clear search when switching tabs
+  };
+
+  if (isLoading && recipesToShow.length === 0) {
     return (
       <div className={Styles.postedSection}>
         <div className={Styles.loading}>Loading recipes...</div>
@@ -92,13 +121,13 @@ export default function PostedPage() {
         <div className={Styles.tabToggle}>
           <button
             className={`${Styles.tabButton} ${activeTab === "public" ? Styles.active : ""}`}
-            onClick={() => setActiveTab("public")}
+            onClick={() => handleTabChange("public")}
           >
             Public
           </button>
           <button
             className={`${Styles.tabButton} ${activeTab === "my" ? Styles.active : ""}`}
-            onClick={() => setActiveTab("my")}
+            onClick={() => handleTabChange("my")}
           >
             My recipes
           </button>
@@ -112,6 +141,16 @@ export default function PostedPage() {
           />
         </div>
       </div>
+
+      {/* Pagination info */}
+      {currentData && !searchQuery && (
+        <div className={Styles.paginationInfo}>
+          Showing {recipesToShow.length} of {currentData.total} recipes
+          {currentData.total_pages > 1 && (
+            <span> • Page {currentData.page} of {currentData.total_pages}</span>
+          )}
+        </div>
+      )}
 
       <div className={Styles.recipeList}>
         <AnimatePresence mode="wait">
@@ -148,6 +187,26 @@ export default function PostedPage() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Pagination controls - only show when not searching */}
+      {currentData && !searchQuery && currentData.total_pages > 1 && (
+        <Pagination
+          currentPage={activeTab === "public" ? publicPage : myPage}
+          totalPages={currentData.total_pages}
+          onPageChange={handlePageChange}
+          isLoading={isLoading}
+          showInfo={true}
+          totalItems={currentData.total}
+          itemsPerPage={pageSize}
+        />
+      )}
+
+      {/* Loading overlay for page changes */}
+      {isLoading && recipesToShow.length > 0 && (
+        <div className={Styles.loadingOverlay}>
+          <div className={Styles.loadingSpinner}>Loading...</div>
+        </div>
+      )}
     </div>
   );
 }

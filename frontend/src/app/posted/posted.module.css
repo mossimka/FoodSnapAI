@@ -3,6 +3,7 @@
   width: 75%;
   margin: 0 auto;
   min-height: 65vh;
+  position: relative;
 }
 
 .controlsContainer {
@@ -59,6 +60,17 @@
   transform: none;
 }
 
+.paginationInfo {
+  font-size: 0.9rem;
+  color: var(--text-color-sub);
+  text-align: center;
+  margin: var(--spacing-md) 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .recipeList {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
@@ -76,6 +88,64 @@
   border-radius: var(--border-radius-xl);
   border: 1px solid rgba(255, 255, 255, 0.2);
   margin: var(--spacing-xl) 0;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 1.1rem;
+  color: var(--text-color-sub);
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  text-align: center;
+  color: var(--text-color-sub);
+}
+
+.error h2 {
+  margin-bottom: var(--spacing-md);
+  color: var(--text-color);
+}
+
+.loadingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  border-radius: var(--border-radius-xl);
+}
+
+.loadingSpinner {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-color);
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--border-radius-lg);
+  font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -110,6 +180,11 @@
   .tabToggle {
     align-self: center;
   }
+  
+  .paginationInfo {
+    font-size: 0.8rem;
+    margin: var(--spacing-sm) 0;
+  }
 }
 
 @media (max-width: 600px) {
@@ -131,5 +206,10 @@
   .noRecipes {
     font-size: 1rem;
     padding: var(--spacing-lg);
+  }
+  
+  .paginationInfo {
+    font-size: 0.75rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
 }

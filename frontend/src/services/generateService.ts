@@ -2,7 +2,7 @@ import axios from '@/lib/axios';
 import { AxiosError } from 'axios';
 import { tokenService } from './tokenService';
 
-import { RecipeOutput, RecipeInput, IRecipe, RecipePatchRequest } from "@/interfaces/recipe";
+import { RecipeOutput, RecipeInput, IRecipe, RecipePatchRequest, PaginatedRecipesResponse } from "@/interfaces/recipe";
 import type { RecipeResult } from '@/interfaces/recipe';
 
 export async function generateRecipe(imageFile: File): Promise<RecipeResult> {
@@ -42,8 +42,9 @@ export async function saveRecipe(recipe: RecipeInput) {
   return { slug: response.data.slug };
 }
 
-export async function getPublicRecipes(): Promise<IRecipe[]> {
-  const response = await axios.get("/dish/public/", {
+// Paginated functions
+export async function getPublicRecipesPaginated(page: number = 1, pageSize: number = 20): Promise<PaginatedRecipesResponse> {
+  const response = await axios.get(`/dish/public/?page=${page}&page_size=${pageSize}`, {
     headers: {
       ...tokenService.getAuthHeader(),
     },
@@ -51,20 +52,39 @@ export async function getPublicRecipes(): Promise<IRecipe[]> {
   return response.data;
 }
 
-export async function getMyRecipes(): Promise<IRecipe[]> {
-  const response = await axios.get("/dish/my/", {
+export async function getMyRecipesPaginated(page: number = 1, pageSize: number = 20): Promise<PaginatedRecipesResponse> {
+  const response = await axios.get(`/dish/my/?page=${page}&page_size=${pageSize}`, {
     headers: {
       ...tokenService.getAuthHeader(),
     },
   });
   return response.data;
+}
+
+export async function getAllRecipesPaginated(page: number = 1, pageSize: number = 20): Promise<PaginatedRecipesResponse> {
+  const response = await axios.get(`/dish/?page=${page}&page_size=${pageSize}`, {
+    headers: {
+      ...tokenService.getAuthHeader(),
+    },
+  });
+  return response.data;
+}
+
+
+export async function getPublicRecipes(): Promise<IRecipe[]> {
+  const response = await getPublicRecipesPaginated(1, 100);
+  return response.recipes;
+}
+
+export async function getMyRecipes(): Promise<IRecipe[]> {
+  const response = await getMyRecipesPaginated(1, 100);
+  return response.recipes;
 }
 
 export async function patchRecipe(recipeId: number, data: RecipePatchRequest) {
   const response = await axios.patch(`/dish/patch/${recipeId}`, data);
   return response.data;
 }
-
 
 export async function deleteRecipe(recipeId: number): Promise<void> {
   const token = tokenService.requireAuth();
