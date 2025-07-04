@@ -32,29 +32,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   keywords: ["AI recipes", "food recognition", "cooking", "FoodSnap AI", "AI cooking app"],
   authors: [{ name: "FoodSnap AI Team" }],
-  openGraph: {
-    title: "FoodSnap AI",
-    description: "AI-powered app to recognize food and generate recipes.",
-    url: "https://foodsnapai.food/",
-    siteName: "FoodSnap AI",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "FoodSnap AI",
-      },
-    ],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "FoodSnap AI",
-    description: "AI-powered app to recognize food and generate recipes.",
-    images: ["/og-image.jpg"],
-  },
 };
-
 
 
 export default function RootLayout({
