@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { AxiosError } from "axios";
+import { motion, AnimatePresence } from 'framer-motion';
 
 import DropZone from "./DropZone/DropZone";
 import CameraCapture from "./CameraCapture/CameraCapture";
@@ -17,6 +18,12 @@ import { NavButton } from "../Navbar/NavButton/NavButton";
 import { Printer } from "../Style/Printer/Printer";
 import { truncateFilename } from '@/utils/stringUtils';
 import { compressImage } from '@/utils/imageUtils';
+import { 
+  cacheImage, 
+  getCachedImage, 
+  clearImageCache, 
+  hasCachedImage
+} from '@/utils/imageCache';
 
 export const Generation = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -28,10 +35,29 @@ export const Generation = () => {
   const [hasGenerated, setHasGenerated] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [isNotFood, setIsNotFood] = useState(false);
+  const [isFromCache, setIsFromCache] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
 
   const [generatedRecipe, setGeneratedRecipe] = useState<RecipeOutput | null>(null);
 
   const { isAuthenticated } = useAuthStore();
+
+  useEffect(() => {
+    const loadCachedImage = () => {
+      if (hasCachedImage()) {
+        const cached = getCachedImage();
+        if (cached) {
+          setImageFile(cached.file);
+          setImagePreview(cached.previewUrl);
+          setIsFromCache(true);
+          setIsLoading(false);
+          console.log('Loaded cached image:', cached.file.name);
+        }
+      }
+    };
+
+    loadCachedImage();
+  }, []);
 
   const handleImageSelect = async (file: File) => {
     try {
@@ -44,9 +70,20 @@ export const Generation = () => {
         throw new Error('Invalid image type after compression');
       }
       
+      // Clean up previous preview URL
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+      }
+      
       setImageFile(compressedFile);
       const previewURL = URL.createObjectURL(compressedFile);
       setImagePreview(previewURL);
+      setIsFromCache(false);
+      
+      // Cache the image for non-authenticated users
+      if (!isAuthenticated) {
+        await cacheImage(compressedFile);
+      }
       
     } catch (error) {
       console.error('Image processing failed:', error);
@@ -58,6 +95,32 @@ export const Generation = () => {
     setResponseText("");
     setHasGenerated(false);
     setIsNotFood(false);
+  };
+
+  const handleClearImage = () => {
+    setIsClearing(true);
+    
+    // Start fade-out animation, then clear after animation completes
+    setTimeout(() => {
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+      }
+      
+      setImageFile(null);
+      setImagePreview(null);
+      setIsFromCache(false);
+      setIsLoading(true);
+      setRecipeGenerates(false);
+      setIsGenerating(false);
+      setResponseText("");
+      setHasGenerated(false);
+      setIsNotFood(false);
+      setGeneratedRecipe(null);
+      setIsClearing(false);
+      
+      // Clear cache
+      clearImageCache();
+    }, 300); // Match animation duration
   };
 
   useEffect(() => {
@@ -110,6 +173,8 @@ const generateResponse = async () => {
         setGeneratedRecipe(finalRecipe);
         setHasGenerated(true);
         setIsNotFood(false);
+        
+        clearImageCache();
       }
     } catch (error: unknown) {
       const err = error as AxiosError<{ detail: string }>;
@@ -123,8 +188,6 @@ const generateResponse = async () => {
   }, 0);
 };
 
-  
-
   return (
     <div className={Styles.wrapper}>
       <div className={Styles.wrapperActions}>
@@ -132,41 +195,64 @@ const generateResponse = async () => {
         <CameraCapture setImage={handleImageSelect} />
       </div>
 
-      {imagePreview && (
-        <div className={Styles.preview}>
-          <p className="gradientText">You chose file: {truncateFilename(imageFile?.name)}</p>
+      <AnimatePresence mode="wait">
+        {imagePreview && !isClearing && (
+          <motion.div 
+            className={Styles.preview}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className={Styles.previewHeader}>
+              <p className="gradientText">
+                You chose file: {truncateFilename(imageFile?.name)}
+              </p>
+              
+              <button 
+                className={Styles.clearButton}
+                onClick={handleClearImage}
+                title="Clear image and start over"
+                disabled={isClearing}
+              >
+                ✕ Clear
+              </button>
+            </div>
 
-          <div className={Styles.imageContainer}>
-            {isLoading && (
-              <div className={Styles.loaderOverlay}>
-                <Image src="/images/loader.gif" alt="Loading..." width={128} height={50} />
-              </div>
+            <div className={Styles.imageContainer}>
+              {isLoading && (
+                <div className={Styles.loaderOverlay}>
+                  <Image src="/images/loader.gif" alt="Loading..." width={128} height={50} />
+                </div>
+              )}
+
+              <Image
+                src={imagePreview}
+                alt="Uploaded preview"
+                className={Styles.previewImage}
+                fill
+                onLoadingComplete={() => {
+                  if (!isFromCache) {
+                    setTimeout(() => {
+                      setIsLoading(false);
+                    }, 2000);
+                  }
+                }}
+              />
+            </div>
+
+            {!isLoading && (
+              <button
+                className="button"
+                onClick={generateResponse}
+                disabled={isGenerating || hasGenerated}
+              >
+                {isGenerating ? "Generating..." : hasGenerated ? "Generated" : "Generate"}
+              </button>
             )}
-
-            <Image
-              src={imagePreview}
-              alt="Uploaded preview"
-              className={Styles.previewImage}
-              fill
-              onLoadingComplete={() => {
-                setTimeout(() => {
-                  setIsLoading(false);
-                }, 2000);
-              }}
-            />
-          </div>
-
-          {!isLoading && (
-            <button
-              className="button"
-              onClick={generateResponse}
-              disabled={isGenerating || hasGenerated}
-            >
-              {isGenerating ? "Generating..." : hasGenerated ? "Generated" : "Generate"}
-            </button>
-          )}
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {recipeGenerates && (
         <div className={Styles.responseBox}>

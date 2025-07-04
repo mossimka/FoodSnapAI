@@ -101,6 +101,49 @@
   margin-top: 1.5rem;
 }
 
+.previewHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-md) var(--spacing-sm) var(--spacing-sm) 0;
+  position: relative;
+}
+
+.cacheNote {
+  font-size: 0.9rem;
+  color: var(--color1);
+  background: rgba(244, 138, 59, 0.1);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid rgba(244, 138, 59, 0.3);
+  margin: 0;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.clearButton {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-color);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  font-weight: 500;
+}
+
+.clearButton:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: var(--color1);
+  color: var(--color1);
+  transform: translateY(-1px);
+}
+
+.clearButton:active {
+  transform: translateY(0);
+}
+
 @media (max-width: 1024px) {
   .wrapper {
     width: 95%;
@@ -128,6 +171,21 @@
   .imageContainer {
     height: 300px;
     width: 90%;
+  }
+  .previewHeader {
+    gap: var(--spacing-xs);
+  }
+  
+  .clearButton {
+    position: static;
+    margin-top: var(--spacing-xs);
+    width: fit-content;
+    align-self: flex-end;
+  }
+  
+  .cacheNote {
+    font-size: 0.8rem;
+    text-align: center;
   }
 }
 
@@ -165,8 +223,14 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .cameraContainer {
