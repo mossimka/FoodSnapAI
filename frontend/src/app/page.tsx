@@ -21,15 +21,23 @@ export const metadata: Metadata = {
   openGraph: {
     title: "FoodSnap AI - Transform Food Photos into Recipes with AI",
     description: "Upload a photo of your food and get instant AI-generated recipes! Advanced computer vision technology recognizes ingredients and creates personalized cooking instructions.",
+    url: "https://foodsnapai.food/",
+    siteName: "FoodSnap AI",
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "https://foodsnapai.food/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "FoodSnap AI - AI Food Recognition and Recipe Generation",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FoodSnap AI - Transform Food Photos into Recipes with AI",
+    description: "Upload a photo of your food and get instant AI-generated recipes! Advanced computer vision technology recognizes ingredients and creates personalized cooking instructions.",
+    images: ["https://foodsnapai.food/og-image.jpg"],
   },
 };
 
