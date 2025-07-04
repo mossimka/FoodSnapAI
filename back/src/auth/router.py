@@ -10,6 +10,7 @@ from src.auth.models import Users
 from src.auth.schemas import CreateUserRequest, Token, UserResponse, UserPatchRequest
 from src.auth.service import authenticate_user, create_access_token, create_refresh_token, verify_refresh_token, get_users, google_auth_flow, get_current_user
 from src.auth.security import bcrypt_context
+from src.auth.captcha import verify_recaptcha
 from src.dependencies import get_db
 
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_DAYS, IS_DEV
@@ -26,7 +27,36 @@ def get_all_users(
     return get_users(db)
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_user(db: db_dependency, create_user_request: CreateUserRequest):
+async def create_user(request: Request, db: db_dependency, create_user_request: CreateUserRequest):
+    # Verify reCAPTCHA if token is provided
+    if create_user_request.captcha_token:
+        client_ip = request.client.host if request.client else None
+        is_captcha_valid = await verify_recaptcha(
+            create_user_request.captcha_token, 
+            client_ip
+        )
+        if not is_captcha_valid:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, 
+                detail="reCAPTCHA verification failed"
+            )
+    
+    # Check if username or email already exists
+    existing_username = db.query(Users).filter(Users.username == create_user_request.username).first()
+    existing_email = db.query(Users).filter(Users.email == create_user_request.email).first()
+    
+    if existing_username:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username already exists"
+        )
+    
+    if existing_email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
+    
     create_user_model = Users(
         username=create_user_request.username,
         email=create_user_request.email,
@@ -34,7 +64,7 @@ async def create_user(db: db_dependency, create_user_request: CreateUserRequest)
     )
     db.add(create_user_model)
     db.commit()
-    return {"message": "User created"}
+    return {"message": "User created successfully"}
 
 @router.patch("/patch/{user_id}")
 async def patch_user(

@@ -6,6 +6,7 @@ class CreateUserRequest(BaseModel):
     username: str
     email: EmailStr
     password: str
+    captcha_token: Optional[str] = None
 
 class Token(BaseModel):
     access_token: str
