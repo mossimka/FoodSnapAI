@@ -4,8 +4,6 @@ on:
   push:
     branches: [main]
 
-name: Deploy to Azure server
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
