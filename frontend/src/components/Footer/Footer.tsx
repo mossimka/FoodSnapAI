@@ -58,7 +58,7 @@ export const Footer = () => {
           <h3 className='gradientText'>Help</h3>
           <ul>
             <li>
-              <Link href="#" className={Styles.link}>
+              <Link href="/faq" className={Styles.link}>
                 FAQs
               </Link>
             </li>
@@ -68,12 +68,12 @@ export const Footer = () => {
               </Link>
             </li>
             <li>
-              <Link href="#" className={Styles.link}>
+              <Link href="/privacy" className={Styles.link}>
                 Privacy Policy
               </Link>
             </li>
             <li>
-              <Link href="#" className={Styles.link}>
+              <Link href="/terms" className={Styles.link}>
                 Terms & Conditions
               </Link>
             </li>

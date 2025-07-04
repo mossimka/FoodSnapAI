@@ -110,6 +110,7 @@ body {
   position: relative;
   overflow: hidden;
   z-index: 1;
+  gap: var(--spacing-sm);
 }
 
 .button::before {
@@ -328,4 +329,8 @@ body.no-scroll {
   --shadow: 0 8px 32px rgba(212, 101, 87, 0.05);
   --hover-shadow: 0 12px 40px rgba(212, 101, 87, 0.1);
   --active-shadow: 0 4px 16px rgba(212, 101, 87, 0.1);
+}
+
+a {
+  text-decoration: none;
 }
