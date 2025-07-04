@@ -1,0 +1,26 @@
+name: Deploy to Azure server
+
+on:
+  push:
+    branches: [main]
+
+name: Deploy to Azure server
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd FoodSnapAI/
+            git pull origin main
+            sudo docker compose up --build -d
