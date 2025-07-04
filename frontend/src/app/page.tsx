@@ -44,7 +44,9 @@ export default function Home() {
 
         <meta property="og:title" content="FoodSnap AI" />
         <meta property="og:description" content="AI-powered app to recognize food and generate recipes." />
-        <meta property="og:image" content="https://foodsnapai.food/og-image.jpg" />
+        <meta property="og:image:url" content="https://foodsnapai.food/og-image.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:url" content="https://foodsnapai.food/" />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="FoodSnap AI" />
