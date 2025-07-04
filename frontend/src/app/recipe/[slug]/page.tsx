@@ -5,12 +5,13 @@ import { RecipePage } from "@/components/Recipes/RecipePage/RecipePage";
 import { getRecipeBySlug } from "@/services/generateService";
 
 interface PageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   try {
-    const recipe = await getRecipeBySlug(params.slug);
+    const { slug } = await params;
+    const recipe = await getRecipeBySlug(slug);
     
     if (!recipe) {
       return {
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const title = `${recipe.dish_name} - FoodSnap AI Recipe`;
     const description = `Discover how to make ${recipe.dish_name}! AI-generated recipe with ${recipe.ingredients_calories.length} ingredients. Created by ${recipe.user.username} on FoodSnap AI.`;
     const imageUrl = recipe.image_path || "https://foodsnapai.food/og-image.jpg";
-    const recipeUrl = `https://foodsnapai.food/recipe/${recipe.slug}`;
+    const recipeUrl = `https://foodsnapai.food/recipe/${slug}`;
 
     return {
       title,
@@ -70,14 +71,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function RecipeDetailPage({ params }: PageProps) {
   try {
+    const { slug } = await params;
     // Verify recipe exists for SSR
-    const recipe = await getRecipeBySlug(params.slug);
+    const recipe = await getRecipeBySlug(slug);
     
     if (!recipe) {
       notFound();
     }
 
-    return <RecipePage slug={params.slug} />;
+    return <RecipePage slug={slug} />;
   } catch (error) {
     console.error("Error loading recipe:", error);
     notFound();
