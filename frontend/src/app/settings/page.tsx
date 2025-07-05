@@ -20,6 +20,7 @@ import ProfilePicUploader from "@/components/Profile/ProfilePicUploader/ProfileP
 import { PasswordInput } from '@/components/Auth/PasswordInput/PasswordInput';
 import { updateProfile } from '@/services/userService';
 import { useUserQuery } from '@/hooks/useUserQuery';
+import { ConfirmationModal } from "@/components/ConfirmationModal/ConfirmationModal";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -95,6 +96,7 @@ export default function SettingsPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   if (!user) {
     return (
@@ -157,9 +159,16 @@ export default function SettingsPage() {
   };
 
   const handleDeleteAccount = () => {
-    if (window.confirm("Are you absolutely sure you want to delete your account? This action cannot be undone.")) {
-      toast.info("Account deletion feature coming soon!");
-    }
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setShowDeleteModal(false);
+    toast.info("Account deletion feature coming soon!");
+  };
+
+  const handleCloseModal = () => {
+    setShowDeleteModal(false);
   };
 
   return (
@@ -289,6 +298,17 @@ export default function SettingsPage() {
           </motion.a>
         </motion.div>
       </motion.section>
+
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmDelete}
+        title="Delete Account"
+        message="Are you absolutely sure you want to delete your account? This action cannot be undone and you will lose all your recipes and data."
+        confirmText="Delete Account"
+        cancelText="Cancel"
+        isLoading={false}
+      />
     </motion.div>
   );
 }

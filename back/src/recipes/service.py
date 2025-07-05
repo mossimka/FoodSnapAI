@@ -13,6 +13,32 @@ def get_recipes(db: Session) -> List[Recipe]:
 def get_recipe_by_slug(db: Session, slug: str) -> Recipe:
     return db.query(Recipe).filter(Recipe.slug == slug).first()
 
+def get_recipe_response_by_slug(db: Session, slug: str) -> RecipeResponse | None:
+    """Get recipe by slug and return as RecipeResponse for API"""
+    recipe = db.query(Recipe).filter(Recipe.slug == slug).first()
+    if not recipe:
+        return None
+        
+    return RecipeResponse(
+        id=recipe.id,
+        slug=recipe.slug,
+        user_id=recipe.user_id,
+        user=UserResponse(
+            username=recipe.user.username,
+            profile_pic=recipe.user.profile_pic
+        ),
+        dish_name=recipe.dish_name,
+        recipe=recipe.recipe,
+        image_path=recipe.image_path,
+        is_published=recipe.is_published,
+        ingredients_calories=[
+            IngredientCaloriesResponse.model_validate(i)
+            for i in recipe.ingredients_calories
+        ],
+        estimated_weight_g=recipe.estimated_weight_g,
+        total_calories_per_100g=recipe.total_calories_per_100g,
+    )
+
 
 def get_recipes_paginated(db: Session, page: int = 1, page_size: int = 20) -> PaginatedRecipesResponse:
     """Get all recipes with pagination"""

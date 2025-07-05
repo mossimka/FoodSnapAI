@@ -14,7 +14,8 @@ from src.gcs.uploader import upload_large_file_to_gcs
 from src.dependencies import get_db
 from src.recipes.models import Recipe, IngredientCalories
 from src.recipes.schemas import RecipeResponse, RecipePatchRequest, PaginatedRecipesResponse
-from src.recipes.service import get_recipe_by_slug, get_recipes_paginated, get_public_recipes_paginated, get_my_recipes_paginated
+from src.recipes.service import get_recipe_by_slug, get_recipe_response_by_slug, get_recipes_paginated, get_public_recipes_paginated, get_my_recipes_paginated
+from src.services.redis import redis_client, invalidate_recipe_caches, invalidate_user_caches
 
 from src.recipes.agents import root_agent, checking_agent
 
@@ -40,14 +41,33 @@ async def get_all_dishes(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Number of items per page")
 ):
-    return get_recipes_paginated(db, page=page, page_size=page_size)
+    cache_key = f"recipes:page={page}:size={page_size}"
+    
+    cached_data = await redis_client.get(cache_key)
+    if cached_data:
+        return PaginatedRecipesResponse(**json.loads(cached_data))
+
+    response: PaginatedRecipesResponse = get_recipes_paginated(db, page=page, page_size=page_size)
+
+    await redis_client.set(cache_key, json.dumps(response.model_dump()), ex=300)
+
+    return response
 
 @router.get("/recipes/{slug}/", response_model=RecipeResponse)
 async def get_recipe(slug: str, db: Session = Depends(get_db)):
-    recipe = get_recipe_by_slug(db, slug)
-    if not recipe:
+    cache_key = f"recipe:slug={slug}"
+    cached_data = await redis_client.get(cache_key)
+
+    if cached_data:
+        return RecipeResponse(**json.loads(cached_data))
+
+    recipe_response = get_recipe_response_by_slug(db, slug)
+    if not recipe_response:
         raise HTTPException(status_code=404, detail="Recipe not found")
-    return recipe
+
+    await redis_client.set(cache_key, json.dumps(recipe_response.model_dump()), ex=1000)
+
+    return recipe_response
 
 @router.post("/")
 async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depends(get_current_user)):
@@ -82,7 +102,7 @@ async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depen
                 checking_result = event.content.parts[0].text
                 break
 
-        cleaned_checking = re.sub(r"^```(?:json)?\s*|\s*```$", "", checking_result.strip(), flags=re.MULTILINE)
+        cleaned_checking = re.sub(r"^```(?:json)?\s*|\s*```$", "", (checking_result or "").strip(), flags=re.MULTILINE)
         checking_data = json.loads(cleaned_checking)
 
         if not checking_data.get("is_food"):
@@ -110,7 +130,7 @@ async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depen
         #print(final_response)
         #print("==========================\n")
 
-        cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", final_response.strip(), flags=re.MULTILINE)
+        cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", (final_response or "").strip(), flags=re.MULTILINE)
         parsed = json.loads(cleaned)
 
         return {
@@ -172,6 +192,10 @@ async def save_recipe(
 
         db.commit()
 
+        # Invalidate caches after saving new recipe
+        await invalidate_recipe_caches()
+        await invalidate_user_caches(current_user["id"])
+
         return {
             "message": "Recipe saved successfully",
             "recipe_id": db_recipe.id,
@@ -199,13 +223,30 @@ async def patch_recipe(
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
     
+    # Store old slug for cache invalidation
+    old_slug = str(recipe.slug)
+    
+    # Update recipe fields
+    update_data = {}
     if patch_data.dish_name is not None:
-        recipe.dish_name = patch_data.dish_name
+        update_data["dish_name"] = patch_data.dish_name
     if patch_data.publish is not None:
-        recipe.is_published = patch_data.publish
-
+        update_data["is_published"] = patch_data.publish
+    
+    # Update using query
+    db.query(Recipe).filter(Recipe.id == recipe_id).update(update_data)
     db.commit()
     db.refresh(recipe)
+
+    # Invalidate caches
+    await invalidate_recipe_caches(old_slug)
+    if old_slug != str(recipe.slug):  # If slug changed
+        await invalidate_recipe_caches(str(recipe.slug))
+    
+    # Also invalidate user-specific caches
+    user_id = getattr(recipe, 'user_id', None)
+    if user_id:
+        await invalidate_user_caches(user_id)
 
     return {"message": "Recipe updated", "recipe": {
         "id": recipe.id,
@@ -224,8 +265,14 @@ async def delete_recipe(
         if not recipe:
             raise HTTPException(status_code=404, detail="Recipe not found or unauthorized")
 
+        recipe_slug = str(recipe.slug)
+        
         db.delete(recipe)
         db.commit()
+
+        # Invalidate caches
+        await invalidate_recipe_caches(recipe_slug)
+        await invalidate_user_caches(current_user["id"])
 
         return {"message": f"Recipe with ID {recipe_id} deleted successfully"}
     except Exception as e:
@@ -237,7 +284,17 @@ async def get_public_recipe(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Number of items per page")
 ):
-    return get_public_recipes_paginated(db, page=page, page_size=page_size)
+    cache_key = f"recipes:public:page={page}:size={page_size}"
+    
+    cached_data = await redis_client.get(cache_key)
+    if cached_data:
+        return PaginatedRecipesResponse(**json.loads(cached_data))
+
+    response: PaginatedRecipesResponse = get_public_recipes_paginated(db, page=page, page_size=page_size)
+
+    await redis_client.set(cache_key, json.dumps(response.model_dump()), ex=300)
+
+    return response
 
 
 @router.get("/my/", response_model=PaginatedRecipesResponse)
@@ -247,5 +304,15 @@ async def get_my_recipes(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Number of items per page")
 ):
-    return get_my_recipes_paginated(db, current_user["id"], page=page, page_size=page_size)
+    cache_key = f"recipes:my:user_id={current_user['id']}:page={page}:size={page_size}"
+    
+    cached_data = await redis_client.get(cache_key)
+    if cached_data:
+        return PaginatedRecipesResponse(**json.loads(cached_data))
+
+    response: PaginatedRecipesResponse = get_my_recipes_paginated(db, current_user["id"], page=page, page_size=page_size)
+
+    await redis_client.set(cache_key, json.dumps(response.model_dump()), ex=300)
+
+    return response
 

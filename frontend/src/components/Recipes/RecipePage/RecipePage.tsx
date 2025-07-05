@@ -11,6 +11,7 @@ import { useUserStore } from "@/stores/userStore";
 import { ShowCaloriesButton } from "@/components/Generation/Calories/ShowCaloriesButton/ShowCaloriesButton";
 import { Calories } from "@/components/Generation/Calories/Calories";
 import { RecipeSteps } from "@/components/Recipes/RecipeSteps/RecipeSteps";
+import { ConfirmationModal } from "@/components/ConfirmationModal/ConfirmationModal";
 import { 
   useRecipeQuery, 
   useUpdateRecipeNameMutation, 
@@ -40,6 +41,7 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState("");
   const [showCalories, setShowCalories] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const isOwner = user?.id === recipe?.user_id;
 
@@ -70,10 +72,24 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
   };
 
   const handleDelete = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
     if (!recipe) return;
-    if (!confirm("Are you sure you want to delete this recipe?")) return;
     
-    deleteRecipe.mutate(recipe.id);
+    deleteRecipe.mutate(recipe.id, {
+      onSuccess: () => {
+        setShowDeleteModal(false);
+      },
+      onError: () => {
+        setShowDeleteModal(false);
+      }
+    });
+  };
+
+  const handleCloseModal = () => {
+    setShowDeleteModal(false);
   };
 
   const handleGoBack = () => {
@@ -228,6 +244,17 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
           />
         </div>
       </div>
+
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmDelete}
+        title="Delete Recipe"
+        message="Are you sure you want to delete this recipe? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        isLoading={deleteRecipe.isPending}
+      />
     </div>
   );
 }; 
