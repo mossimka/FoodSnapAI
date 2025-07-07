@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "storage.googleapis.com",
       },
+      {
+        protocol: "https",
+        hostname: "images.openfoodfacts.org",
+      },
     ],
   },
   eslint: {

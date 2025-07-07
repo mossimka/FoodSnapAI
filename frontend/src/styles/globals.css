@@ -334,3 +334,117 @@ body.no-scroll {
 a {
   text-decoration: none;
 }
+
+#html5-qrcode-button-camera-start {
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--gradientGreen);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--green-shadow);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  width: 250px;
+  margin: 0.5rem;
+}
+
+#html5-qrcode-button-camera-start:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(52, 168, 83, 0.3);
+}
+
+#html5-qrcode-button-camera-start:hover::before {
+  left: 100%;
+}
+
+#html5-qrcode-button-camera-start:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 4px 16px rgba(52, 168, 83, 0.3);
+}
+
+#html5-qrcode-button-camera-stop {
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--gradientRed);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  width: 250px;
+  margin: 0.5rem;
+}
+
+#html5-qrcode-button-camera-stop::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+#html5-qrcode-button-camera-stop:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--hover-shadow);
+}
+
+#html5-qrcode-button-camera-stop:hover::before {
+  left: 100%;
+}
+
+#html5-qrcode-button-camera-stop:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: var(--active-shadow);
+}
+
+#html5-qrcode-anchor-scan-type-change, #html5-qrcode-button-file-selection, #html5-qrcode-button-camera-permission {
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--gradient3);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  gap: var(--spacing-sm);
+  width: 300px;
+  margin: 1rem;
+}
+
+#html5-qrcode-anchor-scan-type-change::before, #html5-qrcode-button-file-selection::before, #html5-qrcode-button-camera-permission::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+#html5-qrcode-anchor-scan-type-change:hover, #html5-qrcode-button-file-selection:hover, #html5-qrcode-button-camera-permission:hover#html5-qrcode-button-camera-permission:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--hover-shadow);
+}
+
+#html5-qrcode-anchor-scan-type-change:hover::before, #html5-qrcode-button-file-selection:hover::before, #html5-qrcode-button-camera-permission:hover::before {
+  left: 100%;
+}
+

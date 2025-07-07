@@ -1,0 +1,401 @@
+/* Barcode Scanner Container */
+.barcodeContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--spacing-2xl);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header p {
+  color: var(--text-color-sub);
+  font-size: 1.1rem;
+}
+
+/* Scanner Section */
+.startSection {
+  text-align: center;
+  padding: var(--spacing-2xl);
+}
+
+.startButton {
+  background: var(--gradient);
+  color: white;
+  border: none;
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  border-radius: var(--border-radius-lg);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(244, 138, 59, 0.3);
+  width: 250px;
+}
+
+.startButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 138, 59, 0.4);
+}
+
+.scannerSection {
+  text-align: center;
+}
+
+.scanner {
+  margin: var(--spacing-xl) auto;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.stopButton {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.stopButton:hover {
+  background: linear-gradient(135deg, #c0392b, #a93226);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+/* Loading State */
+.loading {
+  text-align: center;
+  padding: var(--spacing-2xl);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(244, 138, 59, 0.3);
+  border-top: 3px solid var(--color1);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto var(--spacing-lg);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.errorMessage {
+  text-align: center;
+  padding: var(--spacing-xl);
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: var(--border-radius-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.errorMessage p {
+  color: #ff6b6b;
+  margin-bottom: var(--spacing-lg);
+  font-weight: 500;
+}
+
+.retryButton {
+  background: var(--gradient);
+  color: white;
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retryButton:hover {
+  transform: translateY(-1px);
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .barcodeContainer {
+    padding: var(--spacing-lg);
+    margin: var(--spacing-md);
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .barcodeContainer {
+    padding: var(--spacing-md);
+    margin: var(--spacing-sm);
+  }
+
+  .startButton {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 1rem;
+  }
+}
+
+/* Photo Capture Elements */
+.hiddenVideo {
+  display: none;
+}
+
+.hiddenCanvas {
+  display: none;
+}
+
+.scannerControls {
+  display: flex;
+  gap: var(--spacing-lg);
+  justify-content: center;
+  margin-top: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.captureButton {
+  background: var(--gradient);
+  color: white;
+  border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  box-shadow: 0 4px 15px rgba(244, 138, 59, 0.3);
+}
+
+.captureButton:hover {
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 138, 59, 0.4);
+}
+
+.capturedPhotoSection {
+  margin-top: var(--spacing-xl);
+  text-align: center;
+  background: rgba(255, 255, 255, 0.05);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.capturedPhotoSection h3 {
+  color: var(--text-color);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-lg);
+}
+
+.capturedImage {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  margin-bottom: var(--spacing-lg);
+}
+
+.capturedPhotoSection p {
+  color: var(--text-color-sub);
+  font-size: 1rem;
+  margin-top: var(--spacing-md);
+}
+
+/* Additional responsive styles for photo capture */
+@media (max-width: 768px) {
+  .scannerControls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .captureButton {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .capturedImage {
+    max-height: 200px;
+  }
+}
+
+/* Tab Navigation */
+.tabNavigation {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.tabButton {
+  background: none;
+  border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--text-color-sub);
+  border-bottom: 3px solid transparent;
+}
+
+.tabButton:hover {
+  color: var(--primary-color);
+  background: rgba(244, 138, 59, 0.1);
+}
+
+.activeTab {
+  color: var(--primary-color) !important;
+  background: rgba(244, 138, 59, 0.1);
+  border-bottom-color: var(--primary-color) !important;
+}
+
+/* Upload Section */
+.uploadSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.uploadArea {
+  position: relative;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  text-align: center;
+  transition: all 0.3s ease;
+  background: var(--background-color-light);
+}
+
+.uploadArea:hover {
+  border-color: var(--primary-color);
+  background: rgba(244, 138, 59, 0.05);
+}
+
+.fileInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.uploadLabel {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  color: var(--text-color);
+}
+
+.uploadLabel svg {
+  color: var(--primary-color);
+  opacity: 0.7;
+}
+
+.uploadLabel h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.uploadLabel p {
+  margin: 0;
+  color: var(--text-color-sub);
+  font-size: 1rem;
+}
+
+.uploadButton {
+  background: var(--gradient);
+  color: white;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(244, 138, 59, 0.3);
+}
+
+.uploadButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 138, 59, 0.4);
+}
+
+.uploadedImageSection {
+  text-align: center;
+}
+
+.uploadedImageSection h3 {
+  color: var(--text-color);
+  margin-bottom: var(--spacing-md);
+}
+
+.uploadedImage {
+  max-width: 100%;
+  max-height: 400px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Additional responsive styles for tabs and upload */
+@media (max-width: 768px) {
+  .tabNavigation {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .tabButton {
+    border-radius: var(--border-radius-lg);
+    border-bottom: none;
+    border-left: 3px solid transparent;
+  }
+
+  .activeTab {
+    border-bottom: none !important;
+    border-left-color: var(--primary-color) !important;
+  }
+
+  .uploadArea {
+    padding: var(--spacing-lg);
+  }
+
+  .uploadLabel h3 {
+    font-size: 1.25rem;
+  }
+}
+
+
