@@ -117,6 +117,10 @@ export default function SettingsPage() {
   }
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if(e.target.value.length > 30) {
+      toast.error("Username must be less than 30 characters long");
+      return;
+    }
     setUsername(e.target.value);
   };
 

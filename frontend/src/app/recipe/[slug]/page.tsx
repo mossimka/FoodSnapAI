@@ -2,7 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { RecipePage } from "@/components/Recipes/RecipePage/RecipePage";
-import { getRecipeBySlug } from "@/services/generateService";
+import { getRecipeBySlug } from "@/services/recipeService";
 
 interface PageProps {
   params: Promise<{ slug: string }>;

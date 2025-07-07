@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Pencil, ArrowLeft } from "lucide-react";
+import { toast } from "react-toastify";
 
 import Styles from "./RecipePage.module.css";
 import { useAuthStore } from "@/stores/authStore";
@@ -18,6 +19,7 @@ import {
   useToggleRecipePublishMutation, 
   useDeleteRecipeMutation 
 } from "@/hooks/useRecipeQueries";
+import { FavoriteButton } from "@/components/Recipes/FavoriteButton/FavoriteButton";
 
 interface RecipePageProps {
   slug: string;
@@ -53,6 +55,11 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
 
   const handleUpdateName = () => {
     if (!recipe || !name.trim()) return;
+
+    if(name.length > 50) {
+      toast.error("Recipe name must be less than 50 characters long");
+      return;
+    }
     
     updateRecipeName.mutate(
       { id: recipe.id, dish_name: name },
@@ -138,30 +145,37 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
                 style={{ objectFit: "cover", borderRadius: "12px" }}
               />
             </div>
-            {isOwner && (
-              <div className={Styles.buttons}>
-                <button
-                  onClick={handleTogglePublish}
-                  className="button"
-                  disabled={togglePublish.isPending}
-                >
-                  {togglePublish.isPending
-                    ? recipe.is_published
-                      ? "Unpublishing..."
-                      : "Publishing..."
-                    : recipe.is_published
-                    ? "Unpublish"
-                    : "Publish"}
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="buttonRed"
-                  disabled={deleteRecipe.isPending}
-                >
-                  {deleteRecipe.isPending ? "Deleting..." : "Delete"}
-                </button>
-              </div>
-            )}
+            <div className={Styles.buttons}>
+              {isOwner ? (
+                <>
+                  <button
+                    onClick={handleTogglePublish}
+                    className="button"
+                    disabled={togglePublish.isPending}
+                  >
+                    {togglePublish.isPending
+                      ? recipe.is_published
+                        ? "Unpublishing..."
+                        : "Publishing..."
+                      : recipe.is_published
+                      ? "Unpublish"
+                      : "Publish"}
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="buttonRed"
+                    disabled={deleteRecipe.isPending}
+                  >
+                    {deleteRecipe.isPending ? "Deleting..." : "Delete"}
+                  </button>
+                </>
+              ) : (
+                <FavoriteButton 
+                  recipeId={recipe.id} 
+                  recipeUserId={recipe.user_id} 
+                />
+              )}
+            </div>
           </div>
 
           <div className={Styles.details}>

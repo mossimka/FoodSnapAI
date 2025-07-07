@@ -1,0 +1,109 @@
+.favoriteButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-lg);
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.favoriteButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.favoriteButton:active {
+  transform: translateY(0);
+}
+
+.favoriteButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.favoriteButton:disabled:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: none;
+  box-shadow: none;
+}
+
+.favorited {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  border-color: #ff6b6b;
+  color: white;
+}
+
+.favorited:hover {
+  background: linear-gradient(135deg, #ff5252, #d63031);
+  border-color: #ff5252;
+  color: white;
+}
+
+.heartIcon {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  stroke-width: 2;
+}
+
+.heartIcon.filled {
+  fill: currentColor;
+  stroke: currentColor;
+  animation: heartBeat 0.6s ease-in-out;
+}
+
+.buttonText {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .favoriteButton {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.8rem;
+  }
+  
+  .heartIcon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .buttonText {
+    display: none;
+  }
+  
+  .favoriteButton {
+    padding: var(--spacing-sm);
+    min-width: 40px;
+    justify-content: center;
+  }
+} 

@@ -50,3 +50,22 @@ async def invalidate_user_caches(user_id: int | None = None):
                     await redis_client.delete(*keys)
     except Exception as e:
         print(f"User cache invalidation error: {e}")
+
+async def invalidate_favorite_caches(user_id: int | None = None):
+    """Helper function to invalidate favorite-related caches"""
+    try:
+        if user_id:
+            cache_patterns = [f"favorites:user_id={user_id}:*"]
+            for pattern in cache_patterns:
+                keys = []
+                cursor = 0
+                while True:
+                    cursor, partial_keys = await redis_client.scan(cursor=cursor, match=pattern)
+                    keys.extend(partial_keys)
+                    if cursor == 0:
+                        break
+                
+                if keys:
+                    await redis_client.delete(*keys)
+    except Exception as e:
+        print(f"Favorite cache invalidation error: {e}")

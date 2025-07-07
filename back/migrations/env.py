@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 from src.database import Base
 from src.auth.models import Users
-from src.recipes.models import Recipe, IngredientCalories
+from src.recipes.models import Recipe, IngredientCalories, FavoriteRecipe
 
 # Загружаем переменные окружения
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))

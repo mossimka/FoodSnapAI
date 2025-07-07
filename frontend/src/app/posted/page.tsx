@@ -5,8 +5,8 @@ import Styles from "./posted.module.css";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { RecipeCard } from "@/components/Recipes/RecipeCard/RecipeCard";
-import { usePublicRecipesQuery, useMyRecipesQuery } from "@/hooks/useRecipesQueries";
-import { IRecipe } from "@/interfaces/recipe";
+import { usePublicRecipesQuery, useMyRecipesQuery, useFavoriteRecipesQuery } from "@/hooks/useRecipesQueries";
+import { IRecipe, FavoriteRecipe } from "@/interfaces/recipe";
 import { Search } from "@/components/Recipes/Search/Search";
 import { Pagination } from "@/components/Pagination/Pagination";
 
@@ -28,11 +28,31 @@ const filterRecipes = (recipes: IRecipe[], query: string): IRecipe[] => {
   });
 };
 
+const filterFavoriteRecipes = (favoriteRecipes: FavoriteRecipe[], query: string): FavoriteRecipe[] => {
+  if (!query.trim()) return favoriteRecipes;
+  
+  const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 0);
+  
+  return favoriteRecipes.filter(favoriteRecipe => {
+    const recipe = favoriteRecipe.recipe;
+    const dishName = recipe.dish_name.toLowerCase();
+    const username = recipe.user.username.toLowerCase();
+    const ingredients = recipe.ingredients_calories
+      .map(ing => ing.ingredient.toLowerCase())
+      .join(' ');
+    
+    const searchableText = `${dishName} ${username} ${ingredients}`;
+    
+    return searchTerms.some(term => searchableText.includes(term));
+  });
+};
+
 export default function PostedPage() {
-  const [activeTab, setActiveTab] = useState<"public" | "my">("public");
+  const [activeTab, setActiveTab] = useState<"public" | "my" | "saved">("public");
   const [searchQuery, setSearchQuery] = useState("");
   const [publicPage, setPublicPage] = useState(1);
   const [myPage, setMyPage] = useState(1);
+  const [savedPage, setSavedPage] = useState(1);
   const pageSize = 12; // Reduced for better UX
 
   const { 
@@ -47,8 +67,15 @@ export default function PostedPage() {
     error: myError 
   } = useMyRecipesQuery(myPage, pageSize);
 
+  const { 
+    data: favoriteRecipesData, 
+    isLoading: favoriteLoading, 
+    error: favoriteError 
+  } = useFavoriteRecipesQuery(savedPage, pageSize);
+
   const publicRecipes = publicRecipesData?.recipes || [];
   const myRecipes = myRecipesData?.recipes || [];
+  const favoriteRecipes = favoriteRecipesData?.recipes || [];
 
   // For search, we need to get filtered results from current page
   const filteredPublicRecipes = useMemo(() => 
@@ -61,18 +88,49 @@ export default function PostedPage() {
     [myRecipes, searchQuery]
   );
 
-  const recipesToShow = activeTab === "public" ? filteredPublicRecipes : filteredMyRecipes;
-  const currentData = activeTab === "public" ? publicRecipesData : myRecipesData;
-  const isLoading = publicLoading || myLoading;
-  const hasError = publicError || myError;
+  const filteredFavoriteRecipes = useMemo(() => 
+    filterFavoriteRecipes(favoriteRecipes, searchQuery), 
+    [favoriteRecipes, searchQuery]
+  );
+
+  // Determine what to show based on active tab
+  const recipesToShow = activeTab === "public" 
+    ? filteredPublicRecipes 
+    : activeTab === "my" 
+    ? filteredMyRecipes 
+    : filteredFavoriteRecipes.map(fr => fr.recipe); // Extract recipe from favorite
+
+  const currentData = activeTab === "public" 
+    ? publicRecipesData 
+    : activeTab === "my" 
+    ? myRecipesData 
+    : favoriteRecipesData;
+
+  // Get loading and error states for current tab only
+  const getCurrentLoading = () => {
+    if (activeTab === "public") return publicLoading;
+    if (activeTab === "my") return myLoading;
+    return favoriteLoading;
+  };
+
+  const getCurrentError = () => {
+    if (activeTab === "public") return publicError;
+    if (activeTab === "my") return myError;
+    return favoriteError;
+  };
+
+  const isCurrentTabLoading = getCurrentLoading();
+  const currentTabError = getCurrentError();
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
     // Reset to first page when searching
     if (activeTab === "public") {
       setPublicPage(1);
-    } else {
+    } else if (activeTab === "my") {
       setMyPage(1);
+    } else {
+      setSavedPage(1);
     }
   };
 
@@ -83,20 +141,28 @@ export default function PostedPage() {
   const handlePageChange = (page: number) => {
     if (activeTab === "public") {
       setPublicPage(page);
-    } else {
+    } else if (activeTab === "my") {
       setMyPage(page);
+    } else {
+      setSavedPage(page);
     }
     
     // Scroll to top when changing pages
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleTabChange = (tab: "public" | "my") => {
+  const handleTabChange = (tab: "public" | "my" | "saved") => {
     setActiveTab(tab);
     setSearchQuery(""); // Clear search when switching tabs
   };
 
-  if (isLoading && recipesToShow.length === 0) {
+  const getCurrentPage = () => {
+    if (activeTab === "public") return publicPage;
+    if (activeTab === "my") return myPage;
+    return savedPage;
+  };
+
+  if (isCurrentTabLoading && recipesToShow.length === 0) {
     return (
       <div className={Styles.postedSection}>
         <div className={Styles.loading}>Loading recipes...</div>
@@ -104,7 +170,7 @@ export default function PostedPage() {
     );
   }
 
-  if (hasError) {
+  if (currentTabError) {
     return (
       <div className={Styles.postedSection}>
         <div className={Styles.error}>
@@ -131,6 +197,12 @@ export default function PostedPage() {
           >
             My recipes
           </button>
+          <button
+            className={`${Styles.tabButton} ${activeTab === "saved" ? Styles.active : ""}`}
+            onClick={() => handleTabChange("saved")}
+          >
+            Saved
+          </button>
         </div>
         
         <div className={Styles.searchContainer}>
@@ -153,11 +225,11 @@ export default function PostedPage() {
       )}
 
       <div className={Styles.recipeList}>
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" key={activeTab}>
           {recipesToShow.length > 0 ? (
             recipesToShow.map((r: IRecipe) => (
               <motion.div
-                key={`${r.dish_name}-${r.user_id}`}
+                key={`${activeTab}-${r.dish_name}-${r.user_id}`}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -30 }}
@@ -173,7 +245,7 @@ export default function PostedPage() {
           ) : (
             <motion.p
               className={Styles.noRecipes}
-              key="no-recipes"
+              key={`no-recipes-${activeTab}`}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -30 }}
@@ -181,7 +253,7 @@ export default function PostedPage() {
             >
               {searchQuery ? 
                 `No recipes found for "${searchQuery}"` : 
-                "No recipes to show"
+                activeTab === "saved" ? "No saved recipes yet" : "No recipes to show"
               }
             </motion.p>
           )}
@@ -191,10 +263,10 @@ export default function PostedPage() {
       {/* Pagination controls - only show when not searching */}
       {currentData && !searchQuery && currentData.total_pages > 1 && (
         <Pagination
-          currentPage={activeTab === "public" ? publicPage : myPage}
+          currentPage={getCurrentPage()}
           totalPages={currentData.total_pages}
           onPageChange={handlePageChange}
-          isLoading={isLoading}
+          isLoading={isCurrentTabLoading}
           showInfo={true}
           totalItems={currentData.total}
           itemsPerPage={pageSize}
@@ -202,7 +274,7 @@ export default function PostedPage() {
       )}
 
       {/* Loading overlay for page changes */}
-      {isLoading && recipesToShow.length > 0 && (
+      {isCurrentTabLoading && recipesToShow.length > 0 && (
         <div className={Styles.loadingOverlay}>
           <div className={Styles.loadingSpinner}>Loading...</div>
         </div>

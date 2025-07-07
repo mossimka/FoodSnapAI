@@ -5,7 +5,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-import { getRecipeBySlug, patchRecipe, deleteRecipe } from "@/services/generateService";
+import { getRecipeBySlug, patchRecipe, deleteRecipe } from "@/services/recipeService";
 import { IRecipe, RecipePatchRequest } from "@/interfaces/recipe";
 
 export const useRecipeQuery = (slug: string) => {

@@ -29,6 +29,28 @@ export interface PaginatedRecipesResponse {
   total_pages: number;
 }
 
+// Favorite-related interfaces
+export interface FavoriteRecipe {
+  id: number;
+  user_id: number;
+  recipe_id: number;
+  recipe: IRecipe;
+}
+
+export interface PaginatedFavoriteRecipesResponse {
+  recipes: FavoriteRecipe[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+}
+
+export interface FavoriteStatusResponse {
+  is_favorited: boolean;
+  recipe_id: number;
+  message: string;
+}
+
 export interface RecipeOutput {
   dish_name: string;
   recipe: string;

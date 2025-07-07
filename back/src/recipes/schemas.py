@@ -57,3 +57,36 @@ class PaginatedRecipesResponse(BaseModel):
     page: int
     page_size: int
     total_pages: int
+
+#Favorirites
+class FavoriteRecipeResponse(BaseModel):
+    id: int
+    user_id: int
+    recipe_id: int
+    recipe: RecipeResponse
+
+    model_config = {"from_attributes": True}
+
+class FavoriteRecipeCreate(BaseModel):
+    user_id: int
+    recipe_id: int
+
+class FavoriteRecipeDelete(BaseModel):
+    user_id: int
+    recipe_id: int
+
+class FavoriteToggleRequest(BaseModel):
+    user_id: int
+    recipe_id: int
+
+class PaginatedFavoriteRecipesResponse(BaseModel):
+    recipes: List[FavoriteRecipeResponse]
+    total: int
+    page: int
+    page_size: int
+    total_pages: int
+
+class FavoriteStatusResponse(BaseModel):
+    is_favorited: bool
+    recipe_id: int
+    message: str

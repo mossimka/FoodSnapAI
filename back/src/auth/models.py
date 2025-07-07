@@ -13,3 +13,4 @@ class Users(Base):
     profile_pic = Column(String, nullable=True)
 
     recipes = relationship("Recipe", back_populates="user")
+    favorite_recipes = relationship("FavoriteRecipe", back_populates="user", cascade="all, delete-orphan")

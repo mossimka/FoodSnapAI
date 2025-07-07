@@ -13,9 +13,31 @@ from src.auth.models import Users
 from src.gcs.uploader import upload_large_file_to_gcs
 from src.dependencies import get_db
 from src.recipes.models import Recipe, IngredientCalories
-from src.recipes.schemas import RecipeResponse, RecipePatchRequest, PaginatedRecipesResponse
-from src.recipes.service import get_recipe_by_slug, get_recipe_response_by_slug, get_recipes_paginated, get_public_recipes_paginated, get_my_recipes_paginated
-from src.services.redis import redis_client, invalidate_recipe_caches, invalidate_user_caches
+from src.recipes.schemas import (
+    FavoriteStatusResponse,
+    RecipeResponse, 
+    RecipePatchRequest, 
+    PaginatedRecipesResponse, 
+    PaginatedFavoriteRecipesResponse,
+    FavoriteStatusResponse
+)
+from src.recipes.service import (
+    get_recipe_by_slug, 
+    get_recipe_response_by_slug, 
+    get_recipes_paginated, 
+    get_public_recipes_paginated, 
+    get_my_recipes_paginated,
+    get_favorite_recipes_paginated,
+    add_to_favorites,
+    remove_from_favorites,
+    is_recipe_favorited
+)
+from src.services.redis import (
+    redis_client, 
+    invalidate_recipe_caches, 
+    invalidate_user_caches,
+    invalidate_favorite_caches
+)
 
 from src.recipes.agents import root_agent, checking_agent
 
@@ -316,3 +338,93 @@ async def get_my_recipes(
 
     return response
 
+
+#Favorites
+
+@router.get("/favorites/", response_model=PaginatedFavoriteRecipesResponse)
+async def get_favorite_revipes(
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db),
+    page: int = Query(1, ge=1, description="Page number"),
+    page_size: int = Query(20, ge=1, le=100, description="Number of items per page")
+):
+    cache_key = f"favorites:user_id={current_user['id']}:page={page}:size={page_size}"
+
+    cached_data = await redis_client.get(cache_key)
+    if cached_data:
+        return  PaginatedFavoriteRecipesResponse(**json.loads(cached_data))
+
+    response: PaginatedFavoriteRecipesResponse = get_favorite_recipes_paginated(db, current_user["id"], page=page, page_size=page_size)
+
+    await redis_client.set(cache_key, json.dumps(response.model_dump()), ex=300)
+
+    return response
+
+@router.post("/favorites/{recipe_id}/", response_model=FavoriteStatusResponse)
+async def add_recipe_to_favorites(
+    recipe_id: int = Path(..., description="Recipe ID to add to favorites"),
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Add recipe to user's favorites"""
+    try:
+        success = add_to_favorites(db, current_user["id"], recipe_id)
+        
+        if success:
+            # Инвалидируем кэш избранного для пользователя
+            await invalidate_favorite_caches(current_user["id"])
+            
+            return FavoriteStatusResponse(
+                is_favorited=True,
+                recipe_id=recipe_id,
+                message="Recipe added to favorites"
+            )
+        else:
+            raise HTTPException(
+                status_code=400, 
+                detail="Recipe not found, already in favorites, or is your own recipe"
+            )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to add to favorites: {str(e)}")
+
+@router.delete("/favorites/{recipe_id}/", response_model=FavoriteStatusResponse)
+async def remove_recipe_from_favorites(
+    recipe_id: int = Path(..., description="Recipe ID to remove from favorites"),
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Remove recipe from user's favorites"""
+    try:
+        success = remove_from_favorites(db, current_user["id"], recipe_id)
+        
+        if success:
+            # Инвалидируем кэш избранного для пользователя
+            await invalidate_favorite_caches(current_user["id"])
+            
+            return FavoriteStatusResponse(
+                is_favorited=False,
+                recipe_id=recipe_id,
+                message="Recipe removed from favorites"
+            )
+        else:
+            raise HTTPException(status_code=404, detail="Recipe not found in favorites")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to remove from favorites: {str(e)}")
+
+@router.get("/favorites/check/{recipe_id}/", response_model=FavoriteStatusResponse)
+async def check_favorite_status(
+    recipe_id: int = Path(..., description="Recipe ID to check"),
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Check if recipe is in user's favorites"""
+    try:
+        is_favorited = is_recipe_favorited(db, current_user["id"], recipe_id)
+        
+        return FavoriteStatusResponse(
+            is_favorited=is_favorited,
+            recipe_id=recipe_id,
+            message="Favorite status checked"
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to check favorite status: {str(e)}")
