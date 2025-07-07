@@ -599,3 +599,216 @@ a {
   left: 100%;
 }
 
+/* Camera Selector Dropdown */
+#html5-qrcode-select-camera {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-md);
+  color: var(--text-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin: var(--spacing-sm);
+  min-width: 200px;
+  outline: none;
+}
+
+#html5-qrcode-select-camera:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--color1);
+  box-shadow: 0 6px 20px rgba(244, 138, 59, 0.2);
+  transform: translateY(-1px);
+}
+
+#html5-qrcode-select-camera:focus {
+  border-color: var(--color1);
+  box-shadow: 0 0 0 3px rgba(244, 138, 59, 0.2);
+}
+
+#html5-qrcode-select-camera option {
+  background: var(--bg-color);
+  color: var(--text-color);
+  padding: var(--spacing-sm);
+}
+
+/* Zoom Range Input */
+#html5-qrcode-input-range-zoom {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 200px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+  margin: var(--spacing-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#html5-qrcode-input-range-zoom::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--gradient);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(244, 138, 59, 0.4);
+  transition: all 0.3s ease;
+}
+
+#html5-qrcode-input-range-zoom::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(244, 138, 59, 0.6);
+}
+
+#html5-qrcode-input-range-zoom::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--gradient);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(244, 138, 59, 0.4);
+  transition: all 0.3s ease;
+}
+
+#html5-qrcode-input-range-zoom::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(244, 138, 59, 0.6);
+}
+
+#html5-qrcode-input-range-zoom::-moz-range-track {
+  width: 100%;
+  height: 6px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  border: none;
+}
+
+#html5-qrcode-input-range-zoom:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+#html5-qrcode-input-range-zoom:focus {
+  box-shadow: 0 0 0 3px rgba(244, 138, 59, 0.2);
+}
+
+/* Responsive styles for camera selector and zoom */
+@media (max-width: 768px) {
+  #html5-qrcode-select-camera {
+    min-width: 180px;
+    font-size: 0.85rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  #html5-qrcode-input-range-zoom {
+    width: 180px;
+    margin: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 600px) {
+  #html5-qrcode-select-camera {
+    min-width: 160px;
+    font-size: 0.8rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  #html5-qrcode-input-range-zoom {
+    width: 160px;
+    margin: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  #html5-qrcode-select-camera {
+    min-width: 140px;
+    font-size: 0.75rem;
+    padding: var(--spacing-xs) var(--spacing-xs);
+  }
+
+  #html5-qrcode-input-range-zoom {
+    width: 140px;
+    margin: var(--spacing-xs);
+  }
+
+  #html5-qrcode-input-range-zoom::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+  }
+
+  #html5-qrcode-input-range-zoom::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 400px) {
+  #html5-qrcode-select-camera {
+    min-width: 120px;
+    font-size: 0.7rem;
+  }
+
+  #html5-qrcode-input-range-zoom {
+    width: 120px;
+  }
+
+  #html5-qrcode-input-range-zoom::-webkit-slider-thumb {
+    width: 16px;
+    height: 16px;
+  }
+
+  #html5-qrcode-input-range-zoom::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  #html5-qrcode-select-camera {
+    min-width: 100px;
+    font-size: 0.65rem;
+  }
+
+  #html5-qrcode-input-range-zoom {
+    width: 100px;
+  }
+
+  #html5-qrcode-input-range-zoom::-webkit-slider-thumb {
+    width: 14px;
+    height: 14px;
+  }
+
+  #html5-qrcode-input-range-zoom::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 320px) {
+  #html5-qrcode-select-camera {
+    min-width: 90px;
+    font-size: 0.6rem;
+  }
+
+  #html5-qrcode-input-range-zoom {
+    width: 90px;
+  }
+
+  #html5-qrcode-input-range-zoom::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+  }
+
+  #html5-qrcode-input-range-zoom::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+  }
+}
+

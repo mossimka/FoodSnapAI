@@ -145,29 +145,29 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
                 style={{ objectFit: "cover", borderRadius: "12px" }}
               />
             </div>
-            <div className={Styles.buttons}>
+              <div className={Styles.buttons}>
               {isOwner ? (
                 <>
-                  <button
-                    onClick={handleTogglePublish}
-                    className="button"
-                    disabled={togglePublish.isPending}
-                  >
-                    {togglePublish.isPending
-                      ? recipe.is_published
-                        ? "Unpublishing..."
-                        : "Publishing..."
-                      : recipe.is_published
-                      ? "Unpublish"
-                      : "Publish"}
-                  </button>
-                  <button
-                    onClick={handleDelete}
-                    className="buttonRed"
-                    disabled={deleteRecipe.isPending}
-                  >
-                    {deleteRecipe.isPending ? "Deleting..." : "Delete"}
-                  </button>
+                <button
+                  onClick={handleTogglePublish}
+                  className="button"
+                  disabled={togglePublish.isPending}
+                >
+                  {togglePublish.isPending
+                    ? recipe.is_published
+                      ? "Unpublishing..."
+                      : "Publishing..."
+                    : recipe.is_published
+                    ? "Unpublish"
+                    : "Publish"}
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="buttonRed"
+                  disabled={deleteRecipe.isPending}
+                >
+                  {deleteRecipe.isPending ? "Deleting..." : "Delete"}
+                </button>
                 </>
               ) : (
                 <FavoriteButton 
@@ -175,7 +175,7 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
                   recipeUserId={recipe.user_id} 
                 />
               )}
-            </div>
+              </div>
           </div>
 
           <div className={Styles.details}>
