@@ -167,7 +167,7 @@ export const Barcode: React.FC = () => {
           locate: true,
           src: imageDataUrl
         }, async (result) => {
-          if (result && result.codeResult) {
+          if (result && result.codeResult && result.codeResult.code) {
             const barcode = result.codeResult.code;
             toast.success(`Barcode found: ${barcode}`);
             
