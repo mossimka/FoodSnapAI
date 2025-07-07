@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { Html5QrcodeScanner, Html5QrcodeScanType } from "html5-qrcode";
 import { toast } from "react-toastify";
-import { Camera, Upload } from "lucide-react";
+import { Camera } from "lucide-react";
 import { openFoodFactsService, OpenFoodFactsProduct } from "@/services/openFoodFactsService";
 import { ProductDisplay } from "./ProductDisplay";
 import Styles from "./Barcode.module.css";
@@ -17,31 +17,71 @@ export const Barcode: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'camera' | 'upload'>('camera');
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent || navigator.vendor || (window as unknown as { opera?: string }).opera || '';
+      const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
+      setIsMobile(isMobileDevice);
+    };
+    
+    checkMobile();
+  }, []);
 
-  // Request camera permission
+  // Request camera permission with improved mobile handling
   const requestCameraPermission = async () => {
     try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({ 
-        video: { 
+      // More conservative settings for mobile devices
+      const constraints = {
+        video: isMobile ? {
+          facingMode: 'environment',
+          width: { ideal: 640, max: 1280 },
+          height: { ideal: 480, max: 720 }
+        } : {
           facingMode: 'environment',
           width: { ideal: 1280 },
           height: { ideal: 720 }
-        } 
-      });
+        }
+      };
+
+      const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
       
       setHasPermission(true);
       setStream(mediaStream);
-      
-      toast.success("Camera permission granted!");
       return true;
-    } catch (error) {
-      console.error("Camera permission denied:", error);
+    } catch (error: unknown) {
+      console.error("Camera permission error:", error);
       setHasPermission(false);
-      setError("Camera permission is required for barcode scanning");
-      toast.error("Camera permission denied");
+      
+      // Improved error handling for mobile devices
+      let errorMessage = "Camera access denied";
+      let userAction = "Please grant camera permission and try again";
+      
+      if (error instanceof Error && error.name === 'NotReadableError') {
+        if (isMobile) {
+          errorMessage = "Camera is busy or unavailable";
+          userAction = "Please close other apps using the camera (like Instagram, WhatsApp, or video calls) and try again. You can also try using the file selection option.";
+        } else {
+          errorMessage = "Camera is being used by another application";
+          userAction = "Please close other applications using the camera (like Zoom, Skype, or other browser tabs) and try again";
+        }
+      } else if (error instanceof Error && error.name === 'NotAllowedError') {
+        if (isMobile) {
+          errorMessage = "Camera permission denied";
+          userAction = "Please allow camera access in your browser settings. On mobile, you may need to refresh the page after granting permission.";
+        } else {
+          errorMessage = "Camera permission denied";
+          userAction = "Please click the camera icon in your browser's address bar and allow camera access";
+        }
+      } else if (error instanceof Error && error.name === 'NotFoundError') {
+        errorMessage = "No camera found";
+        userAction = isMobile ? "Please try using the file selection option to scan barcodes from photos" : "Please connect a camera and try again";
+      }
+      
+      setError(`${errorMessage}. ${userAction}`);
+      toast.error(errorMessage);
       return false;
     }
   };
@@ -69,6 +109,10 @@ export const Barcode: React.FC = () => {
           showTorchButtonIfSupported: true,
           showZoomSliderIfSupported: true,
           defaultZoomValueIfSupported: 2,
+          supportedScanTypes: [
+            Html5QrcodeScanType.SCAN_TYPE_CAMERA,
+            Html5QrcodeScanType.SCAN_TYPE_FILE
+          ]
         },
         false
       );
@@ -122,88 +166,6 @@ export const Barcode: React.FC = () => {
     console.log("Scan failed:", error);
   };
 
-  // Handle file upload
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const result = e.target?.result;
-          if (result && typeof result === 'string') {
-            setUploadedImage(result);
-            scanImageForBarcode(result);
-          }
-        };
-        reader.readAsDataURL(file);
-      } else {
-        toast.error("Please select a valid image file");
-      }
-    }
-  };
-
-  // Scan image for barcodes using Quagga2
-  const scanImageForBarcode = async (imageDataUrl: string) => {
-    
-    setIsLoading(true);
-    try {
-      // Import Quagga2 dynamically
-      const Quagga = await import('@ericblade/quagga2');
-      
-      return new Promise((resolve, reject) => {
-        Quagga.default.decodeSingle({
-          decoder: {
-            readers: [
-              "code_128_reader",
-              "ean_reader",
-              "ean_8_reader",
-              "code_39_reader",
-              "code_93_reader",
-              "codabar_reader",
-              "upc_reader",
-              "upc_e_reader"
-            ]
-          },
-          locate: true,
-          src: imageDataUrl
-        }, async (result) => {
-          if (result && result.codeResult && result.codeResult.code) {
-            const barcode = result.codeResult.code;
-            toast.success(`Barcode found: ${barcode}`);
-            
-            // Fetch product information using the detected barcode
-            try {
-              const productData = await openFoodFactsService.getProductByBarcode(barcode);
-              if (productData.status === 1 && productData.product) {
-                setScannedProduct(productData.product);
-                toast.success("Product found!");
-              } else {
-                setError("Product not found in Open Food Facts database");
-                toast.error("Product not found");
-              }
-            } catch (error) {
-              console.error('Error fetching product:', error);
-              setError("Failed to fetch product information");
-              toast.error("Failed to fetch product information");
-            }
-            resolve(result);
-          } else {
-            setError("No barcode detected in image");
-            toast.error("No barcode detected in image");
-            reject(new Error("No barcode detected"));
-          }
-          setIsLoading(false);
-        });
-      });
-    } catch (error) {
-      console.error('Error scanning image:', error);
-      setError("Error scanning image");
-      toast.error("Error scanning image");
-      setIsLoading(false);
-      throw error;
-    }
-  };
-
   const handleCloseProduct = () => {
     setScannedProduct(null);
     setError(null);
@@ -242,33 +204,17 @@ export const Barcode: React.FC = () => {
     <div className={Styles.barcodeContainer}>
       <div className={Styles.header}>
         <h1>Barcode Scanner</h1>
-        <p>Scan a product barcode to get information from Open Food Facts</p>
-      </div>
-
-      {/* Tab Navigation */}
-      <div className={Styles.tabNavigation}>
-        <button 
-          className={`${Styles.tabButton} ${activeTab === 'camera' ? Styles.activeTab : ''}`}
-          onClick={() => setActiveTab('camera')}
-        >
-          <Camera size={20} />
-          Camera Scanner
-        </button>
-        <button 
-          className={`${Styles.tabButton} ${activeTab === 'upload' ? Styles.activeTab : ''}`}
-          onClick={() => setActiveTab('upload')}
-        >
-          <Upload size={20} />
-          Upload Image
-        </button>
+        <p>Scan a product barcode or upload an image to get information from Open Food Facts</p>
       </div>
 
       {error && (
         <div className={Styles.errorMessage}>
           <p>{error}</p>
-          <button onClick={handleTryAgain} className={Styles.retryButton}>
-            Try Again
-          </button>
+          <div className={Styles.errorActions}>
+            <button onClick={handleTryAgain} className={Styles.retryButton}>
+              Try Again
+            </button>
+          </div>
         </div>
       )}
 
@@ -279,60 +225,28 @@ export const Barcode: React.FC = () => {
         </div>
       )}
 
-      {/* Camera Tab */}
-      {activeTab === 'camera' && (
-        <>
-          {!isScanning && !isLoading && !error && (
-            <div className={Styles.startSection}>
-              {hasPermission === false && (
-                <div className={Styles.errorMessage}>
-                  <p>Camera permission is required for barcode scanning.</p>
-                  <button onClick={requestCameraPermission} className={Styles.retryButton}>
-                    Grant Camera Permission
-                  </button>
-                </div>
-              )}
-              {(hasPermission === null || hasPermission === true) && (
-                <button onClick={startScanning} className={Styles.startButton}>
-                  Start Scanning
-                </button>
-              )}
+      {!isScanning && !isLoading && !error && (
+        <div className={Styles.startSection}>
+          {hasPermission === false && (
+            <div className={Styles.errorMessage}>
+              <p>Camera permission is required for barcode scanning.</p>
+              <button onClick={requestCameraPermission} className={Styles.retryButton}>
+                Grant Camera Permission
+              </button>
             </div>
           )}
-
-          {isScanning && (
-            <div className={Styles.scannerSection}>
-              <div id={scannerId.current} className={Styles.scanner}></div>
-            </div>
+          {(hasPermission === null || hasPermission === true) && (
+            <button onClick={startScanning} className={Styles.startButton}>
+              <Camera size={20} style={{ marginRight: '8px' }} />
+              Start Scanning
+            </button>
           )}
-        </>
+        </div>
       )}
 
-      {/* Upload Tab */}
-      {activeTab === 'upload' && !isLoading && !error && (
-        <div className={Styles.uploadSection}>
-          <div className={Styles.uploadArea}>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileUpload}
-              className={Styles.fileInput}
-              id="barcode-file-input"
-            />
-            <label htmlFor="barcode-file-input" className={Styles.uploadLabel}>
-              <Upload size={48} />
-              <h3>Upload Image</h3>
-              <p>Select an image containing a barcode</p>
-              <span className={Styles.uploadButton}>Choose File</span>
-            </label>
-          </div>
-          
-          {uploadedImage && (
-            <div className={Styles.uploadedImageSection}>
-              <h3>Uploaded Image</h3>
-              <img src={uploadedImage} alt="Uploaded" className={Styles.uploadedImage} />
-            </div>
-          )}
+      {isScanning && (
+        <div className={Styles.scannerSection}>
+          <div id={scannerId.current} className={Styles.scanner}></div>
         </div>
       )}
     </div>

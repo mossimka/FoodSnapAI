@@ -285,6 +285,48 @@ input:focus, textarea:focus, select:focus {
     font-size: 0.9rem;
     border-radius: var(--border-radius-sm);
   }
+
+  #html5-qrcode-button-camera-start,
+  #html5-qrcode-button-camera-stop {
+    width: 220px;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 0.95rem;
+  }
+
+  #html5-qrcode-anchor-scan-type-change,
+  #html5-qrcode-button-file-selection,
+  #html5-qrcode-button-camera-permission {
+    width: 280px;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .button,
+  .buttonRed {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.9rem;
+  }
+
+  #html5-qrcode-button-camera-start,
+  #html5-qrcode-button-camera-stop {
+    width: 100%;
+    max-width: 300px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.9rem;
+    margin: 0.25rem;
+  }
+
+  #html5-qrcode-anchor-scan-type-change,
+  #html5-qrcode-button-file-selection,
+  #html5-qrcode-button-camera-permission {
+    width: 100%;
+    max-width: 320px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.9rem;
+    margin: 0.5rem;
+  }
 }
 
 @media (max-width: 600px) {
@@ -292,6 +334,115 @@ input:focus, textarea:focus, select:focus {
   .buttonRed {
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: 0.85rem;
+  }
+
+  #html5-qrcode-button-camera-start,
+  #html5-qrcode-button-camera-stop {
+    width: 100%;
+    max-width: 280px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.85rem;
+    margin: 0.25rem;
+  }
+
+  #html5-qrcode-anchor-scan-type-change,
+  #html5-qrcode-button-file-selection,
+  #html5-qrcode-button-camera-permission {
+    width: 100%;
+    max-width: 300px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.85rem;
+    margin: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .button,
+  .buttonRed {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.8rem;
+  }
+
+  #html5-qrcode-button-camera-start,
+  #html5-qrcode-button-camera-stop {
+    width: 100%;
+    max-width: 260px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.8rem;
+    margin: 0.25rem;
+  }
+
+  #html5-qrcode-anchor-scan-type-change,
+  #html5-qrcode-button-file-selection,
+  #html5-qrcode-button-camera-permission {
+    width: 100%;
+    max-width: 280px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.8rem;
+    margin: 0.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  #html5-qrcode-button-camera-start,
+  #html5-qrcode-button-camera-stop {
+    width: 100%;
+    max-width: 240px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.75rem;
+    margin: 0.25rem;
+  }
+
+  #html5-qrcode-anchor-scan-type-change,
+  #html5-qrcode-button-file-selection,
+  #html5-qrcode-button-camera-permission {
+    width: 100%;
+    max-width: 260px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.75rem;
+    margin: 0.5rem;
+  }
+}
+
+@media (max-width: 360px) {
+  #html5-qrcode-button-camera-start,
+  #html5-qrcode-button-camera-stop {
+    width: 100%;
+    max-width: 220px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.7rem;
+    margin: 0.25rem;
+  }
+
+  #html5-qrcode-anchor-scan-type-change,
+  #html5-qrcode-button-file-selection,
+  #html5-qrcode-button-camera-permission {
+    width: 100%;
+    max-width: 240px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.7rem;
+    margin: 0.5rem;
+  }
+}
+
+@media (max-width: 320px) {
+  #html5-qrcode-button-camera-start,
+  #html5-qrcode-button-camera-stop {
+    width: 100%;
+    max-width: 200px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.65rem;
+    margin: 0.25rem;
+  }
+
+  #html5-qrcode-anchor-scan-type-change,
+  #html5-qrcode-button-file-selection,
+  #html5-qrcode-button-camera-permission {
+    width: 100%;
+    max-width: 220px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.65rem;
+    margin: 0.5rem;
   }
 }
 

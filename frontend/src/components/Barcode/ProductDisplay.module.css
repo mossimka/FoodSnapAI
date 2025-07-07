@@ -68,8 +68,6 @@
   transform: scale(1.02);
 }
 
-
-
 .productContent {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -475,10 +473,59 @@
   }
 }
 
+@media (max-width: 600px) {
+  .productDisplay {
+    padding: var(--spacing-md);
+    margin: var(--spacing-sm);
+  }
+
+  .productTitle {
+    font-size: 1.3rem;
+  }
+
+  .productHeader {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: stretch;
+  }
+
+  .infoSection h3 {
+    font-size: 1.2rem;
+  }
+
+  .nutritionGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .ingredientsSection {
+    padding: var(--spacing-sm);
+  }
+
+  .ingredientsSection h3 {
+    font-size: 1rem;
+  }
+
+  .ingredientsSection .ingredients {
+    font-size: 0.85rem;
+  }
+
+  .label {
+    font-size: 0.9rem;
+  }
+
+  .value {
+    font-size: 0.9rem;
+  }
+}
+
 @media (max-width: 480px) {
   .productDisplay {
     padding: var(--spacing-md);
     margin: var(--spacing-sm);
+  }
+
+  .productTitle {
+    font-size: 1.2rem;
   }
 
   .nutritionGrid {
@@ -490,5 +537,165 @@
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-xs);
+  }
+
+  .infoSection h3 {
+    font-size: 1.1rem;
+  }
+
+  .ingredientsSection h3 {
+    font-size: 0.95rem;
+  }
+
+  .ingredientsSection .ingredients {
+    font-size: 0.8rem;
+  }
+
+  .label {
+    font-size: 0.85rem;
+  }
+
+  .value {
+    font-size: 0.85rem;
+  }
+
+  .grade {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .gradeValue {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .productDisplay {
+    padding: var(--spacing-sm);
+    margin: var(--spacing-xs);
+  }
+
+  .productTitle {
+    font-size: 1.1rem;
+  }
+
+  .infoSection {
+    padding: var(--spacing-sm);
+  }
+
+  .infoSection h3 {
+    font-size: 1rem;
+  }
+
+  .ingredientsSection {
+    padding: var(--spacing-xs);
+  }
+
+  .ingredientsSection h3 {
+    font-size: 0.9rem;
+  }
+
+  .ingredientsSection .ingredients {
+    font-size: 0.75rem;
+  }
+
+  .label {
+    font-size: 0.8rem;
+  }
+
+  .value {
+    font-size: 0.8rem;
+  }
+
+  .sectionIcon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .productDisplay {
+    padding: var(--spacing-xs);
+    margin: var(--spacing-xs);
+  }
+
+  .productTitle {
+    font-size: 1rem;
+  }
+
+  .infoSection h3 {
+    font-size: 0.95rem;
+  }
+
+  .ingredientsSection h3 {
+    font-size: 0.85rem;
+  }
+
+  .ingredientsSection .ingredients {
+    font-size: 0.7rem;
+  }
+
+  .label {
+    font-size: 0.75rem;
+  }
+
+  .value {
+    font-size: 0.75rem;
+  }
+
+  .grade {
+    padding: var(--spacing-xs) var(--spacing-xs);
+  }
+
+  .gradeValue {
+    font-size: 0.8rem;
+  }
+
+  .sectionIcon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 320px) {
+  .productDisplay {
+    padding: var(--spacing-xs);
+    margin: 2px;
+  }
+
+  .productTitle {
+    font-size: 0.9rem;
+  }
+
+  .infoSection {
+    padding: var(--spacing-xs);
+  }
+
+  .infoSection h3 {
+    font-size: 0.9rem;
+  }
+
+  .ingredientsSection h3 {
+    font-size: 0.8rem;
+  }
+
+  .ingredientsSection .ingredients {
+    font-size: 0.65rem;
+  }
+
+  .label {
+    font-size: 0.7rem;
+  }
+
+  .value {
+    font-size: 0.7rem;
+  }
+
+  .gradeValue {
+    font-size: 0.75rem;
+  }
+
+  .sectionIcon {
+    width: 12px;
+    height: 12px;
   }
 } 
