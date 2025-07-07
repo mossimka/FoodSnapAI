@@ -1,0 +1,468 @@
+.scannerSection {
+  position: relative;
+  width: 75%;
+  margin: 3rem auto;
+  padding: 0;
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.container:hover {
+  box-shadow: 0 16px 40px rgba(31, 38, 135, 0.22);
+  transform: translateY(-2px);
+}
+
+.header {
+  text-align: center;
+  padding: 2.5rem 2rem 1.5rem;
+  background: linear-gradient(135deg, rgba(244, 138, 59, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.iconContainer {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.mainIcon {
+  color: var(--color1);
+  filter: drop-shadow(0 4px 8px rgba(244, 138, 59, 0.3));
+  animation: float 3s ease-in-out infinite;
+}
+
+.accentIcon {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  color: var(--color2);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  padding: 4px;
+  filter: drop-shadow(0 2px 4px rgba(255, 107, 107, 0.3));
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  color: var(--text-color);
+}
+
+.description {
+  font-size: 1.1rem;
+  color: var(--text-color-sub);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.content {
+  padding: 2rem;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.feature:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.featureIcon {
+  color: var(--color1);
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+  filter: drop-shadow(0 2px 4px rgba(244, 138, 59, 0.3));
+}
+
+.featureText h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.featureText p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-color-sub);
+  line-height: 1.5;
+}
+
+.actionContainer {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.scanButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: var(--gradient);
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(244, 138, 59, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.scanButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.scanButton:hover::before {
+  left: 100%;
+}
+
+.scanButton:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(244, 138, 59, 0.5);
+}
+
+.scanButton:active {
+  transform: translateY(-1px) scale(1);
+}
+
+.hint {
+  margin: 1rem 0 0 0;
+  font-size: 0.9rem;
+  color: var(--text-color-sub);
+  opacity: 0.8;
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: modalFadeIn 0.3s ease-out;
+  padding: var(--spacing-lg);
+}
+
+.modalContent {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.modalClose {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-color);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+}
+
+.modalClose:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-8px); 
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+  50% { 
+    transform: scale(1.1); 
+    opacity: 0.8; 
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .scannerSection {
+    width: 85%;
+  }
+}
+
+@media (max-width: 768px) {
+  .scannerSection {
+    width: 95%;
+    margin: 2rem auto;
+  }
+
+  .header {
+    padding: 2rem 1.5rem 1rem;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .content {
+    padding: 1.5rem;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .feature {
+    padding: 1.25rem;
+  }
+
+  .scanButton {
+    padding: 0.875rem 1.75rem;
+    font-size: 1rem;
+  }
+
+  .modal {
+    padding: var(--spacing-md);
+  }
+
+  .modalContent {
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+
+  .modalClose {
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .scannerSection {
+    width: 98%;
+    margin: 1.5rem auto;
+  }
+
+  .header {
+    padding: 1.5rem 1rem 0.75rem;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .description {
+    font-size: 0.95rem;
+  }
+
+  .content {
+    padding: 1.25rem;
+  }
+
+  .feature {
+    padding: 1rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .featureText h3 {
+    font-size: 1rem;
+  }
+
+  .featureText p {
+    font-size: 0.9rem;
+  }
+
+  .scanButton {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .modal {
+    padding: var(--spacing-sm);
+  }
+
+  .modalContent {
+    max-width: 98vw;
+    max-height: 98vh;
+  }
+
+  .modalClose {
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 1.25rem 0.75rem 0.5rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .features {
+    margin-bottom: 1.5rem;
+  }
+
+  .feature {
+    padding: 0.875rem;
+  }
+
+  .scanButton {
+    padding: 0.675rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .scanButton svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  .scannerSection {
+    margin: 1rem auto;
+  }
+
+  .header {
+    padding: 1rem 0.5rem 0.25rem;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .description {
+    font-size: 0.85rem;
+  }
+
+  .content {
+    padding: 0.75rem;
+  }
+
+  .feature {
+    padding: 0.75rem;
+  }
+
+  .featureText h3 {
+    font-size: 0.95rem;
+  }
+
+  .featureText p {
+    font-size: 0.85rem;
+  }
+
+  .scanButton {
+    padding: 0.625rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .hint {
+    font-size: 0.8rem;
+  }
+} 

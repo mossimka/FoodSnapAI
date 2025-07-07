@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import Styles from "./page.module.css";
 import { HeroSection } from "@/components/HeroSection/HeroSection";
 import { Generation } from "@/components/Generation/Generation";
+import { ScannerSection } from "@/components/ScannerSection/ScannerSection";
 import { BarcodeButton } from "@/components/Barcode/BarcodeButton";
 
 export const metadata: Metadata = {
@@ -50,6 +51,7 @@ export default function Home() {
       <main className={Styles.main}>
         <HeroSection />
         <Generation />
+        <ScannerSection />
       </main>
       <BarcodeButton />
     </>
