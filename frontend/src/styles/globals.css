@@ -812,3 +812,315 @@ a {
   }
 }
 
+/* QR Scanner Styles */
+#qr-shaded-region {
+  border-radius: 10px;
+  border-color: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  transition: all 0.3s ease;
+  max-width: 400px !important;
+  max-height: 400px !important;
+}
+
+/* QR Scanner Corner Elements */
+#qr-shaded-region > div {
+  background: var(--gradient) !important;
+  border-radius: 2px;
+  box-shadow: 
+    0 0 8px rgba(244, 138, 59, 0.6),
+    0 0 16px rgba(244, 138, 59, 0.4),
+    0 0 24px rgba(244, 138, 59, 0.2);
+  animation: scannerPulse 2s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+/* Enhanced corner styling for better visibility */
+#qr-shaded-region > div:nth-child(1),
+#qr-shaded-region > div:nth-child(2),
+#qr-shaded-region > div:nth-child(3),
+#qr-shaded-region > div:nth-child(4) {
+  height: 4px !important;
+  width: 30px !important;
+}
+
+#qr-shaded-region > div:nth-child(5),
+#qr-shaded-region > div:nth-child(6),
+#qr-shaded-region > div:nth-child(7),
+#qr-shaded-region > div:nth-child(8) {
+  width: 4px !important;
+  height: 30px !important;
+}
+
+/* Scanning line animation */
+#qr-shaded-region::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 2px;
+  background: var(--gradient);
+  border-radius: 1px;
+  box-shadow: 0 0 10px rgba(244, 138, 59, 0.8);
+  animation: scanLine 2s linear infinite;
+  z-index: 10;
+}
+
+/* Scanner pulse animation */
+@keyframes scannerPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 
+      0 0 8px rgba(244, 138, 59, 0.6),
+      0 0 16px rgba(244, 138, 59, 0.4),
+      0 0 24px rgba(244, 138, 59, 0.2);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+    box-shadow: 
+      0 0 12px rgba(244, 138, 59, 0.8),
+      0 0 20px rgba(244, 138, 59, 0.6),
+      0 0 28px rgba(244, 138, 59, 0.4);
+  }
+}
+
+/* Scanning line animation */
+@keyframes scanLine {
+  0% {
+    top: 25%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: 75%;
+    opacity: 0;
+  }
+}
+
+/* Active scanning state */
+#qr-shaded-region.scanning {
+  border-color: rgba(244, 138, 59, 0.3) !important;
+}
+
+#qr-shaded-region.scanning > div {
+  animation: scannerPulseActive 1s ease-in-out infinite;
+}
+
+@keyframes scannerPulseActive {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 
+      0 0 12px rgba(244, 138, 59, 0.8),
+      0 0 20px rgba(244, 138, 59, 0.6),
+      0 0 28px rgba(244, 138, 59, 0.4);
+  }
+  50% {
+    opacity: 0.9;
+    box-shadow: 
+      0 0 16px rgba(244, 138, 59, 1),
+      0 0 24px rgba(244, 138, 59, 0.8),
+      0 0 32px rgba(244, 138, 59, 0.6);
+  }
+}
+
+/* Dark theme adjustments */
+.dark #qr-shaded-region {
+  border-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.dark #qr-shaded-region > div {
+  box-shadow: 
+    0 0 6px rgba(244, 138, 59, 0.4),
+    0 0 12px rgba(244, 138, 59, 0.2),
+    0 0 18px rgba(244, 138, 59, 0.1);
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  #qr-shaded-region {
+    max-width: 300px !important;
+    max-height: 300px !important;
+  }
+  
+  #qr-shaded-region > div {
+    border-radius: 1px;
+    box-shadow: 
+      0 0 4px rgba(244, 138, 59, 0.8),
+      0 0 8px rgba(244, 138, 59, 0.6),
+      0 0 12px rgba(244, 138, 59, 0.4);
+  }
+  
+  #qr-shaded-region > div:nth-child(1),
+  #qr-shaded-region > div:nth-child(2),
+  #qr-shaded-region > div:nth-child(3),
+  #qr-shaded-region > div:nth-child(4) {
+    height: 3px !important;
+    width: 25px !important;
+  }
+
+  #qr-shaded-region > div:nth-child(5),
+  #qr-shaded-region > div:nth-child(6),
+  #qr-shaded-region > div:nth-child(7),
+  #qr-shaded-region > div:nth-child(8) {
+    width: 3px !important;
+    height: 25px !important;
+  }
+
+  #qr-shaded-region::after {
+    width: 85%;
+    height: 1px;
+  }
+}
+
+@media (max-width: 480px) {
+  #qr-shaded-region {
+    max-width: 250px !important;
+    max-height: 250px !important;
+  }
+  
+  #qr-shaded-region > div:nth-child(1),
+  #qr-shaded-region > div:nth-child(2),
+  #qr-shaded-region > div:nth-child(3),
+  #qr-shaded-region > div:nth-child(4) {
+    height: 2px !important;
+    width: 20px !important;
+  }
+
+  #qr-shaded-region > div:nth-child(5),
+  #qr-shaded-region > div:nth-child(6),
+  #qr-shaded-region > div:nth-child(7),
+  #qr-shaded-region > div:nth-child(8) {
+    width: 2px !important;
+    height: 20px !important;
+  }
+
+  #qr-shaded-region::after {
+    width: 90%;
+    height: 1px;
+  }
+}
+
+@media (max-width: 360px) {
+  #qr-shaded-region {
+    max-width: 220px !important;
+    max-height: 220px !important;
+  }
+  
+  #qr-shaded-region > div:nth-child(1),
+  #qr-shaded-region > div:nth-child(2),
+  #qr-shaded-region > div:nth-child(3),
+  #qr-shaded-region > div:nth-child(4) {
+    height: 2px !important;
+    width: 18px !important;
+  }
+
+  #qr-shaded-region > div:nth-child(5),
+  #qr-shaded-region > div:nth-child(6),
+  #qr-shaded-region > div:nth-child(7),
+  #qr-shaded-region > div:nth-child(8) {
+    width: 2px !important;
+    height: 18px !important;
+  }
+
+  #qr-shaded-region::after {
+    width: 95%;
+    height: 1px;
+  }
+}
+
+@media (max-width: 320px) {
+  #qr-shaded-region {
+    max-width: 200px !important;
+    max-height: 200px !important;
+  }
+  
+  #qr-shaded-region > div:nth-child(1),
+  #qr-shaded-region > div:nth-child(2),
+  #qr-shaded-region > div:nth-child(3),
+  #qr-shaded-region > div:nth-child(4) {
+    height: 1.5px !important;
+    width: 15px !important;
+  }
+
+  #qr-shaded-region > div:nth-child(5),
+  #qr-shaded-region > div:nth-child(6),
+  #qr-shaded-region > div:nth-child(7),
+  #qr-shaded-region > div:nth-child(8) {
+    width: 1.5px !important;
+    height: 15px !important;
+  }
+
+  #qr-shaded-region::after {
+    width: 98%;
+    height: 0.5px;
+  }
+}
+
+@media (max-width: 280px) {
+  #qr-shaded-region {
+    max-width: 180px !important;
+    max-height: 180px !important;
+  }
+  
+  #qr-shaded-region > div:nth-child(1),
+  #qr-shaded-region > div:nth-child(2),
+  #qr-shaded-region > div:nth-child(3),
+  #qr-shaded-region > div:nth-child(4) {
+    height: 1px !important;
+    width: 12px !important;
+  }
+
+  #qr-shaded-region > div:nth-child(5),
+  #qr-shaded-region > div:nth-child(6),
+  #qr-shaded-region > div:nth-child(7),
+  #qr-shaded-region > div:nth-child(8) {
+    width: 1px !important;
+    height: 12px !important;
+  }
+
+  #qr-shaded-region::after {
+    display: none;
+  }
+}
+
+/* Success state when QR code is detected */
+#qr-shaded-region.success {
+  border-color: rgba(52, 168, 83, 0.4) !important;
+}
+
+#qr-shaded-region.success > div {
+  background: var(--gradientGreen) !important;
+  box-shadow: 
+    0 0 12px rgba(52, 168, 83, 0.8),
+    0 0 20px rgba(52, 168, 83, 0.6),
+    0 0 28px rgba(52, 168, 83, 0.4);
+  animation: successPulse 0.5s ease-in-out;
+}
+
+#qr-shaded-region.success::after {
+  background: var(--gradientGreen);
+  box-shadow: 0 0 10px rgba(52, 168, 83, 0.8);
+  animation: none;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+

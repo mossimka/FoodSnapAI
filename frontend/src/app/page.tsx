@@ -1,5 +1,3 @@
-export const dynamic = "force-static"
-
 import React from "react";
 import type { Metadata } from "next";
 
@@ -8,6 +6,7 @@ import { HeroSection } from "@/components/HeroSection/HeroSection";
 import { Generation } from "@/components/Generation/Generation";
 import { ScannerSection } from "@/components/ScannerSection/ScannerSection";
 import { BarcodeButton } from "@/components/Barcode/BarcodeButton";
+import { StructuredData } from "@/components/SEO/StructuredData";
 
 export const metadata: Metadata = {
   title: "FoodSnap AI - AI Food Recognition & Recipe Generator",
@@ -20,8 +19,10 @@ export const metadata: Metadata = {
     "recipe from photo",
     "AI cooking assistant",
     "ingredient recognition",
-    "personalized recipes"
+    "personalized recipes",
+    "FoodSnap AI"
   ],
+  authors: [{ name: "FoodSnap AI Team" }],
   openGraph: {
     title: "FoodSnap AI - Transform Food Photos into Recipes with AI",
     description: "Upload a photo of your food and get instant AI-generated recipes! Advanced computer vision technology recognizes ingredients and creates personalized cooking instructions.",
@@ -43,11 +44,23 @@ export const metadata: Metadata = {
     description: "Upload a photo of your food and get instant AI-generated recipes! Advanced computer vision technology recognizes ingredients and creates personalized cooking instructions.",
     images: ["https://foodsnapai.food/og-image.jpg"],
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function Home() {
   return (
     <>
+      <StructuredData type="website" />
       <main className={Styles.main}>
         <HeroSection />
         <Generation />

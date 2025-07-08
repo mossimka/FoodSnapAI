@@ -22,7 +22,10 @@ const rubik = Rubik({
 });
 
 export const metadata: Metadata = {
-  title: "FoodSnap AI",
+  title: {
+    template: "%s | FoodSnap AI",
+    default: "FoodSnap AI - AI Food Recognition & Recipe Generator"
+  },
   description: "AI-powered app to recognize food and generate recipes.",
   icons: {
     icon: "/favicon.ico",
@@ -32,6 +35,19 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   keywords: ["AI recipes", "food recognition", "cooking", "FoodSnap AI", "AI cooking app"],
   authors: [{ name: "FoodSnap AI Team" }],
+  creator: "FoodSnap AI Team",
+  publisher: "FoodSnap AI",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     title: "FoodSnap AI – AI Food Recognition & Recipes",
     description: "Upload food photos to get AI-generated recipes instantly. FoodSnap AI recognizes ingredients and helps you cook smart.",
@@ -46,12 +62,17 @@ export const metadata: Metadata = {
       },
     ],
     type: "website",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "FoodSnap AI – AI Food Recognition & Recipes",
     description: "Upload food photos to get AI-generated recipes instantly. FoodSnap AI recognizes ingredients and helps you cook smart.",
     images: ["https://foodsnapai.food/og-image.jpg"],
+    creator: "@FoodSnapAI",
+  },
+  verification: {
+    google: "google-site-verification-code-here", // Заменить на реальный код верификации
   },
 };
 
