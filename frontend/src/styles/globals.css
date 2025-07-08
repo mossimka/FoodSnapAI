@@ -812,315 +812,110 @@ a {
   }
 }
 
-/* QR Scanner Styles */
+/* QR Scanner Styling */
 #qr-shaded-region {
-  border-radius: 10px;
+  position: relative;
   border-color: rgba(0, 0, 0, 0.6) !important;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  transition: all 0.3s ease;
-  max-width: 400px !important;
-  max-height: 400px !important;
-}
-
-/* QR Scanner Corner Elements */
-#qr-shaded-region > div {
-  background: var(--gradient) !important;
-  border-radius: 2px;
-  box-shadow: 
-    0 0 8px rgba(244, 138, 59, 0.6),
-    0 0 16px rgba(244, 138, 59, 0.4),
-    0 0 24px rgba(244, 138, 59, 0.2);
   animation: scannerPulse 2s ease-in-out infinite;
-  transition: all 0.3s ease;
 }
 
-/* Enhanced corner styling for better visibility */
-#qr-shaded-region > div:nth-child(1),
-#qr-shaded-region > div:nth-child(2),
-#qr-shaded-region > div:nth-child(3),
-#qr-shaded-region > div:nth-child(4) {
-  height: 4px !important;
-  width: 30px !important;
-}
-
-#qr-shaded-region > div:nth-child(5),
-#qr-shaded-region > div:nth-child(6),
-#qr-shaded-region > div:nth-child(7),
-#qr-shaded-region > div:nth-child(8) {
-  width: 4px !important;
-  height: 30px !important;
-}
-
-/* Scanning line animation */
-#qr-shaded-region::after {
+#qr-shaded-region::before {
   content: '';
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80%;
+  left: 0;
+  right: 0;
   height: 2px;
-  background: var(--gradient);
-  border-radius: 1px;
-  box-shadow: 0 0 10px rgba(244, 138, 59, 0.8);
+  background: linear-gradient(90deg, transparent, var(--color1), transparent);
   animation: scanLine 2s linear infinite;
   z-index: 10;
 }
 
-/* Scanner pulse animation */
+#qr-shaded-region > div {
+  background: var(--gradient) !important;
+  box-shadow: 0 0 15px rgba(244, 138, 59, 0.6), 0 0 30px rgba(244, 138, 59, 0.3);
+  border-radius: 2px;
+  animation: cornerPulse 1.5s ease-in-out infinite alternate;
+  transition: all 0.3s ease;
+}
+
+#qr-shaded-region > div:hover {
+  box-shadow: 0 0 20px rgba(244, 138, 59, 0.8), 0 0 40px rgba(244, 138, 59, 0.4);
+}
+
+[id$="__scan_region"] > img {
+  display: none;
+}
+
+/* Keyframe Animations */
 @keyframes scannerPulse {
   0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-    box-shadow: 
-      0 0 8px rgba(244, 138, 59, 0.6),
-      0 0 16px rgba(244, 138, 59, 0.4),
-      0 0 24px rgba(244, 138, 59, 0.2);
+    box-shadow: inset 0 0 0 2px rgba(244, 138, 59, 0.3);
   }
   50% {
-    opacity: 0.8;
-    transform: scale(1.05);
-    box-shadow: 
-      0 0 12px rgba(244, 138, 59, 0.8),
-      0 0 20px rgba(244, 138, 59, 0.6),
-      0 0 28px rgba(244, 138, 59, 0.4);
+    box-shadow: inset 0 0 0 2px rgba(244, 138, 59, 0.6);
   }
 }
 
-/* Scanning line animation */
 @keyframes scanLine {
   0% {
-    top: 25%;
+    transform: translateY(-100px);
     opacity: 0;
   }
-  50% {
+  10% {
+    opacity: 1;
+  }
+  90% {
     opacity: 1;
   }
   100% {
-    top: 75%;
+    transform: translateY(100px);
     opacity: 0;
   }
 }
 
-/* Active scanning state */
-#qr-shaded-region.scanning {
-  border-color: rgba(244, 138, 59, 0.3) !important;
-}
-
-#qr-shaded-region.scanning > div {
-  animation: scannerPulseActive 1s ease-in-out infinite;
-}
-
-@keyframes scannerPulseActive {
-  0%, 100% {
+@keyframes cornerPulse {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  100% {
     opacity: 1;
-    box-shadow: 
-      0 0 12px rgba(244, 138, 59, 0.8),
-      0 0 20px rgba(244, 138, 59, 0.6),
-      0 0 28px rgba(244, 138, 59, 0.4);
-  }
-  50% {
-    opacity: 0.9;
-    box-shadow: 
-      0 0 16px rgba(244, 138, 59, 1),
-      0 0 24px rgba(244, 138, 59, 0.8),
-      0 0 32px rgba(244, 138, 59, 0.6);
+    transform: scale(1.05);
   }
 }
 
-/* Dark theme adjustments */
-.dark #qr-shaded-region {
-  border-color: rgba(0, 0, 0, 0.8) !important;
-}
-
-.dark #qr-shaded-region > div {
-  box-shadow: 
-    0 0 6px rgba(244, 138, 59, 0.4),
-    0 0 12px rgba(244, 138, 59, 0.2),
-    0 0 18px rgba(244, 138, 59, 0.1);
-}
-
-/* Mobile-specific adjustments */
+/* Responsive adjustments for QR scanner */
 @media (max-width: 768px) {
-  #qr-shaded-region {
-    max-width: 300px !important;
-    max-height: 300px !important;
+  #qr-shaded-region::before {
+    height: 1.5px;
   }
   
   #qr-shaded-region > div {
-    border-radius: 1px;
-    box-shadow: 
-      0 0 4px rgba(244, 138, 59, 0.8),
-      0 0 8px rgba(244, 138, 59, 0.6),
-      0 0 12px rgba(244, 138, 59, 0.4);
-  }
-  
-  #qr-shaded-region > div:nth-child(1),
-  #qr-shaded-region > div:nth-child(2),
-  #qr-shaded-region > div:nth-child(3),
-  #qr-shaded-region > div:nth-child(4) {
-    height: 3px !important;
-    width: 25px !important;
-  }
-
-  #qr-shaded-region > div:nth-child(5),
-  #qr-shaded-region > div:nth-child(6),
-  #qr-shaded-region > div:nth-child(7),
-  #qr-shaded-region > div:nth-child(8) {
-    width: 3px !important;
-    height: 25px !important;
-  }
-
-  #qr-shaded-region::after {
-    width: 85%;
-    height: 1px;
+    box-shadow: 0 0 10px rgba(244, 138, 59, 0.5), 0 0 20px rgba(244, 138, 59, 0.2);
   }
 }
 
 @media (max-width: 480px) {
-  #qr-shaded-region {
-    max-width: 250px !important;
-    max-height: 250px !important;
-  }
-  
-  #qr-shaded-region > div:nth-child(1),
-  #qr-shaded-region > div:nth-child(2),
-  #qr-shaded-region > div:nth-child(3),
-  #qr-shaded-region > div:nth-child(4) {
-    height: 2px !important;
-    width: 20px !important;
-  }
-
-  #qr-shaded-region > div:nth-child(5),
-  #qr-shaded-region > div:nth-child(6),
-  #qr-shaded-region > div:nth-child(7),
-  #qr-shaded-region > div:nth-child(8) {
-    width: 2px !important;
-    height: 20px !important;
-  }
-
-  #qr-shaded-region::after {
-    width: 90%;
+  #qr-shaded-region::before {
     height: 1px;
   }
+  
+  #qr-shaded-region > div {
+    box-shadow: 0 0 8px rgba(244, 138, 59, 0.4), 0 0 15px rgba(244, 138, 59, 0.2);
+  }
 }
 
-@media (max-width: 360px) {
-  #qr-shaded-region {
-    max-width: 220px !important;
-    max-height: 220px !important;
+/* Accessibility: Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  #qr-shaded-region,
+  #qr-shaded-region::before,
+  #qr-shaded-region > div {
+    animation: none;
   }
   
-  #qr-shaded-region > div:nth-child(1),
-  #qr-shaded-region > div:nth-child(2),
-  #qr-shaded-region > div:nth-child(3),
-  #qr-shaded-region > div:nth-child(4) {
-    height: 2px !important;
-    width: 18px !important;
-  }
-
-  #qr-shaded-region > div:nth-child(5),
-  #qr-shaded-region > div:nth-child(6),
-  #qr-shaded-region > div:nth-child(7),
-  #qr-shaded-region > div:nth-child(8) {
-    width: 2px !important;
-    height: 18px !important;
-  }
-
-  #qr-shaded-region::after {
-    width: 95%;
-    height: 1px;
-  }
-}
-
-@media (max-width: 320px) {
-  #qr-shaded-region {
-    max-width: 200px !important;
-    max-height: 200px !important;
-  }
-  
-  #qr-shaded-region > div:nth-child(1),
-  #qr-shaded-region > div:nth-child(2),
-  #qr-shaded-region > div:nth-child(3),
-  #qr-shaded-region > div:nth-child(4) {
-    height: 1.5px !important;
-    width: 15px !important;
-  }
-
-  #qr-shaded-region > div:nth-child(5),
-  #qr-shaded-region > div:nth-child(6),
-  #qr-shaded-region > div:nth-child(7),
-  #qr-shaded-region > div:nth-child(8) {
-    width: 1.5px !important;
-    height: 15px !important;
-  }
-
-  #qr-shaded-region::after {
-    width: 98%;
-    height: 0.5px;
-  }
-}
-
-@media (max-width: 280px) {
-  #qr-shaded-region {
-    max-width: 180px !important;
-    max-height: 180px !important;
-  }
-  
-  #qr-shaded-region > div:nth-child(1),
-  #qr-shaded-region > div:nth-child(2),
-  #qr-shaded-region > div:nth-child(3),
-  #qr-shaded-region > div:nth-child(4) {
-    height: 1px !important;
-    width: 12px !important;
-  }
-
-  #qr-shaded-region > div:nth-child(5),
-  #qr-shaded-region > div:nth-child(6),
-  #qr-shaded-region > div:nth-child(7),
-  #qr-shaded-region > div:nth-child(8) {
-    width: 1px !important;
-    height: 12px !important;
-  }
-
-  #qr-shaded-region::after {
-    display: none;
-  }
-}
-
-/* Success state when QR code is detected */
-#qr-shaded-region.success {
-  border-color: rgba(52, 168, 83, 0.4) !important;
-}
-
-#qr-shaded-region.success > div {
-  background: var(--gradientGreen) !important;
-  box-shadow: 
-    0 0 12px rgba(52, 168, 83, 0.8),
-    0 0 20px rgba(52, 168, 83, 0.6),
-    0 0 28px rgba(52, 168, 83, 0.4);
-  animation: successPulse 0.5s ease-in-out;
-}
-
-#qr-shaded-region.success::after {
-  background: var(--gradientGreen);
-  box-shadow: 0 0 10px rgba(52, 168, 83, 0.8);
-  animation: none;
-}
-
-@keyframes successPulse {
-  0% {
-    transform: scale(1);
+  #qr-shaded-region > div {
     opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
+    transform: none;
   }
 }
-
