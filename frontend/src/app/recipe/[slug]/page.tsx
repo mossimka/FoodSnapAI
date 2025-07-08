@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { RecipePage } from "@/components/Recipes/RecipePage/RecipePage";
 import { getRecipeBySlug } from "@/services/recipeService";
-import { StructuredData } from "@/components/SEO/StructuredData";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -80,23 +79,8 @@ export default async function RecipeDetailPage({ params }: PageProps) {
       notFound();
     }
 
-    // Prepare structured data for recipe
-    const recipeStructuredData = {
-      name: recipe.dish_name,
-      description: `AI-generated recipe for ${recipe.dish_name}`,
-      image: recipe.image_path || "https://foodsnapai.food/og-image.jpg",
-      author: recipe.user.username,
-      datePublished: new Date().toISOString(), // Using current date as IRecipe doesn't have created_at
-      ingredients: recipe.ingredients_calories.map(ing => ing.ingredient),
-      instructions: recipe.recipe?.split('\n').filter(Boolean) || [], // Using recipe field instead of instructions
-      nutrition: {
-        calories: recipe.ingredients_calories.reduce((total, ing) => total + (ing.calories || 0), 0)
-      }
-    };
-
     return (
       <>
-        <StructuredData type="recipe" data={recipeStructuredData} />
         <RecipePage slug={slug} />
       </>
     );
