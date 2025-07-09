@@ -94,9 +94,16 @@ export interface CaloriesOutput {
   total_calories_per_100g: number;
 }
 
+export interface DeliveryLink {
+  product: string;
+  link: string;
+  store: string;
+}
+
 export interface GenerationOutput {
   recipe: RecipeOutput;
   calories: CaloriesOutput;
+  delivery: DeliveryLink[];
 }
 
 // Type guards

@@ -92,7 +92,11 @@ async def get_recipe(slug: str, db: Session = Depends(get_db)):
     return recipe_response
 
 @router.post("/")
-async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depends(get_current_user)):
+async def analyze_dish(
+    file: UploadFile = File(...), 
+    location: str = Form(None),
+    current_user: Users = Depends(get_current_user)
+):
     try:
         image_data = await file.read()
 
@@ -104,14 +108,19 @@ async def analyze_dish(file: UploadFile = File(...), current_user: Users = Depen
             session_id=SESSION_ID,
         )
 
+        content_parts = [types.Part(
+            inline_data=types.Blob(
+                mime_type=file.content_type,
+                data=image_data
+            )
+        )]
+        
+        if location:
+            content_parts.append(types.Part(text=f"User location: {location}"))
+
         content = types.Content(
             role="user",
-            parts=[types.Part(
-                inline_data=types.Blob(
-                    mime_type=file.content_type,
-                    data=image_data
-                )
-            )]
+            parts=content_parts
         )
 
         checking_result = "Agent did not respond"

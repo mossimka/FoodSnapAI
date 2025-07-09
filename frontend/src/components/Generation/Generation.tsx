@@ -13,7 +13,7 @@ import Styles from "./Generation.module.css";
 import { SignPopup } from "@/components/SignPopup/SignPopup";
 import { useAuthStore } from "@/stores/authStore";
 import { generateRecipe } from "@/services/generateService";
-import { RecipeOutput, isNotFoodResponse, isGenerationOutput } from "@/interfaces/recipe";
+import { GenerationOutput, isNotFoodResponse, isGenerationOutput } from "@/interfaces/recipe";
 import { NavButton } from "../Navbar/NavButton/NavButton";
 import { Printer } from "../Style/Printer/Printer";
 import { truncateFilename } from '@/utils/stringUtils';
@@ -38,7 +38,7 @@ export const Generation = () => {
   const [isFromCache, setIsFromCache] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
 
-  const [generatedRecipe, setGeneratedRecipe] = useState<RecipeOutput | null>(null);
+  const [generatedRecipe, setGeneratedRecipe] = useState<GenerationOutput | null>(null);
 
   const { isAuthenticated } = useAuthStore();
 
@@ -163,11 +163,15 @@ const generateResponse = async () => {
           })
         );
 
-        const finalRecipe = {
-          ...res.recipe,
-          ingredients_calories: ingredients_calories_array,
-          estimated_weight_g: res.calories.estimated_weight_g ?? null,
-          total_calories_per_100g: res.calories.total_calories_per_100g ?? null,
+        const finalRecipe: GenerationOutput = {
+          recipe: {
+            ...res.recipe,
+            ingredients_calories: ingredients_calories_array,
+            estimated_weight_g: res.calories.estimated_weight_g ?? null,
+            total_calories_per_100g: res.calories.total_calories_per_100g ?? null,
+          },
+          calories: res.calories,
+          delivery: res.delivery ?? [],
         };
 
         setGeneratedRecipe(finalRecipe);
@@ -260,12 +264,10 @@ const generateResponse = async () => {
             <Image src="/images/loader.gif" alt="Generating..." width={128} height={50} />
           ) : (
             <div className={Styles.responseBoxContainer}>
-              {/* Show not food response or error with Printer */}
               {isNotFood && (
                 <Printer initialText={responseText} speed={10}/>
               )}
               
-              {/* Show beautiful recipe display */}
               {generatedRecipe && !isNotFood && (
                 <>
                   <RecipeDisplay 
@@ -275,7 +277,7 @@ const generateResponse = async () => {
                   <div className={Styles.action}>
                     <SaveRecipeButton 
                       file={imageFile!} 
-                      recipePart={generatedRecipe!}
+                      recipePart={generatedRecipe.recipe}
                     />
                     <NavButton text="Go to my recipies" link="/posted" inputStyle={{ marginTop: "3vh" }} />
                   </div>

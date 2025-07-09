@@ -1,4 +1,5 @@
 from google.adk.agents import LlmAgent, SequentialAgent
+from google.adk.tools import google_search
 
 checking_agent = LlmAgent(
   name="checking_agent",
@@ -131,20 +132,76 @@ calories_agent = LlmAgent(
   output_key="calories",
 )
 
+delivery_agent = LlmAgent(
+    name="delivery_agent",
+    model="gemini-2.0-flash",
+    instruction="""
+    STEP 1: Check for "User location:" in message
+    - If NOT found: return exactly []
+    - If found: extract location and continue
+    
+    STEP 2: For each basic or rare ingredient from the recipe, create Google search URLs for delivery:
+    
+    Create search URLs in this format:
+    https://www.google.com/search?q=[ingredient]+[delivery_term]+[location
+    
+    Examples:
+    - For Russian/CIS locations: "заказать+помидоры+алматы", "доставка+мука+москва"
+    - For English locations: "deliver+flour+london", "order+tomatoes+new+york"
+    
+    STEP 3: Generate search URLs for main ingredients:
+    - Bread flour: "https://www.google.com/search?q=заказать+мука+хлебопекарная+[location]"
+    - Mozzarella: "https://www.google.com/search?q=доставка+моцарелла+сыр+[location]"
+    - Cherry tomatoes: "https://www.google.com/search?q=заказать+помидоры+черри+[location]"
+    - Olive oil: "https://www.google.com/search?q=доставка+оливковое+масло+[location]"
+    
+    For English-speaking locations use English terms:
+    - "https://www.google.com/search?q=deliver+bread+flour+[location]"
+    - "https://www.google.com/search?q=order+mozzarella+cheese+[location]"
+    
+    STEP 4: Return array with Google search links:
+    [
+      {
+        "product": "bread flour",
+        "link": "https://www.google.com/search?q=заказать+мука+хлебопекарная+алматы",
+      },
+      {
+        "product": "mozzarella cheese", 
+        "link": "https://www.google.com/search?q=доставка+моцарелла+сыр+алматы",
+      }
+    ]
+    
+    LANGUAGE RULES:
+    - For Kazakhstan, Russia, Belarus: use Russian terms (заказать, доставка)
+    - For USA, UK, Canada, Australia: use English terms (deliver, order)
+    - For other locations: use English terms
+    
+    URL ENCODING:
+    - Replace spaces with + in URLs
+    - Use proper Google search format
+    - Each ingredient gets its own search URL
+    
+    NO google_search tool needed - just generate the search URLs directly.
+    """,
+    tools=[],
+    output_key="delivery",
+    description="Generates Google search URLs for ingredient delivery queries."
+)
 
 final_agent = LlmAgent(
     name="final_agent",
     model="gemini-2.0-flash", 
     instruction="""
-    You are a final validator that combines recipe and nutritional information.
+    You are a final validator that combines recipe, nutritional information, and delivery data.
     
-    You will receive state['recipe'] and state['calories'].
+    You will receive state['recipe'], state['calories'], and state['delivery'].
     
     VALIDATION RULES:
     - Ensure recipe is realistic and achievable
     - Verify ingredients match between recipe and calories
     - Check that nutritional estimates are reasonable
     - Ensure no "buy this product" instructions exist
+    - Include delivery data if available
     
     State['calories'] structure:
     {
@@ -164,10 +221,20 @@ final_agent = LlmAgent(
       "recipe": "string"
     }
     
+    State['delivery'] structure:
+    [
+      {
+        "product": "specific ingredient name",
+        "link": "https://store.com/specific-product-page",
+      },
+      ...
+    ]
+    
     Return a JSON object:
     {
       "recipe": state['recipe'],
-      "calories": state['calories']
+      "calories": state['calories'],
+      "delivery": state['delivery']
     }
     
     Only return JSON — no extra text.
@@ -178,5 +245,5 @@ final_agent = LlmAgent(
 
 root_agent = SequentialAgent(
   name="root_agent",
-  sub_agents=[recipe_agent, calories_agent, final_agent]
+  sub_agents=[recipe_agent, calories_agent, delivery_agent, final_agent]
 )
