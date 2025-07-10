@@ -20,17 +20,7 @@
 .stepContainer.completed {
   background: rgba(52, 168, 83, 0.1);
   border-color: var(--green);
-}
-
-.stepContainer.completed::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: var(--gradientGreen);
-  border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg);
+  border-left: 4px solid var(--green);
 }
 
 .stepHeader {

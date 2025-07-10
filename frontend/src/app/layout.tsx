@@ -14,6 +14,7 @@ import { AddToHomeScreenPrompt } from "@/components/AddToHomeScreenPrompt/AddToH
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { GoogleAnalytics } from "../analytics/GoogleAnalytics";
 import { CookieWrapper } from "@/components/CookieConsent";
+import { BarcodeButton } from "@/components/Barcode/BarcodeButton";
 
 
 const rubik = Rubik({
@@ -107,6 +108,7 @@ export default function RootLayout({
                   pauseOnHover
                   theme="light"
                 />
+                <BarcodeButton />
               </ThemeProvider>
             </Providers>
           </GoogleProviderWrapper>

@@ -3,9 +3,9 @@
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-md) var(--spacing-lg);
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--glass-bg);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--glass-border);
   border-radius: var(--border-radius-lg);
   color: var(--text-color);
   cursor: pointer;
@@ -17,7 +17,7 @@
 }
 
 .favoriteButton:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--glass-bg2);
   border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);

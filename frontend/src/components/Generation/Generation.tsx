@@ -332,18 +332,21 @@ const generateResponse = async () => {
               <div className={Styles.generateSection}>
                 {/* Location Checkbox */}
                 <div className={Styles.locationSection}>
-                  <label className={Styles.locationCheckbox}>
-                    <input
-                      type="checkbox"
-                      checked={shareLocation}
-                      onChange={(e) => handleLocationToggle(e.target.checked)}
-                      disabled={isLocationLoading}
-                    />
-                    <span className={Styles.checkboxText}>
-                      <MapPin size={16} />
-                      Share location for delivery links
-                    </span>
-                  </label>
+                <label className={Styles.locationCheckbox}>
+                  <input
+                    type="checkbox"
+                    className={Styles.customCheckboxInput}
+                    checked={shareLocation}
+                    onChange={(e) => handleLocationToggle(e.target.checked)}
+                    disabled={isLocationLoading}
+                  />
+                  <span className={Styles.checkmark} />
+                  <span className={Styles.checkboxText}>
+                    <MapPin size={17} className={Styles.locationIcon} />
+                    Share location for delivery links
+                  </span>
+                </label>
+
                   
                   {isLocationLoading && (
                     <div className={Styles.locationStatus}>

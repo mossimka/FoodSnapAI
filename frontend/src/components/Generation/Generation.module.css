@@ -261,6 +261,9 @@
   gap: 0.5rem;
   align-items: center;
   width: 100%;
+  background-color: var(--glass-bg);
+  padding: 1rem;
+  border-radius: 1rem;
 }
 
 .locationCheckbox {
@@ -273,12 +276,59 @@
   user-select: none;
 }
 
-.locationCheckbox input[type="checkbox"] {
+.locationIcon {
+  color: var(--color1);
+}
+
+/* Скрываем оригинальный checkbox */
+.customCheckboxInput {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Визуальный кастомный круг */
+.checkmark {
+  display: inline-block;
   width: 18px;
   height: 18px;
-  accent-color: var(--color1);
-  cursor: pointer;
+  border: 2px solid var(--color1);
+  border-radius: 50%;
+  background-color: var(--bg-color);
+  transition: all 0.2s ease;
+  margin-right: 8px;
+  position: relative;
 }
+
+/* Галочка */
+.checkmark::after {
+  content: "";
+  display: none;
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 4px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.customCheckboxInput:checked + .checkmark {
+  background-color: var(--color1);
+}
+
+.customCheckboxInput:checked + .checkmark::after {
+  display: block;
+}
+
+.customCheckboxInput:disabled + .checkmark {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 
 .checkboxText {
   display: flex;

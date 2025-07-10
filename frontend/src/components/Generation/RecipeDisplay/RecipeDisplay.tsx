@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { ChefHat, Copy, ShoppingCart } from "lucide-react";
 import { GenerationOutput } from "@/interfaces/recipe";
 import { RecipeSteps } from "../../Recipes/RecipeSteps/RecipeSteps";
-import { Calories } from "../Calories/Calories";
-import { ShowCaloriesButton } from "../Calories/ShowCaloriesButton/ShowCaloriesButton";
+import { CaloriesSection } from "../Calories/CaloriesSection/CaloriesSection";
 import { toast } from "react-toastify";
-import styles from "./RecipeDisplay.module.css";
+import Styles from "./RecipeDisplay.module.css";
 
 interface RecipeDisplayProps {
   recipe: GenerationOutput;
@@ -18,7 +17,6 @@ export const RecipeDisplay: React.FC<RecipeDisplayProps> = ({
   recipe, 
   isAnimating = false
 }) => {
-  const [showCalories, setShowCalories] = useState(false);
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -41,9 +39,9 @@ export const RecipeDisplay: React.FC<RecipeDisplayProps> = ({
 
   if (isAnimating) {
     return (
-      <div className={styles.container}>
-        <div className={styles.loading}>
-          <div className={styles.loadingSpinner} />
+      <div className={Styles.container}>
+        <div className={Styles.loading}>
+          <div className={Styles.loadingSpinner} />
           <p>Generating your recipe...</p>
         </div>
       </div>
@@ -51,21 +49,17 @@ export const RecipeDisplay: React.FC<RecipeDisplayProps> = ({
   }
 
   return (
-    <div className={styles.container}>
+    <div className={Styles.container}>
       {/* Header Section */}
-      <div className={styles.header}>
-        <div className={styles.dishTitle}>
-          <ChefHat className={styles.titleIcon} />
-          <h1 className={styles.dishName}>{recipe.recipe.dish_name}</h1>
+      <div className={Styles.header}>
+        <div className={Styles.dishTitle}>
+          <ChefHat className={Styles.titleIcon} />
+          <h1 className={Styles.dishName}>{recipe.recipe.dish_name}</h1>
         </div>
-        <div className={styles.headerActions}>
-          <ShowCaloriesButton
-            onClick={() => setShowCalories(true)}
-            text="View Nutrition"
-          />
+        <div className={Styles.headerActions}>
           <button
             onClick={() => copyToClipboard(recipe.recipe.dish_name, "Dish name")}
-            className={styles.copyButton}
+            className={Styles.copyButton}
             title="Copy dish name"
           >
             <Copy size={16} />
@@ -73,35 +67,22 @@ export const RecipeDisplay: React.FC<RecipeDisplayProps> = ({
         </div>
       </div>
 
-      {/* Quick nutrition preview */}
-      <div className={styles.quickNutrition}>
-        <div className={styles.nutritionPreview}>
-          <div className={styles.nutritionItem}>
-            <span className={styles.nutritionLabel}>Weight:</span>
-            <span className={styles.nutritionValue}>
-              {recipe.recipe.estimated_weight_g ? `${recipe.recipe.estimated_weight_g}g` : 'N/A'}
-            </span>
-          </div>
-          <div className={styles.nutritionItem}>
-            <span className={styles.nutritionLabel}>Calories:</span>
-            <span className={styles.nutritionValue}>
-              {totalCalories ? `${totalCalories} kcal` : 'N/A'}
-            </span>
-          </div>
-          <div className={styles.nutritionItem}>
-            <span className={styles.nutritionLabel}>Ingredients:</span>
-            <span className={styles.nutritionValue}>
-              {recipe.recipe.ingredients_calories.length}
-            </span>
-          </div>
-        </div>
-      </div>
+      {/* Nutrition Information Section */}
+        <CaloriesSection
+          caloriesData={{
+          dish_name: recipe.recipe.dish_name,
+          ingredients_calories: recipe.recipe.ingredients_calories,
+          estimated_weight_g: recipe.recipe.estimated_weight_g,
+          total_calories_per_100g: recipe.recipe.total_calories_per_100g,
+          total_calories: totalCalories
+        }}
+      />
 
       {/* Ingredients Section */}
-      <div className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.emoji}>🧂</span>
+      <div className={Styles.section}>
+        <div className={Styles.sectionHeader}>
+          <h2 className={Styles.sectionTitle}>
+            <span className={Styles.emoji}>🧂</span>
             Ingredients
           </h2>
           <button
@@ -109,26 +90,27 @@ export const RecipeDisplay: React.FC<RecipeDisplayProps> = ({
               recipe.recipe.ingredients_calories.map(ing => `${ing.ingredient}`).join('\n'),
               "Ingredients list"
             )}
-            className={styles.copyButton}
+            className={Styles.copyButton}
             title="Copy ingredients"
           >
             <Copy size={16} />
           </button>
         </div>
         
-        <div className={styles.ingredientsList}>
+        <div className={Styles.ingredientsList}>
           {recipe.recipe.ingredients_calories.map((ingredient, index) => {
             const deliveryLink = findDeliveryLink(ingredient.ingredient);
             
             return (
-              <div key={index} className={styles.ingredientCard}>
-                <div className={styles.ingredientName}>{ingredient.ingredient}</div>
+              <div key={index} className={Styles.ingredientCard}>
+                <div className={Styles.ingredientName}>{ingredient.ingredient}</div>
+                <span className={Styles.ingredientCalories}>{ingredient.calories} cal/100g</span>
                 {deliveryLink && (
                   <a 
                     href={deliveryLink.link} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className={styles.deliveryLink}
+                    className={Styles.deliveryLink}
                     title={`Buy from ${deliveryLink.store || 'store'}`}
                   >
                     <ShoppingCart size={16} />
@@ -145,19 +127,6 @@ export const RecipeDisplay: React.FC<RecipeDisplayProps> = ({
         recipeText={recipe.recipe.recipe}
         recipeId={0} // Temporary ID for generated recipe
         recipeName={recipe.recipe.dish_name}
-      />
-
-      {/* Calories Popup */}
-      <Calories
-        open={showCalories}
-        onClose={() => setShowCalories(false)}
-        caloriesData={{
-          dish_name: recipe.recipe.dish_name,
-          ingredients_calories: recipe.recipe.ingredients_calories,
-          estimated_weight_g: recipe.recipe.estimated_weight_g,
-          total_calories_per_100g: recipe.recipe.total_calories_per_100g,
-          total_calories: totalCalories
-        }}
       />
     </div>
   );

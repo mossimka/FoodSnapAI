@@ -462,8 +462,8 @@ body.no-scroll {
   --text-color-sub: #666;
   --contrast-color: white;
   --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-bg2: rgba(255, 255, 255, 0.9);
-  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-bg2: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(40, 40, 40, 0.1);
   --shadow: 0 8px 32px rgba(244, 138, 59, 0.15);
   --hover-shadow: 0 12px 40px rgba(212, 101, 87, 0.25);
   --active-shadow: 0 4px 16px rgba(212, 101, 87, 0.3);
@@ -477,7 +477,7 @@ body.no-scroll {
   --text-color-sub: #999;
   --contrast-color: black;
   --glass-bg: rgba(40, 40, 40, 0.8);
-  --glass-bg2: rgba(40, 40, 40, 0.7);
+  --glass-bg2: rgba(40, 40, 40, 0.6);
   --glass-border: rgba(255, 255, 255, 0.1);
   --shadow: 0 8px 32px rgba(212, 101, 87, 0.05);
   --hover-shadow: 0 12px 40px rgba(212, 101, 87, 0.1);

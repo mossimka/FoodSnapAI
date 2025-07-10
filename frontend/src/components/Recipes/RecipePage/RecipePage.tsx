@@ -9,8 +9,7 @@ import { toast } from "react-toastify";
 import Styles from "./RecipePage.module.css";
 import { useAuthStore } from "@/stores/authStore";
 import { useUserStore } from "@/stores/userStore";
-import { ShowCaloriesButton } from "@/components/Generation/Calories/ShowCaloriesButton/ShowCaloriesButton";
-import { Calories } from "@/components/Generation/Calories/Calories";
+import { CaloriesSection } from "@/components/Generation/Calories/CaloriesSection/CaloriesSection";
 import { RecipeSteps } from "@/components/Recipes/RecipeSteps/RecipeSteps";
 import { ConfirmationModal } from "@/components/ConfirmationModal/ConfirmationModal";
 import { 
@@ -42,7 +41,6 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState("");
-  const [showCalories, setShowCalories] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const isOwner = user?.id === recipe?.user_id;
@@ -222,31 +220,27 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
 
             <div className={Styles.ingredients}>
               <h3>Ingredients</h3>
-              <ul className={Styles.ingredientList}>
+              <div className={Styles.ingredientsGrid}>
                 {recipe.ingredients_calories.map((item, i) => (
-                  <li key={i}>
-                    🧂 {item.ingredient}
-                  </li>
+                  <div key={i} className={Styles.ingredientCard}>
+                    <span className={Styles.ingredientName}>{item.ingredient}</span>
+                    <span className={Styles.ingredientCalories}>{item.calories} cal/100g</span>
+                  </div>
                 ))}
-              </ul>
-              <ShowCaloriesButton
-                text="Show calories"
-                onClick={() => setShowCalories(true)}
-                style={{ marginTop: "1rem" }}
-              />
-              <Calories
-                open={showCalories}
-                onClose={() => setShowCalories(false)}
-                caloriesData={{
-                  ingredients_calories: recipe.ingredients_calories || [],
-                  estimated_weight_g: recipe.estimated_weight_g ?? null,
-                  total_calories_per_100g: recipe.total_calories_per_100g,
-                  total_calories: recipe.total_calories_per_100g && recipe.estimated_weight_g
-                    ? Math.round((recipe.total_calories_per_100g * recipe.estimated_weight_g) / 100)
-                    : null
-                }}
-              />
+              </div>
             </div>
+            
+            <CaloriesSection
+              caloriesData={{
+                dish_name: recipe.dish_name,
+                ingredients_calories: recipe.ingredients_calories || [],
+                estimated_weight_g: recipe.estimated_weight_g ?? null,
+                total_calories_per_100g: recipe.total_calories_per_100g,
+                total_calories: recipe.total_calories_per_100g && recipe.estimated_weight_g
+                  ? Math.round((recipe.total_calories_per_100g * recipe.estimated_weight_g) / 100)
+                  : null
+              }}
+            />
           </div>
         </div>
 
