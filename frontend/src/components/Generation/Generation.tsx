@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { AxiosError } from "axios";
 import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin } from "lucide-react";
 
 import DropZone from "./DropZone/DropZone";
 import CameraCapture from "./CameraCapture/CameraCapture";
@@ -37,6 +38,12 @@ export const Generation = () => {
   const [isNotFood, setIsNotFood] = useState(false);
   const [isFromCache, setIsFromCache] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
+  
+  // Location states
+  const [shareLocation, setShareLocation] = useState(false);
+  const [userLocation, setUserLocation] = useState<string | null>(null);
+  const [isLocationLoading, setIsLocationLoading] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
 
   const [generatedRecipe, setGeneratedRecipe] = useState<GenerationOutput | null>(null);
 
@@ -58,6 +65,82 @@ export const Generation = () => {
 
     loadCachedImage();
   }, []);
+
+  const getCurrentLocation = async (): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error('Geolocation is not supported by this browser'));
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          try {
+            const { latitude, longitude } = position.coords;
+            
+            // Use OpenStreetMap Nominatim for reverse geocoding (free)
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=en`
+            );
+            
+            if (!response.ok) {
+              throw new Error('Failed to get location name');
+            }
+            
+            const data = await response.json();
+            const city = data.address?.city || data.address?.town || data.address?.village || 'Unknown City';
+            const country = data.address?.country || 'Unknown Country';
+            
+            resolve(`${city}, ${country}`);
+          } catch (error) {
+            reject(error);
+          }
+        },
+        (error) => {
+          let errorMessage = 'Failed to get location';
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage = 'Location access denied by user';
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = 'Location information unavailable';
+              break;
+            case error.TIMEOUT:
+              errorMessage = 'Location request timed out';
+              break;
+          }
+          reject(new Error(errorMessage));
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 300000 // 5 minutes
+        }
+      );
+    });
+  };
+
+  const handleLocationToggle = async (checked: boolean) => {
+    setShareLocation(checked);
+    setLocationError(null);
+    
+    if (checked) {
+      setIsLocationLoading(true);
+      try {
+        const location = await getCurrentLocation();
+        setUserLocation(location);
+        console.log('Location detected:', location);
+      } catch (error) {
+        console.error('Location error:', error);
+        setLocationError(error instanceof Error ? error.message : 'Failed to get location');
+        setShareLocation(false); // Reset checkbox on error
+      } finally {
+        setIsLocationLoading(false);
+      }
+    } else {
+      setUserLocation(null);
+    }
+  };
 
   const handleImageSelect = async (file: File) => {
     try {
@@ -144,7 +227,7 @@ const generateResponse = async () => {
 
   setTimeout(async () => {
     try {
-      const res = await generateRecipe(imageFile);
+      const res = await generateRecipe(imageFile, userLocation);
       
       if (isNotFoodResponse(res)) {
         const formattedText = `🚫 This doesn't look like food.\n\n🔍 Detected: ${res.description}`;
@@ -246,13 +329,49 @@ const generateResponse = async () => {
             </div>
 
             {!isLoading && (
-              <button
-                className="button"
-                onClick={generateResponse}
-                disabled={isGenerating || hasGenerated}
-              >
-                {isGenerating ? "Generating..." : hasGenerated ? "Generated" : "Generate"}
-              </button>
+              <div className={Styles.generateSection}>
+                {/* Location Checkbox */}
+                <div className={Styles.locationSection}>
+                  <label className={Styles.locationCheckbox}>
+                    <input
+                      type="checkbox"
+                      checked={shareLocation}
+                      onChange={(e) => handleLocationToggle(e.target.checked)}
+                      disabled={isLocationLoading}
+                    />
+                    <span className={Styles.checkboxText}>
+                      <MapPin size={16} />
+                      Share location for delivery links
+                    </span>
+                  </label>
+                  
+                  {isLocationLoading && (
+                    <div className={Styles.locationStatus}>
+                      <span className={Styles.locationLoading}>📍 Detecting location...</span>
+                    </div>
+                  )}
+                  
+                  {userLocation && (
+                    <div className={Styles.locationStatus}>
+                      <span className={Styles.locationSuccess}>📍 {userLocation}</span>
+                    </div>
+                  )}
+                  
+                  {locationError && (
+                    <div className={Styles.locationStatus}>
+                      <span className={Styles.locationError}>❌ {locationError}</span>
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  className="button"
+                  onClick={generateResponse}
+                  disabled={isGenerating || hasGenerated || isLocationLoading}
+                >
+                  {isGenerating ? "Generating..." : hasGenerated ? "Generated" : "Generate"}
+                </button>
+              </div>
             )}
           </motion.div>
         )}

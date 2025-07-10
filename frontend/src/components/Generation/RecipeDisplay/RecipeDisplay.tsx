@@ -132,7 +132,6 @@ export const RecipeDisplay: React.FC<RecipeDisplayProps> = ({
                     title={`Buy from ${deliveryLink.store || 'store'}`}
                   >
                     <ShoppingCart size={16} />
-                    <span className={styles.deliveryText}>Buy</span>
                   </a>
                 )}
               </div>

@@ -3,9 +3,14 @@ import { tokenService } from './tokenService';
 import { RecipeOutput, RecipeInput } from "@/interfaces/recipe";
 import type { RecipeResult } from '@/interfaces/recipe';
 
-export async function generateRecipe(imageFile: File): Promise<RecipeResult> {
+export async function generateRecipe(imageFile: File, location?: string | null): Promise<RecipeResult> {
   const formData = new FormData();
   formData.append("file", imageFile);
+  
+  // Add location if provided
+  if (location) {
+    formData.append("location", location);
+  }
 
   const token = tokenService.requireAuth();
 
