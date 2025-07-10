@@ -1,6 +1,6 @@
 .wrapper{
   position: relative;
-  width: 75%;
+  width: 75vw;
   margin: 4rem auto;
   padding: var(--spacing-xl);
   background: rgba(255, 255, 255, 0.3);

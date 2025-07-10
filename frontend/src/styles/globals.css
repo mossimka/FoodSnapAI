@@ -266,6 +266,10 @@ body {
   animation: pulse 2s ease-in-out infinite;
 }
 
+input {
+  color: var(--text-color);
+}
+
 a, button, input, textarea, select {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
