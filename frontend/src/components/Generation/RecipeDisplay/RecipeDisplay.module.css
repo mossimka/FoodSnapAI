@@ -181,7 +181,7 @@
 
 .ingredientCard {
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--glass-bg);
   border-radius: var(--border-radius-md);
   border: 1px solid var(--glass-border);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
