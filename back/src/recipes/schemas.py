@@ -2,6 +2,15 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
+class CategoryCreate(BaseModel):
+    name: str
+
+class CategoryResponse(BaseModel):
+    id: int
+    name: str
+
+    model_config = {"from_attributes": True}
+
 class IngredientCaloriesCreate(BaseModel):
     ingredient: str
     calories: int
@@ -22,6 +31,7 @@ class RecipeCreate(BaseModel):
     ingredients_calories: List[IngredientCaloriesCreate]
     estimated_weight_g: Optional[int] = None
     total_calories_per_100g: Optional[int] = None
+    categories: List[str] = []
 
 
 class UserResponse(BaseModel):
@@ -42,14 +52,31 @@ class RecipeResponse(BaseModel):
     ingredients_calories: List[IngredientCaloriesResponse]
     estimated_weight_g: Optional[int] = None
     total_calories_per_100g: Optional[int] = None
+    categories: List[CategoryResponse] = []
 
     model_config = {"from_attributes": True}
 
+# Дополнительная схема для AI ответа
+class AIRecipeResponse(BaseModel):
+    dish_name: str
+    recipe: str
+    ingredients_calories: dict
+    estimated_weight_g: int
+    total_calories_per_100g: int
+    health_categories: List[str] = []
+
+
+class RecipeSaveRequest(BaseModel):
+    dish_name: str
+    recipe: str
+    ingredients_calories: List[dict]
+    estimated_weight_g: int
+    total_calories_per_100g: int
+    health_categories: List[str] = []
 
 class RecipePatchRequest(BaseModel):
     dish_name: Optional[str] = None
     publish: Optional[bool] = None
-
 
 class PaginatedRecipesResponse(BaseModel):
     recipes: List[RecipeResponse]
@@ -90,3 +117,8 @@ class FavoriteStatusResponse(BaseModel):
     is_favorited: bool
     recipe_id: int
     message: str
+
+class CategoryListResponse(BaseModel):
+    categories: List[CategoryResponse]
+
+    model_config = {"from_attributes": True}

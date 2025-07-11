@@ -132,6 +132,71 @@ calories_agent = LlmAgent(
   output_key="calories",
 )
 
+health_categories_agent = LlmAgent(
+  name="health_categories_agent",
+  model="gemini-2.0-flash",
+  instruction=(
+      """
+      You are a nutritional analyst that assigns health categories to dishes based on their ingredients and nutritional information.
+      
+      You will receive a JSON with recipe and nutritional data:
+      {
+        "recipe": {
+          "dish_name": "string",
+          "ingredients": ["string", ...],
+          "recipe": "string"
+        },
+        "calories": {
+          "dish_name": "string",
+          "ingredients_calories": {...},
+          "estimated_weight_g": number,
+          "total_calories_per_100g": number,
+          "healthiness": "string"
+        }
+      }
+      
+      Analyze the dish and assign relevant health categories ONLY from this exact list:
+      - "High in Fiber" - dishes with high fiber content (>5g per 100g)
+      - "High Sodium" - dishes with high salt content (>1.5g per 100g)
+      - "High Sugar" - dishes with high sugar content (>15g per 100g)
+      - "High Saturated Fat" - dishes with high saturated fat content (>5g per 100g)
+      - "Spicy/Irritant" - spicy dishes or containing irritating spices
+      - "Red Meat-Based" - dishes based on red meat (beef, pork, lamb)
+      - "Plant-Based" - dishes without any animal products
+      - "Dairy-Free" - dishes without dairy products
+      - "High Protein" - dishes with high protein content (>20g per 100g)
+      - "Contains Nuts" - dishes containing any nuts or tree nuts
+      
+      ANALYSIS GUIDELINES:
+      - Check ingredients for fiber sources (vegetables, whole grains, legumes)
+      - Identify sodium sources (salt, soy sauce, processed ingredients)
+      - Look for sugar content (added sugars, natural sugars, sweeteners)
+      - Analyze fat types (saturated vs unsaturated)
+      - Check for spices (chili, pepper, hot sauce)
+      - Identify protein sources (meat, fish, dairy, legumes, nuts)
+      - Check for nuts/tree nuts (almonds, walnuts, peanuts, etc.)
+      - Determine if dish is plant-based (no animal products)
+      - Check for dairy ingredients (milk, cheese, butter, cream)
+      
+      CATEGORY ASSIGNMENT RULES:
+      - Return health_categories as an array of strings
+      - Use ONLY the exact category names from the approved list
+      - Do not invent new categories or modify existing category names
+      - Multiple categories can be assigned to one dish if applicable
+      - If no categories apply, return empty array []
+      
+      Return JSON in this format:
+      {
+        "health_categories": ["category1", "category2", ...]
+      }
+      
+      Only return JSON — no explanations or additional text.
+      """
+  ),
+  description="Analyzes dishes and assigns health categories based on ingredients and nutritional data.",
+  output_key="health_categories",
+)
+
 delivery_agent = LlmAgent(
     name="delivery_agent",
     model="gemini-2.0-flash",
@@ -194,13 +259,18 @@ final_agent = LlmAgent(
     instruction="""
     You are a final validator that combines recipe, nutritional information, and delivery data.
     
-    You will receive state['recipe'], state['calories'], and state['delivery'].
+    You will receive state['recipe'], state['calories'], state['health_categories'], and state['delivery'].
     
     VALIDATION RULES:
     - Ensure recipe is realistic and achievable
     - Verify ingredients match between recipe and calories
     - Check that nutritional estimates are reasonable
     - Ensure no "buy this product" instructions exist
+    - Validate health categories are appropriate for ingredients
+    - Ensure health categories are ONLY from this approved list:
+      ["High in Fiber", "High Sodium", "High Sugar", "High Saturated Fat", 
+       "Spicy/Irritant", "Red Meat-Based", "Plant-Based", "Dairy-Free", 
+       "High Protein", "Contains Nuts"]
     - Include delivery data if available
     
     State['calories'] structure:
@@ -211,7 +281,12 @@ final_agent = LlmAgent(
         ...
       },
       "estimated_weight_g": number,
-      "total_calories_per_100g": number,
+      "total_calories_per_100g": number
+    }
+    
+    State['health_categories'] structure:
+    {
+      "health_categories": ["category1", "category2", ...]
     }
     
     State['recipe'] structure:
@@ -234,6 +309,7 @@ final_agent = LlmAgent(
     {
       "recipe": state['recipe'],
       "calories": state['calories'],
+      "health_categories": state['health_categories'],
       "delivery": state['delivery']
     }
     

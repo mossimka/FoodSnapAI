@@ -1,7 +1,27 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean, UniqueConstraint, Table
 from sqlalchemy.orm import relationship
 from src.database import Base
 from slugify import slugify
+
+HEALTH_CATEGORIES = [
+    "High in Fiber", 
+    "High Sodium", 
+    "High Sugar",
+    "High Saturated Fat", 
+    "Spicy/Irritant", 
+    "Red Meat-Based",
+    "Plant-Based", 
+    "Dairy-Free", 
+    "High Protein",
+    "Contains Nuts"
+]
+
+recipe_categories = Table(
+    'recipe_categories',
+    Base.metadata,
+    Column('recipe_id', Integer, ForeignKey('recipes.id'), primary_key=True),
+    Column('category_id', Integer, ForeignKey('categories.id'), primary_key=True)
+)
 
 class Recipe(Base):
     __tablename__ = "recipes"
@@ -26,8 +46,14 @@ class Recipe(Base):
         cascade="all, delete-orphan"
     )
 
+    categories = relationship(
+        "Category",
+        secondary=recipe_categories,
+        back_populates="recipes"
+    )
+
     def generate_slug(self):
-        self.slug = slugify(self.dish_name) + "-" + str(self.id)
+        self.slug = slugify(str(self.dish_name)) + "-" + str(self.id)  # type: ignore
 
 
 class IngredientCalories(Base):
@@ -51,3 +77,15 @@ class FavoriteRecipe(Base):
     recipe = relationship("Recipe", back_populates="favorited_by")
 
     __table_args__ = (UniqueConstraint('user_id', 'recipe_id', name='unique_user_recipe_favorite'),)
+
+class Category(Base):
+    __tablename__ = "categories"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
+
+    recipes = relationship(
+        "Recipe",
+        secondary=recipe_categories,
+        back_populates="categories"
+    )

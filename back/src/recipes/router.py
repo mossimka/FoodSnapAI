@@ -12,14 +12,16 @@ from src.auth.service import get_current_user
 from src.auth.models import Users
 from src.gcs.uploader import upload_large_file_to_gcs
 from src.dependencies import get_db
-from src.recipes.models import Recipe, IngredientCalories
+from src.recipes.models import Recipe, IngredientCalories, HEALTH_CATEGORIES
 from src.recipes.schemas import (
     FavoriteStatusResponse,
     RecipeResponse, 
     RecipePatchRequest, 
     PaginatedRecipesResponse, 
     PaginatedFavoriteRecipesResponse,
-    FavoriteStatusResponse
+    FavoriteStatusResponse,
+    CategoryResponse,
+    CategoryListResponse
 )
 from src.recipes.service import (
     get_recipe_by_slug, 
@@ -30,7 +32,9 @@ from src.recipes.service import (
     get_favorite_recipes_paginated,
     add_to_favorites,
     remove_from_favorites,
-    is_recipe_favorited
+    is_recipe_favorited,
+    get_categories,
+    create_recipe_with_categories
 )
 from src.services.redis import (
     redis_client, 
@@ -188,26 +192,24 @@ async def save_recipe(
         ingredients_calories = parsed.get("ingredients_calories", [])
         estimated_weight_g = parsed.get("estimated_weight_g")
         total_calories_per_100g = parsed.get("total_calories_per_100g")
-
+        health_categories = parsed.get("health_categories", [])
 
         if not dish_name or not recipe_text or not ingredients_calories:
             raise HTTPException(status_code=400, detail="Invalid recipe format")
 
-        db_recipe = Recipe(
+        # Use new function that handles categories
+        db_recipe = create_recipe_with_categories(
+            db=db,
             user_id=current_user["id"],
             dish_name=dish_name,
-            recipe=recipe_text,
+            recipe_text=recipe_text,
             image_path=image_url,
             estimated_weight_g=estimated_weight_g,
             total_calories_per_100g=total_calories_per_100g,
+            health_categories=health_categories
         )
-        
-        db.add(db_recipe)
-        db.flush()
-        db_recipe.generate_slug()
-        db.commit()
-        db.refresh(db_recipe)
 
+        # Add ingredients
         for item in ingredients_calories:
             ingredient = item.get("ingredient")
             calories = item.get("calories")
@@ -215,7 +217,7 @@ async def save_recipe(
                 continue
 
             db_ingredient = IngredientCalories(
-                recipe_id=db_recipe.id,
+                recipe_id=db_recipe.id,  # type: ignore
                 ingredient=ingredient,
                 calories=calories
             )
@@ -229,8 +231,8 @@ async def save_recipe(
 
         return {
             "message": "Recipe saved successfully",
-            "recipe_id": db_recipe.id,
-            "slug": db_recipe.slug
+            "recipe_id": db_recipe.id,  # type: ignore
+            "slug": db_recipe.slug  # type: ignore
         }
 
     except Exception as e:
@@ -437,3 +439,20 @@ async def check_favorite_status(
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to check favorite status: {str(e)}")
+
+
+# Categories endpoints
+
+@router.get("/categories/", response_model=CategoryListResponse)
+async def get_all_categories(db: Session = Depends(get_db)):
+    """Get all available categories"""
+    try:
+        categories = get_categories(db)
+        return CategoryListResponse(categories=categories) # type: ignore
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get categories: {str(e)}")
+
+@router.get("/categories/health/", response_model=List[str])
+async def get_health_categories():
+    """Get list of available health categories"""
+    return HEALTH_CATEGORIES
