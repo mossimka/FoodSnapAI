@@ -50,7 +50,7 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
     if (recipe) {
       setName(recipe.dish_name);
     }
-  }, [recipe?.dish_name]);
+  }, [recipe]);
 
   const handleUpdateName = () => {
     if (!recipe || !name.trim()) return;

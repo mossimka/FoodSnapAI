@@ -73,32 +73,26 @@ export default function PostedPage() {
     error: favoriteError 
   } = useFavoriteRecipesQuery(savedPage, pageSize);
 
-  const publicRecipes = publicRecipesData?.recipes || [];
-  const myRecipes = myRecipesData?.recipes || [];
-  const favoriteRecipes = favoriteRecipesData?.recipes || [];
-
-  // For search, we need to get filtered results from current page
-  const filteredPublicRecipes = useMemo(() => 
-    filterRecipes(publicRecipes, searchQuery), 
-    [publicRecipes, searchQuery]
-  );
+  const filteredPublicRecipes = useMemo(() => {
+    const publicRecipes = publicRecipesData?.recipes || [];
+    return filterRecipes(publicRecipes, searchQuery);
+  }, [publicRecipesData?.recipes, searchQuery]);
   
-  const filteredMyRecipes = useMemo(() => 
-    filterRecipes(myRecipes, searchQuery), 
-    [myRecipes, searchQuery]
-  );
+  const filteredMyRecipes = useMemo(() => {
+    const myRecipes = myRecipesData?.recipes || [];
+    return filterRecipes(myRecipes, searchQuery);
+  }, [myRecipesData?.recipes, searchQuery]);
 
-  const filteredFavoriteRecipes = useMemo(() => 
-    filterFavoriteRecipes(favoriteRecipes, searchQuery), 
-    [favoriteRecipes, searchQuery]
-  );
+  const filteredFavoriteRecipes = useMemo(() => {
+    const favoriteRecipes = favoriteRecipesData?.recipes || [];
+    return filterFavoriteRecipes(favoriteRecipes, searchQuery);
+  }, [favoriteRecipesData?.recipes, searchQuery]);
 
-  // Determine what to show based on active tab
   const recipesToShow = activeTab === "public" 
     ? filteredPublicRecipes 
     : activeTab === "my" 
     ? filteredMyRecipes 
-    : filteredFavoriteRecipes.map(fr => fr.recipe); // Extract recipe from favorite
+    : filteredFavoriteRecipes.map(fr => fr.recipe);
 
   const currentData = activeTab === "public" 
     ? publicRecipesData 

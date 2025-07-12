@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { useCookieConsent } from '../../hooks/useCookieConsent';
+import { useCookieConsent } from '@/hooks/useCookieConsent';
 
 interface CookieRefreshButtonProps {
   children?: React.ReactNode;

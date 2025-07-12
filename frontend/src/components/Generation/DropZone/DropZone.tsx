@@ -20,28 +20,7 @@ const DropZone: React.FC<DropZoneProps> = ({ setImage }) => {
     return () => setVisible(false);
   }, []);
 
-  // Обработка paste события
-  useEffect(() => {
-    const handlePaste = async (e: ClipboardEvent) => {
-      const items = e.clipboardData?.items;
-      if (!items) return;
-
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].type.indexOf('image') !== -1) {
-          e.preventDefault();
-          const file = items[i].getAsFile();
-          if (file) {
-            handleClipboardImage(file);
-          }
-        }
-      }
-    };
-
-    document.addEventListener('paste', handlePaste);
-    return () => document.removeEventListener('paste', handlePaste);
-  }, []);
-
-  const handleClipboardImage = (file: File) => {
+  const handleClipboardImage = useCallback((file: File) => {
     // Валидация размера
     if (file.size > 10 * 1024 * 1024) {
       setPasteError('Image too large (max 10MB)');
@@ -64,7 +43,28 @@ const DropZone: React.FC<DropZoneProps> = ({ setImage }) => {
     const previewUrl = URL.createObjectURL(file);
     setFilePreviewUrl(previewUrl);
     setImage(file);
-  };
+  }, [setImage]);
+
+  // Обработка paste события
+  useEffect(() => {
+    const handlePaste = async (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          e.preventDefault();
+          const file = items[i].getAsFile();
+          if (file) {
+            handleClipboardImage(file);
+          }
+        }
+      }
+    };
+
+    document.addEventListener('paste', handlePaste);
+    return () => document.removeEventListener('paste', handlePaste);
+  }, [handleClipboardImage]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];

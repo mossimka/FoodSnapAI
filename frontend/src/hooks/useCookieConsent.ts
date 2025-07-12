@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { CookiePreferences, CookieConsentData } from '../components/CookieConsent/types';
+import { CookiePreferences, CookieConsentData } from '@/components/Popups/CookieConsent/types';
 
 export function useCookieConsent() {
   const [hasConsent, setHasConsent] = useState<boolean | null>(null);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import ReactDOM from "react-dom";
 import { Camera, Clipboard } from "lucide-react";
 import Styles from "./CameraCapture.module.css";
@@ -24,28 +24,7 @@ const CameraCapture: React.FC<DropZoneProps> = ({ setImage }) => {
     return () => setVisible(false);
   }, []);
 
-  // Обработка paste события
-  useEffect(() => {
-    const handlePaste = async (e: ClipboardEvent) => {
-      const items = e.clipboardData?.items;
-      if (!items) return;
-
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].type.indexOf('image') !== -1) {
-          e.preventDefault();
-          const file = items[i].getAsFile();
-          if (file) {
-            handleClipboardImage(file);
-          }
-        }
-      }
-    };
-
-    document.addEventListener('paste', handlePaste);
-    return () => document.removeEventListener('paste', handlePaste);
-  }, []);
-
-  const handleClipboardImage = (file: File) => {
+  const handleClipboardImage = useCallback((file: File) => {
     // Валидация размера
     if (file.size > 10 * 1024 * 1024) {
       setPasteError('Image too large (max 10MB)');
@@ -66,7 +45,28 @@ const CameraCapture: React.FC<DropZoneProps> = ({ setImage }) => {
     setTimeout(() => setJustPasted(false), 1000);
     
     setImage(file);
-  };
+  }, [setImage]);
+
+  // Обработка paste события
+  useEffect(() => {
+    const handlePaste = async (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          e.preventDefault();
+          const file = items[i].getAsFile();
+          if (file) {
+            handleClipboardImage(file);
+          }
+        }
+      }
+    };
+
+    document.addEventListener('paste', handlePaste);
+    return () => document.removeEventListener('paste', handlePaste);
+  }, [handleClipboardImage]);
 
   const startCamera = async () => {
     setCapturing(true);

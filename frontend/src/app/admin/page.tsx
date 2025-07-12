@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styles from './admin.module.css';
 import axios from '@/lib/axios';
 import { useAuthStore } from '@/stores/authStore';
@@ -19,11 +19,7 @@ export default function AdminPage() {
   const [usersPageSize, setUsersPageSize] = useState<number | string>(20);
   const [recipesPageSize, setRecipesPageSize] = useState<number | string>(20);
 
-  useEffect(() => {
-    loadAllData();
-  }, []);
-
-  const loadAllData = async () => {
+  const loadAllData = useCallback(async () => {
     setLoading(true);
     try {
       // Используем значения по умолчанию если поля пустые
@@ -52,7 +48,11 @@ export default function AdminPage() {
       setMessage(`Error loading data: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
     setLoading(false);
-  };
+  }, [token, usersPageSize, recipesPageSize]);
+
+  useEffect(() => {
+    loadAllData();
+  }, [loadAllData]);
 
   const deleteUser = async () => {
     if (!deleteUserId) return;

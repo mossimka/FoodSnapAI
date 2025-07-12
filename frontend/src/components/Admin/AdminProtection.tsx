@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/authStore';
 import axios from '@/lib/axios';
@@ -15,11 +15,7 @@ export default function AdminProtection({ children }: AdminProtectionProps) {
   const router = useRouter();
   const { token, isAuthenticated } = useAuthStore();
 
-  useEffect(() => {
-    checkAdminAccess();
-  }, []);
-
-  const checkAdminAccess = async () => {
+  const checkAdminAccess = useCallback(async () => {
     try {
       // Проверяем авторизацию
       if (!isAuthenticated || !token) {
@@ -61,7 +57,11 @@ export default function AdminProtection({ children }: AdminProtectionProps) {
       }
     }
     setLoading(false);
-  };
+  }, [isAuthenticated, token, router]);
+
+  useEffect(() => {
+    checkAdminAccess();
+  }, [checkAdminAccess]);
 
   if (loading) {
     return (
