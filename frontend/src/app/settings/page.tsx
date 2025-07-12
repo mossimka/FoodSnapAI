@@ -20,7 +20,7 @@ import ProfilePicUploader from "@/components/Profile/ProfilePicUploader/ProfileP
 import { PasswordInput } from '@/components/Auth/PasswordInput/PasswordInput';
 import { updateProfile } from '@/services/userService';
 import { useUserQuery } from '@/hooks/useUserQuery';
-import { ConfirmationModal } from "@/components/ConfirmationModal/ConfirmationModal";
+import { ConfirmationModal } from "@/components/Popups/ConfirmationModal/ConfirmationModal";
 
 const containerVariants = {
   hidden: { opacity: 0 },

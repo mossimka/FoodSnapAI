@@ -84,6 +84,20 @@
   gap: 0.75rem;
 }
 
+/* Health Categories */
+.healthCategories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: var(--glass-bg);
+  border-radius: 16px;
+  box-shadow: var(--hover-shadow);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  margin-bottom: 1rem;
+}
+
 .copyButton {
   padding: 0.5rem;
   background: var(--glass-bg);
@@ -318,6 +332,11 @@
     font-size: 0.75rem;
     padding: 0.2rem 0.4rem;
   }
+
+  .healthCategories {
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
+  }
 }
 
 /* Mobile */
@@ -366,6 +385,11 @@
 
   .deliveryLink {
     padding: 0.35rem;
+  }
+
+  .healthCategories {
+    padding: 0.5rem 0.75rem;
+    gap: 0.4rem;
   }
 }
 

@@ -229,7 +229,7 @@ export default function PostedPage() {
           {recipesToShow.length > 0 ? (
             recipesToShow.map((r: IRecipe) => (
               <motion.div
-                key={`${activeTab}-${r.dish_name}-${r.user_id}`}
+                key={`${activeTab}-${r.id}`}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -30 }}

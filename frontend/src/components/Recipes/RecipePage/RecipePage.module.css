@@ -95,7 +95,54 @@
 .author {
   font-size: 1rem;
   color: var(--text-color-sub);
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* Health Categories */
+.healthCategories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.healthCategories :global(.categoryIcon) {
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.healthCategories :global(.categoryIcon):hover {
+  transform: scale(1.1) !important;
+}
+
+.healthCategories :global(.categoryLabel) {
+  position: absolute !important;
+  top: 100% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin-top: 4px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  background: rgba(0, 0, 0, 0.8) !important;
+  color: white !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  opacity: 0 !important;
+  transition: opacity 0.2s ease !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+.healthCategories :global(.categoryIcon):hover :global(.categoryLabel) {
+  opacity: 1 !important;
 }
 
 .statusBadge {
@@ -387,6 +434,16 @@
     margin-bottom: 1rem;
   }
 
+  .healthCategories {
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .healthCategories :global(.categoryIcon) {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
   .statusBadge {
     margin-bottom: 0.75rem;
   }
@@ -471,6 +528,16 @@
   .author {
     font-size: 0.8rem;
     margin-bottom: 1rem;
+  }
+
+  .healthCategories {
+    gap: 0.3rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .healthCategories :global(.categoryIcon) {
+    width: 28px !important;
+    height: 28px !important;
   }
 
   .ingredients h3 {

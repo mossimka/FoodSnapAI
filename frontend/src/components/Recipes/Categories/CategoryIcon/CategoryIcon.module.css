@@ -1,0 +1,166 @@
+.categoryIcon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.categoryIcon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.categoryLabel {
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Tooltip styles */
+.categoryTooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-color2);
+  color: var(--text-color);
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  z-index: 99999;
+  margin-bottom: 4px;
+}
+
+.categoryTooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: var(--bg-color2);
+  z-index: 99999;
+}
+
+.categoryIcon:hover .categoryTooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Portal tooltip styles */
+.portalTooltip {
+  position: fixed;
+  background: var(--bg-color2);
+  color: var(--text-color);
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  z-index: 99999;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.portalTooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: var(--bg-color2);
+}
+
+/* Specific category colors */
+.categoryIcon[data-category="High in Fiber"] {
+  background: linear-gradient(135deg, #8B4513, #D2691E);
+  border-color: rgba(210, 105, 30, 0.3);
+}
+
+.categoryIcon[data-category="High Sodium"] {
+  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+  border-color: rgba(255, 107, 107, 0.3);
+}
+
+.categoryIcon[data-category="High Sugar"] {
+  background: linear-gradient(135deg, #FF69B4, #FFB6C1);
+  border-color: rgba(255, 105, 180, 0.3);
+}
+
+.categoryIcon[data-category="High Saturated Fat"] {
+  background: linear-gradient(135deg, #FF4500, #FF6347);
+  border-color: rgba(255, 69, 0, 0.3);
+}
+
+.categoryIcon[data-category="Spicy/Irritant"] {
+  background: linear-gradient(135deg, #DC143C, #FF0000);
+  border-color: rgba(220, 20, 60, 0.3);
+}
+
+.categoryIcon[data-category="Red Meat-Based"] {
+  background: linear-gradient(135deg, #8B0000, #B22222);
+  border-color: rgba(139, 0, 0, 0.3);
+}
+
+.categoryIcon[data-category="Plant-Based"] {
+  background: linear-gradient(135deg, #228B22, #32CD32);
+  border-color: rgba(34, 139, 34, 0.3);
+}
+
+.categoryIcon[data-category="Dairy-Free"] {
+  background: linear-gradient(135deg, #4169E1, #6495ED);
+  border-color: rgba(65, 105, 225, 0.3);
+}
+
+.categoryIcon[data-category="High Protein"] {
+  background: linear-gradient(135deg, #9932CC, #BA55D3);
+  border-color: rgba(153, 50, 204, 0.3);
+}
+
+.categoryIcon[data-category="Contains Nuts"] {
+  background: linear-gradient(135deg, #CD853F, #DEB887);
+  border-color: rgba(205, 133, 63, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .categoryIcon {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  
+  .categoryLabel {
+    font-size: 11px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .categoryIcon {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .categoryIcon:hover {
+    background: rgba(0, 0, 0, 0.4);
+  }
+}

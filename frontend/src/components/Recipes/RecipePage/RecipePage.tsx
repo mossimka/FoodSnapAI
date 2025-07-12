@@ -11,7 +11,8 @@ import { useAuthStore } from "@/stores/authStore";
 import { useUserStore } from "@/stores/userStore";
 import { CaloriesSection } from "@/components/Generation/Calories/CaloriesSection/CaloriesSection";
 import { RecipeSteps } from "@/components/Recipes/RecipeSteps/RecipeSteps";
-import { ConfirmationModal } from "@/components/ConfirmationModal/ConfirmationModal";
+import { ConfirmationModal } from "@/components/Popups/ConfirmationModal/ConfirmationModal";
+import { CategoryIcon } from "@/components/Recipes/Categories/CategoryIcon/CategoryIcon";
 import { 
   useRecipeQuery, 
   useUpdateRecipeNameMutation, 
@@ -209,6 +210,20 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
             </div>
 
             <p className={Styles.author}>by {recipe.user.username}</p>
+
+            {/* Health Categories */}
+            {recipe.categories && recipe.categories.length > 0 && (
+              <div className={Styles.healthCategories}>
+                {recipe.categories.map((category) => (
+                  <CategoryIcon 
+                    key={category.id} 
+                    category={{ name: category.name }}
+                    size={18}
+                    showLabel={true}
+                  />
+                ))}
+              </div>
+            )}
 
             <div className={Styles.statusBadge}>
               {recipe.is_published ? (

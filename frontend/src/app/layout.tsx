@@ -10,10 +10,10 @@ import { Navbar } from "@/components/Navbar/Navbar";
 import { Footer } from '@/components/Footer/Footer';
 import { GoogleProviderWrapper } from "@/components/Auth/GoogleProviderWrapper";
 import { ThemeProvider } from "@/context/ThemeProvider";
-import { AddToHomeScreenPrompt } from "@/components/AddToHomeScreenPrompt/AddToHomeScreenPrompt";
+import { AddToHomeScreenPrompt } from "@/components/Popups/AddToHomeScreenPrompt/AddToHomeScreenPrompt";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { GoogleAnalytics } from "../analytics/GoogleAnalytics";
-import { CookieWrapper } from "@/components/CookieConsent";
+import CookieWrapper from "@/components/Popups/CookieConsent/CookieWrapper";
 import { BarcodeButton } from "@/components/Barcode/BarcodeButton";
 
 

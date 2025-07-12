@@ -7,6 +7,7 @@ import { RecipeSteps } from "../../Recipes/RecipeSteps/RecipeSteps";
 import { CaloriesSection } from "../Calories/CaloriesSection/CaloriesSection";
 import { toast } from "react-toastify";
 import Styles from "./RecipeDisplay.module.css";
+import { CategoryIcon } from "@/components/Recipes/Categories/CategoryIcon/CategoryIcon";
 
 interface RecipeDisplayProps {
   recipe: GenerationOutput;
@@ -65,6 +66,15 @@ export const RecipeDisplay: React.FC<RecipeDisplayProps> = ({
             <Copy size={16} />
           </button>
         </div>
+      </div>
+      <div className={Styles.healthCategories}>
+        {Array.isArray(recipe.health_categories) && recipe.health_categories.length > 0 ? (
+          recipe.health_categories.map((category) => (
+            <CategoryIcon key={category.name} category={category} showLabel={true} />
+          ))
+        ) : (
+          <span style={{ color: '#666', fontSize: '0.9rem' }}>No health categories available</span>
+        )}
       </div>
 
       {/* Nutrition Information Section */}

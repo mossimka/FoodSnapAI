@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 import Styles from "./SignPopup.module.css";
-import { NavButton } from "../Navbar/NavButton/NavButton";
+import { NavButton } from "@/components/Navbar/NavButton/NavButton";
 
 interface SignPopupProps {
   onClose: () => void;

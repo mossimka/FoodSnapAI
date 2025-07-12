@@ -4,6 +4,11 @@ export interface IngredientCalories {
   calories: number;
 }
 
+export interface CategoryResponse {
+  id: number;
+  name: string;
+}
+
 export interface IRecipe {
   id: number;
   slug: string;
@@ -19,6 +24,7 @@ export interface IRecipe {
   ingredients_calories: IngredientCalories[];
   estimated_weight_g: number;
   total_calories_per_100g: number;
+  categories: CategoryResponse[];
 }
 
 export interface PaginatedRecipesResponse {
@@ -29,7 +35,6 @@ export interface PaginatedRecipesResponse {
   total_pages: number;
 }
 
-// Favorite-related interfaces
 export interface FavoriteRecipe {
   id: number;
   user_id: number;
@@ -57,6 +62,7 @@ export interface RecipeOutput {
   ingredients_calories: IngredientToCalories[];
   estimated_weight_g: number | null;
   total_calories_per_100g: number | null;
+  health_categories: HealthCategory[] | null;
 }
 
 export interface RecipeInput {
@@ -67,6 +73,7 @@ export interface RecipeInput {
     ingredients_calories: IngredientToCalories[];
     estimated_weight_g: number;
     total_calories_per_100g: number;
+    health_categories: string[]
   };
 }
 
@@ -100,10 +107,22 @@ export interface DeliveryLink {
   store: string;
 }
 
+export interface GenerationResponse {
+  recipe: RecipeOutput;
+  calories: CaloriesOutput;
+  delivery: DeliveryLink[];
+  health_categories: string[]; // Бэкенд возвращает массив строк
+}
+
 export interface GenerationOutput {
   recipe: RecipeOutput;
   calories: CaloriesOutput;
   delivery: DeliveryLink[];
+  health_categories: HealthCategory[]; // Фронтенд работает с объектами
+}
+
+export interface HealthCategory {
+  name: string;
 }
 
 // Type guards

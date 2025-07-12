@@ -309,7 +309,7 @@ final_agent = LlmAgent(
     {
       "recipe": state['recipe'],
       "calories": state['calories'],
-      "health_categories": state['health_categories'],
+      "health_categories": state['health_categories']['health_categories'] if state['health_categories'] else [],
       "delivery": state['delivery']
     }
     
@@ -321,5 +321,5 @@ final_agent = LlmAgent(
 
 root_agent = SequentialAgent(
   name="root_agent",
-  sub_agents=[recipe_agent, calories_agent, delivery_agent, final_agent]
+  sub_agents=[recipe_agent, calories_agent, health_categories_agent, delivery_agent, final_agent]
 )

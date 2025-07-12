@@ -161,9 +161,9 @@ async def analyze_dish(
                 final_response = event.content.parts[0].text
                 break
         
-        #print("\n=== RAW FINAL RESPONSE ===")
-        #print(final_response)
-        #print("==========================\n")
+        print("\n=== RAW FINAL RESPONSE ===")
+        print(final_response)
+        print("==========================\n")
 
         cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", (final_response or "").strip(), flags=re.MULTILINE)
         parsed = json.loads(cleaned)
@@ -193,6 +193,11 @@ async def save_recipe(
         estimated_weight_g = parsed.get("estimated_weight_g")
         total_calories_per_100g = parsed.get("total_calories_per_100g")
         health_categories = parsed.get("health_categories", [])
+        
+        print(f"=== SAVE RECIPE DEBUG ===")
+        print(f"Raw health_categories: {health_categories}")
+        print(f"Type: {type(health_categories)}")
+        print(f"========================")
 
         if not dish_name or not recipe_text or not ingredients_calories:
             raise HTTPException(status_code=400, detail="Invalid recipe format")

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import CookieConsent from './CookieConsent';
-import { useCookieConsent } from '../../hooks/useCookieConsent';
+import { useCookieConsent } from '@/hooks/useCookieConsent';
 import { CookiePreferences } from './types';
 
 interface CookieWrapperProps {

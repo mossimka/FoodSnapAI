@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { IRecipe } from "@/interfaces/recipe";
+import { CategoryIcon } from "@/components/Recipes/Categories/CategoryIcon/CategoryIcon";
 import styles from "./RecipeCard.module.css";
 
 interface RecipeCardProps {
@@ -24,6 +25,24 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, hidePublishedBad
             fill
             style={{ objectFit: "cover" }}
           />
+          {/* Health Categories */}
+          {recipe.categories && recipe.categories.length > 0 && (
+            <div className={styles.healthCategories}>
+              {recipe.categories.slice(0, 3).map((category) => (
+                <CategoryIcon 
+                  key={category.id} 
+                  category={{ name: category.name }}
+                  size={14}
+                  showLabel={false}
+                />
+              ))}
+              {recipe.categories.length > 3 && (
+                <div className={styles.moreCategoriesIndicator} title={`+${recipe.categories.length - 3} more categories`}>
+                  +{recipe.categories.length - 3}
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <div className={styles.cardContent}>
           <h3 className={styles.title}>{recipe.dish_name}</h3>

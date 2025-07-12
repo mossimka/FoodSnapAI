@@ -83,7 +83,7 @@ export default function ProfilePage() {
         <div className={RecipeStyles.recipeList}>
           {myRecipes.length > 0 ? (
             myRecipes.map((r) => (
-              <RecipeCard key={`${r.dish_name} - ${r.user_id}`} recipe={r} />
+              <RecipeCard key={r.id} recipe={r} />
             ))
           ) : (
             <p className={RecipeStyles.noRecipes}>No recipes to show</p>

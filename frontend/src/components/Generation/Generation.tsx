@@ -11,10 +11,10 @@ import CameraCapture from "./CameraCapture/CameraCapture";
 import { SaveRecipeButton } from "./SaveRecipeButton/SaveRecipeButton";
 import { RecipeDisplay } from "./RecipeDisplay/RecipeDisplay";
 import Styles from "./Generation.module.css";
-import { SignPopup } from "@/components/SignPopup/SignPopup";
+import { SignPopup } from "@/components/Popups/SignPopup/SignPopup";
 import { useAuthStore } from "@/stores/authStore";
 import { generateRecipe } from "@/services/generateService";
-import { GenerationOutput, isNotFoodResponse, isGenerationOutput } from "@/interfaces/recipe";
+import { GenerationOutput, GenerationResponse, isNotFoodResponse } from "@/interfaces/recipe";
 import { NavButton } from "../Navbar/NavButton/NavButton";
 import { Printer } from "../Style/Printer/Printer";
 import { truncateFilename } from '@/utils/stringUtils';
@@ -227,7 +227,7 @@ const generateResponse = async () => {
 
   setTimeout(async () => {
     try {
-      const res = await generateRecipe(imageFile, userLocation);
+      const res: GenerationResponse = await generateRecipe(imageFile, userLocation);
       
       if (isNotFoodResponse(res)) {
         const formattedText = `🚫 This doesn't look like food.\n\n🔍 Detected: ${res.description}`;
@@ -238,7 +238,8 @@ const generateResponse = async () => {
         return;
       }
 
-      if (isGenerationOutput(res)) {
+      // Теперь res всегда GenerationResponse, поэтому проверяем наличие нужных полей
+      if (res.recipe && res.calories) {
         const ingredients_calories_array = Object.entries(res.calories.ingredients_calories).map(
           ([ingredient, calories]) => ({
             ingredient,
@@ -246,16 +247,22 @@ const generateResponse = async () => {
           })
         );
 
+        console.log("Raw health_categories from backend:", res.health_categories);
+        
         const finalRecipe: GenerationOutput = {
           recipe: {
             ...res.recipe,
             ingredients_calories: ingredients_calories_array,
             estimated_weight_g: res.calories.estimated_weight_g ?? null,
             total_calories_per_100g: res.calories.total_calories_per_100g ?? null,
+            health_categories: (res.health_categories || []).map(category => ({ name: category })),
           },
           calories: res.calories,
           delivery: res.delivery ?? [],
+          health_categories: (res.health_categories || []).map(category => ({ name: category })),
         };
+        
+        console.log("Final health_categories:", finalRecipe.health_categories);
 
         setGeneratedRecipe(finalRecipe);
         setHasGenerated(true);

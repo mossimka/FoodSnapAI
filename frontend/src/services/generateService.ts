@@ -1,9 +1,9 @@
 import axios from '@/lib/axios';
 import { tokenService } from './tokenService';
-import { RecipeOutput, RecipeInput } from "@/interfaces/recipe";
+import { RecipeOutput, RecipeInput, GenerationResponse } from "@/interfaces/recipe";
 import type { RecipeResult } from '@/interfaces/recipe';
 
-export async function generateRecipe(imageFile: File, location?: string | null): Promise<RecipeResult> {
+export async function generateRecipe(imageFile: File, location?: string | null): Promise<GenerationResponse> {
   const formData = new FormData();
   formData.append("file", imageFile);
   

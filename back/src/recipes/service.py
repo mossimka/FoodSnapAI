@@ -76,10 +76,20 @@ def get_or_create_category(db: Session, name: str) -> Category:
 
 def validate_categories(category_names: List[str]) -> List[str]:
     """Validate that all category names are in allowed list"""
+    print(f"=== VALIDATE CATEGORIES DEBUG ===")
+    print(f"Input categories: {category_names}")
+    print(f"Available categories: {HEALTH_CATEGORIES}")
+    
     valid_categories = []
     for name in category_names:
         if name in HEALTH_CATEGORIES:
             valid_categories.append(name)
+            print(f"✓ Valid category: {name}")
+        else:
+            print(f"✗ Invalid category: {name}")
+    
+    print(f"Final valid categories: {valid_categories}")
+    print(f"================================")
     return valid_categories
 
 # Basic recipe operations

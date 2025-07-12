@@ -19,14 +19,19 @@ export const SaveRecipeButton: React.FC<Props> = ({ file, recipePart }) => {
     const handleSave = async () => {
       setIsSaving(true);
       try {
-        const { slug } = await saveRecipe({
+        const recipeData = {
           file,
           recipePart: {
             ...recipePart,
             estimated_weight_g: recipePart.estimated_weight_g ?? 0,
             total_calories_per_100g: recipePart.total_calories_per_100g ?? 0,
+            health_categories: (recipePart.health_categories || []).map(cat => cat.name),
           },
-        });
+        };
+        
+        console.log("Saving recipe with health_categories:", recipeData.recipePart.health_categories);
+        
+        const { slug } = await saveRecipe(recipeData);
         setIsSaved(true);
         toast.success("Recipe saved successfully!");
         setTimeout(() => {
