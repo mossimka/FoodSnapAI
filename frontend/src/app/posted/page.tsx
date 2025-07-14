@@ -9,13 +9,26 @@ import { usePublicRecipesQuery, useMyRecipesQuery, useFavoriteRecipesQuery } fro
 import { IRecipe, FavoriteRecipe } from "@/interfaces/recipe";
 import { Search } from "@/components/Recipes/Search/Search";
 import { Pagination } from "@/components/Pagination/Pagination";
+import { CategoryFilterButton } from "@/components/Recipes/Categories/CategoryFilterButton/CategoryFilterButton";
+import { CategorySelector } from "@/components/Recipes/Categories/CategorySelector/CategorySelector";
 
-const filterRecipes = (recipes: IRecipe[], query: string): IRecipe[] => {
-  if (!query.trim()) return recipes;
+const filterRecipes = (recipes: IRecipe[], query: string, selectedCategories: string[] = []): IRecipe[] => {
+  let filteredRecipes = recipes;
+  
+  // Filter by categories first
+  if (selectedCategories.length > 0) {
+    filteredRecipes = filteredRecipes.filter(recipe => {
+      const recipeCategories = recipe.categories.map(cat => cat.name);
+      return selectedCategories.some(selectedCat => recipeCategories.includes(selectedCat));
+    });
+  }
+  
+  // Then filter by search query
+  if (!query.trim()) return filteredRecipes;
   
   const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 0);
   
-  return recipes.filter(recipe => {
+  return filteredRecipes.filter(recipe => {
     const dishName = recipe.dish_name.toLowerCase();
     const username = recipe.user.username.toLowerCase();
     const ingredients = recipe.ingredients_calories
@@ -28,12 +41,23 @@ const filterRecipes = (recipes: IRecipe[], query: string): IRecipe[] => {
   });
 };
 
-const filterFavoriteRecipes = (favoriteRecipes: FavoriteRecipe[], query: string): FavoriteRecipe[] => {
-  if (!query.trim()) return favoriteRecipes;
+const filterFavoriteRecipes = (favoriteRecipes: FavoriteRecipe[], query: string, selectedCategories: string[] = []): FavoriteRecipe[] => {
+  let filteredRecipes = favoriteRecipes;
+  
+  // Filter by categories first
+  if (selectedCategories.length > 0) {
+    filteredRecipes = filteredRecipes.filter(favoriteRecipe => {
+      const recipeCategories = favoriteRecipe.recipe.categories.map(cat => cat.name);
+      return selectedCategories.some(selectedCat => recipeCategories.includes(selectedCat));
+    });
+  }
+  
+  // Then filter by search query
+  if (!query.trim()) return filteredRecipes;
   
   const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 0);
   
-  return favoriteRecipes.filter(favoriteRecipe => {
+  return filteredRecipes.filter(favoriteRecipe => {
     const recipe = favoriteRecipe.recipe;
     const dishName = recipe.dish_name.toLowerCase();
     const username = recipe.user.username.toLowerCase();
@@ -50,6 +74,8 @@ const filterFavoriteRecipes = (favoriteRecipes: FavoriteRecipe[], query: string)
 export default function PostedPage() {
   const [activeTab, setActiveTab] = useState<"public" | "my" | "saved">("public");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [showCategorySelector, setShowCategorySelector] = useState(false);
   const [publicPage, setPublicPage] = useState(1);
   const [myPage, setMyPage] = useState(1);
   const [savedPage, setSavedPage] = useState(1);
@@ -75,18 +101,18 @@ export default function PostedPage() {
 
   const filteredPublicRecipes = useMemo(() => {
     const publicRecipes = publicRecipesData?.recipes || [];
-    return filterRecipes(publicRecipes, searchQuery);
-  }, [publicRecipesData?.recipes, searchQuery]);
+    return filterRecipes(publicRecipes, searchQuery, selectedCategories);
+  }, [publicRecipesData?.recipes, searchQuery, selectedCategories]);
   
   const filteredMyRecipes = useMemo(() => {
     const myRecipes = myRecipesData?.recipes || [];
-    return filterRecipes(myRecipes, searchQuery);
-  }, [myRecipesData?.recipes, searchQuery]);
+    return filterRecipes(myRecipes, searchQuery, selectedCategories);
+  }, [myRecipesData?.recipes, searchQuery, selectedCategories]);
 
   const filteredFavoriteRecipes = useMemo(() => {
     const favoriteRecipes = favoriteRecipesData?.recipes || [];
-    return filterFavoriteRecipes(favoriteRecipes, searchQuery);
-  }, [favoriteRecipesData?.recipes, searchQuery]);
+    return filterFavoriteRecipes(favoriteRecipes, searchQuery, selectedCategories);
+  }, [favoriteRecipesData?.recipes, searchQuery, selectedCategories]);
 
   const recipesToShow = activeTab === "public" 
     ? filteredPublicRecipes 
@@ -132,6 +158,18 @@ export default function PostedPage() {
     setSearchQuery("");
   };
 
+  const handleCategoryFilterApply = (categories: string[]) => {
+    setSelectedCategories(categories);
+    // Reset to first page when filtering
+    if (activeTab === "public") {
+      setPublicPage(1);
+    } else if (activeTab === "my") {
+      setMyPage(1);
+    } else {
+      setSavedPage(1);
+    }
+  };
+
   const handlePageChange = (page: number) => {
     if (activeTab === "public") {
       setPublicPage(page);
@@ -148,6 +186,7 @@ export default function PostedPage() {
   const handleTabChange = (tab: "public" | "my" | "saved") => {
     setActiveTab(tab);
     setSearchQuery(""); // Clear search when switching tabs
+    setSelectedCategories([]); // Clear category filters when switching tabs
   };
 
   const getCurrentPage = () => {
@@ -205,15 +244,30 @@ export default function PostedPage() {
             onSearchChange={handleSearchChange}
             onSearchClear={handleSearchClear}
           />
+          <CategoryFilterButton
+            selectedCategories={selectedCategories}
+            onClick={() => setShowCategorySelector(true)}
+          />
         </div>
       </div>
 
       {/* Pagination info */}
-      {currentData && !searchQuery && (
+      {currentData && !searchQuery && selectedCategories.length === 0 && (
         <div className={Styles.paginationInfo}>
           Showing {recipesToShow.length} of {currentData.total} recipes
           {currentData.total_pages > 1 && (
             <span> • Page {currentData.page} of {currentData.total_pages}</span>
+          )}
+        </div>
+      )}
+
+      {/* Filter info */}
+      {(searchQuery || selectedCategories.length > 0) && (
+        <div className={Styles.paginationInfo}>
+          Showing {recipesToShow.length} filtered recipes
+          {searchQuery && <span> • Search: "{searchQuery}"</span>}
+          {selectedCategories.length > 0 && (
+            <span> • {selectedCategories.length} categor{selectedCategories.length === 1 ? 'y' : 'ies'} selected</span>
           )}
         </div>
       )}
@@ -237,25 +291,25 @@ export default function PostedPage() {
               </motion.div>
             ))
           ) : (
-            <motion.p
-              className={Styles.noRecipes}
-              key={`no-recipes-${activeTab}`}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -30 }}
-              transition={{ duration: 0.35, ease: "easeInOut" }}
-            >
-              {searchQuery ? 
-                `No recipes found for "${searchQuery}"` : 
-                activeTab === "saved" ? "No saved recipes yet" : "No recipes to show"
-              }
-            </motion.p>
+                          <motion.p
+                className={Styles.noRecipes}
+                key={`no-recipes-${activeTab}`}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -30 }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+              >
+                {searchQuery || selectedCategories.length > 0 ? 
+                  "No recipes found matching your filters" : 
+                  activeTab === "saved" ? "No saved recipes yet" : "No recipes to show"
+                }
+              </motion.p>
           )}
         </AnimatePresence>
       </div>
 
-      {/* Pagination controls - only show when not searching */}
-      {currentData && !searchQuery && currentData.total_pages > 1 && (
+      {/* Pagination controls - only show when not filtering */}
+      {currentData && !searchQuery && selectedCategories.length === 0 && currentData.total_pages > 1 && (
         <Pagination
           currentPage={getCurrentPage()}
           totalPages={currentData.total_pages}
@@ -273,6 +327,14 @@ export default function PostedPage() {
           <div className={Styles.loadingSpinner}>Loading...</div>
         </div>
       )}
+
+      {/* Category Selector Popup */}
+      <CategorySelector
+        isOpen={showCategorySelector}
+        onClose={() => setShowCategorySelector(false)}
+        selectedCategories={selectedCategories}
+        onApply={handleCategoryFilterApply}
+      />
     </div>
   );
 }

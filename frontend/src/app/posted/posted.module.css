@@ -29,6 +29,7 @@
 .searchContainer {
   display: flex;
   align-items: center;
+  gap: var(--spacing-md);
 }
 
 .tabButton {
@@ -175,6 +176,8 @@
   .searchContainer {
     width: 100%;
     justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
   }
   
   .tabToggle {
