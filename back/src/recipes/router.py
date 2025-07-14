@@ -7,6 +7,7 @@ from typing import List
 import uuid
 import json
 import re
+from datetime import datetime
 
 from src.auth.service import get_current_user
 from src.auth.models import Users
@@ -21,7 +22,8 @@ from src.recipes.schemas import (
     PaginatedFavoriteRecipesResponse,
     FavoriteStatusResponse,
     CategoryResponse,
-    CategoryListResponse
+    CategoryListResponse,
+    SortOrder
 )
 from src.recipes.service import (
     get_recipe_by_slug, 
@@ -45,6 +47,13 @@ from src.services.redis import (
 
 from src.recipes.agents import root_agent, checking_agent
 
+# Custom JSON encoder for datetime objects
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return super().default(obj)
+
 APP_NAME = "dish_analysis_app"
 session_service = InMemorySessionService()
 runner = Runner(
@@ -65,17 +74,18 @@ router = APIRouter(prefix="/dish", tags=["dish"])
 async def get_all_dishes(
     db: Session = Depends(get_db),
     page: int = Query(1, ge=1, description="Page number"),
-    page_size: int = Query(20, ge=1, le=100, description="Number of items per page")
+    page_size: int = Query(20, ge=1, le=100, description="Number of items per page"),
+    sort_by: SortOrder = Query(SortOrder.NEWEST, description="Sort order for recipes")
 ):
-    cache_key = f"recipes:page={page}:size={page_size}"
+    cache_key = f"recipes:page={page}:size={page_size}:sort={sort_by}"
     
     cached_data = await redis_client.get(cache_key)
     if cached_data:
         return PaginatedRecipesResponse(**json.loads(cached_data))
 
-    response: PaginatedRecipesResponse = get_recipes_paginated(db, page=page, page_size=page_size)
+    response: PaginatedRecipesResponse = get_recipes_paginated(db, page=page, page_size=page_size, sort_by=sort_by)
 
-    await redis_client.set(cache_key, json.dumps(response.model_dump()), ex=300)
+    await redis_client.set(cache_key, json.dumps(response.model_dump(), cls=DateTimeEncoder), ex=300)
 
     return response
 
@@ -91,7 +101,7 @@ async def get_recipe(slug: str, db: Session = Depends(get_db)):
     if not recipe_response:
         raise HTTPException(status_code=404, detail="Recipe not found")
 
-    await redis_client.set(cache_key, json.dumps(recipe_response.model_dump()), ex=1000)
+    await redis_client.set(cache_key, json.dumps(recipe_response.model_dump(), cls=DateTimeEncoder), ex=1000)
 
     return recipe_response
 
@@ -320,17 +330,18 @@ async def delete_recipe(
 async def get_public_recipe(
     db: Session = Depends(get_db),
     page: int = Query(1, ge=1, description="Page number"),
-    page_size: int = Query(20, ge=1, le=100, description="Number of items per page")
+    page_size: int = Query(20, ge=1, le=100, description="Number of items per page"),
+    sort_by: SortOrder = Query(SortOrder.NEWEST, description="Sort order for recipes")
 ):
-    cache_key = f"recipes:public:page={page}:size={page_size}"
+    cache_key = f"recipes:public:page={page}:size={page_size}:sort={sort_by}"
     
     cached_data = await redis_client.get(cache_key)
     if cached_data:
         return PaginatedRecipesResponse(**json.loads(cached_data))
 
-    response: PaginatedRecipesResponse = get_public_recipes_paginated(db, page=page, page_size=page_size)
+    response: PaginatedRecipesResponse = get_public_recipes_paginated(db, page=page, page_size=page_size, sort_by=sort_by)
 
-    await redis_client.set(cache_key, json.dumps(response.model_dump()), ex=300)
+    await redis_client.set(cache_key, json.dumps(response.model_dump(), cls=DateTimeEncoder), ex=300)
 
     return response
 
@@ -340,17 +351,18 @@ async def get_my_recipes(
     current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db),
     page: int = Query(1, ge=1, description="Page number"),
-    page_size: int = Query(20, ge=1, le=100, description="Number of items per page")
+    page_size: int = Query(20, ge=1, le=100, description="Number of items per page"),
+    sort_by: SortOrder = Query(SortOrder.NEWEST, description="Sort order for recipes")
 ):
-    cache_key = f"recipes:my:user_id={current_user['id']}:page={page}:size={page_size}"
+    cache_key = f"recipes:my:user_id={current_user['id']}:page={page}:size={page_size}:sort={sort_by}"
     
     cached_data = await redis_client.get(cache_key)
     if cached_data:
         return PaginatedRecipesResponse(**json.loads(cached_data))
 
-    response: PaginatedRecipesResponse = get_my_recipes_paginated(db, current_user["id"], page=page, page_size=page_size)
+    response: PaginatedRecipesResponse = get_my_recipes_paginated(db, current_user["id"], page=page, page_size=page_size, sort_by=sort_by)
 
-    await redis_client.set(cache_key, json.dumps(response.model_dump()), ex=300)
+    await redis_client.set(cache_key, json.dumps(response.model_dump(), cls=DateTimeEncoder), ex=300)
 
     return response
 
@@ -362,17 +374,18 @@ async def get_favorite_revipes(
     current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db),
     page: int = Query(1, ge=1, description="Page number"),
-    page_size: int = Query(20, ge=1, le=100, description="Number of items per page")
+    page_size: int = Query(20, ge=1, le=100, description="Number of items per page"),
+    sort_by: SortOrder = Query(SortOrder.NEWEST, description="Sort order for recipes")
 ):
-    cache_key = f"favorites:user_id={current_user['id']}:page={page}:size={page_size}"
+    cache_key = f"favorites:user_id={current_user['id']}:page={page}:size={page_size}:sort={sort_by}"
 
     cached_data = await redis_client.get(cache_key)
     if cached_data:
         return  PaginatedFavoriteRecipesResponse(**json.loads(cached_data))
 
-    response: PaginatedFavoriteRecipesResponse = get_favorite_recipes_paginated(db, current_user["id"], page=page, page_size=page_size)
+    response: PaginatedFavoriteRecipesResponse = get_favorite_recipes_paginated(db, current_user["id"], page=page, page_size=page_size, sort_by=sort_by)
 
-    await redis_client.set(cache_key, json.dumps(response.model_dump()), ex=300)
+    await redis_client.set(cache_key, json.dumps(response.model_dump(), cls=DateTimeEncoder), ex=300)
 
     return response
 

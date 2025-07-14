@@ -9,6 +9,13 @@ export interface CategoryResponse {
   name: string;
 }
 
+export enum SortOrder {
+  NEWEST = "newest",
+  OLDEST = "oldest",
+  NAME_ASC = "name_asc",
+  NAME_DESC = "name_desc"
+}
+
 export interface IRecipe {
   id: number;
   slug: string;

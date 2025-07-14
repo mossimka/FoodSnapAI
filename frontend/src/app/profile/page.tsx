@@ -9,9 +9,15 @@ import { useUserQuery } from "@/hooks/useUserQuery";
 import { useMyRecipesQuery } from "@/hooks/useRecipesQueries";
 import { RecipeCard } from "@/components/Recipes/RecipeCard/RecipeCard";
 import { Pagination } from "@/components/Pagination/Pagination";
+import { CategoryFilterButton } from "@/components/Recipes/Categories/CategoryFilterButton/CategoryFilterButton";
+import { CategorySelector } from "@/components/Recipes/Categories/CategorySelector/CategorySelector";
+import { SortOrder } from "@/interfaces/recipe";
 
 export default function ProfilePage() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState<SortOrder>(SortOrder.NEWEST);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [showCategorySelector, setShowCategorySelector] = useState(false);
   const pageSize = 12;
   const { data: user} = useUserQuery();
 
@@ -19,13 +25,19 @@ export default function ProfilePage() {
     data: myRecipesData, 
     isLoading: myLoading, 
     error: myError 
-  } = useMyRecipesQuery(currentPage, pageSize);
+  } = useMyRecipesQuery(currentPage, pageSize, sortBy);
 
   const myRecipes = myRecipesData?.recipes || [];
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleFilterSortApply = (categories: string[], newSortBy: SortOrder) => {
+    setSelectedCategories(categories);
+    setSortBy(newSortBy);
+    setCurrentPage(1); // Reset to first page when filtering or sorting changes
   };
 
   if (!user) {
@@ -71,7 +83,14 @@ export default function ProfilePage() {
       </div>
 
       <div className={Styles.recipesSection}>
-        <h3>My recipes</h3>
+        <div className={Styles.recipesHeader}>
+          <h3>My recipes</h3>
+          <CategoryFilterButton
+            selectedCategories={selectedCategories}
+            sortBy={sortBy}
+            onClick={() => setShowCategorySelector(true)}
+          />
+        </div>
         {myRecipesData && myRecipesData.total > 0 && (
           <div className={Styles.recipeStats}>
             Total recipes: {myRecipesData.total}
@@ -108,6 +127,15 @@ export default function ProfilePage() {
             <div className={Styles.loadingSpinner}>Loading...</div>
           </div>
         )}
+
+        {/* Category Selector Popup */}
+        <CategorySelector
+          isOpen={showCategorySelector}
+          onClose={() => setShowCategorySelector(false)}
+          selectedCategories={selectedCategories}
+          sortBy={sortBy}
+          onApply={handleFilterSortApply}
+        />
       </div>
     </div>
   );

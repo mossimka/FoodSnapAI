@@ -1,11 +1,11 @@
 import axios from '@/lib/axios';
 import { AxiosError } from 'axios';
 import { tokenService } from './tokenService';
-import { IRecipe, RecipePatchRequest, PaginatedRecipesResponse } from "@/interfaces/recipe";
+import { IRecipe, RecipePatchRequest, PaginatedRecipesResponse, SortOrder } from "@/interfaces/recipe";
 
 // Paginated functions
-export async function getPublicRecipesPaginated(page: number = 1, pageSize: number = 20): Promise<PaginatedRecipesResponse> {
-  const response = await axios.get(`/dish/public/?page=${page}&page_size=${pageSize}`, {
+export async function getPublicRecipesPaginated(page: number = 1, pageSize: number = 20, sortBy: SortOrder = SortOrder.NEWEST): Promise<PaginatedRecipesResponse> {
+  const response = await axios.get(`/dish/public/?page=${page}&page_size=${pageSize}&sort_by=${sortBy}`, {
     headers: {
       ...tokenService.getAuthHeader(),
     },
@@ -13,8 +13,8 @@ export async function getPublicRecipesPaginated(page: number = 1, pageSize: numb
   return response.data;
 }
 
-export async function getMyRecipesPaginated(page: number = 1, pageSize: number = 20): Promise<PaginatedRecipesResponse> {
-  const response = await axios.get(`/dish/my/?page=${page}&page_size=${pageSize}`, {
+export async function getMyRecipesPaginated(page: number = 1, pageSize: number = 20, sortBy: SortOrder = SortOrder.NEWEST): Promise<PaginatedRecipesResponse> {
+  const response = await axios.get(`/dish/my/?page=${page}&page_size=${pageSize}&sort_by=${sortBy}`, {
     headers: {
       ...tokenService.getAuthHeader(),
     },
@@ -22,8 +22,8 @@ export async function getMyRecipesPaginated(page: number = 1, pageSize: number =
   return response.data;
 }
 
-export async function getAllRecipesPaginated(page: number = 1, pageSize: number = 20): Promise<PaginatedRecipesResponse> {
-  const response = await axios.get(`/dish/?page=${page}&page_size=${pageSize}`, {
+export async function getAllRecipesPaginated(page: number = 1, pageSize: number = 20, sortBy: SortOrder = SortOrder.NEWEST): Promise<PaginatedRecipesResponse> {
+  const response = await axios.get(`/dish/?page=${page}&page_size=${pageSize}&sort_by=${sortBy}`, {
     headers: {
       ...tokenService.getAuthHeader(),
     },

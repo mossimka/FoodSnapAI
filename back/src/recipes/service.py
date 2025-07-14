@@ -11,7 +11,8 @@ from src.recipes.schemas import (
     CategoryResponse,
     PaginatedRecipesResponse,
     PaginatedFavoriteRecipesResponse,
-    FavoriteRecipeResponse
+    FavoriteRecipeResponse,
+    SortOrder
 )
 
 # Helper functions
@@ -38,7 +39,8 @@ def _build_recipe_response(recipe: Recipe) -> RecipeResponse:
         categories=[
             CategoryResponse(id=cat.id, name=cat.name)  # type: ignore
             for cat in recipe.categories
-        ]
+        ],
+        created_at=getattr(recipe, 'created_at', None)  # type: ignore
     )
 
 def _build_favorite_recipe_response(favorite_recipe: FavoriteRecipe) -> FavoriteRecipeResponse:
@@ -105,14 +107,26 @@ def get_recipe_response_by_slug(db: Session, slug: str) -> Optional[RecipeRespon
     return _build_recipe_response(recipe) if recipe else None
 
 # Recipe pagination
-def get_recipes_paginated(db: Session, page: int = 1, page_size: int = 20) -> PaginatedRecipesResponse:
-    """Get all recipes with pagination"""
+def get_recipes_paginated(db: Session, page: int = 1, page_size: int = 20, sort_by: SortOrder = SortOrder.NEWEST) -> PaginatedRecipesResponse:
+    """Get all recipes with pagination and sorting"""
     offset = (page - 1) * page_size
     
-    recipes = db.query(Recipe).join(Users).offset(offset).limit(page_size).all()
+    query = db.query(Recipe).join(Users)
+    
+    # Apply sorting
+    if sort_by == SortOrder.NEWEST:
+        query = query.order_by(Recipe.created_at.desc())
+    elif sort_by == SortOrder.OLDEST:
+        query = query.order_by(Recipe.created_at.asc())
+    elif sort_by == SortOrder.NAME_ASC:
+        query = query.order_by(Recipe.dish_name.asc())
+    elif sort_by == SortOrder.NAME_DESC:
+        query = query.order_by(Recipe.dish_name.desc())
+    
+    recipes = query.offset(offset).limit(page_size).all()
     total_recipes = db.query(Recipe).count()
     total_pages = ceil(total_recipes / page_size)
-    
+    m
     return PaginatedRecipesResponse(
         recipes=[_build_recipe_response(r) for r in recipes],
         total=total_recipes,
@@ -123,11 +137,23 @@ def get_recipes_paginated(db: Session, page: int = 1, page_size: int = 20) -> Pa
 
 # Public & My
 
-def get_public_recipes_paginated(db: Session, page: int = 1, page_size: int = 20) -> PaginatedRecipesResponse:
-    """Get public recipes with pagination"""
+def get_public_recipes_paginated(db: Session, page: int = 1, page_size: int = 20, sort_by: SortOrder = SortOrder.NEWEST) -> PaginatedRecipesResponse:
+    """Get public recipes with pagination and sorting"""
     offset = (page - 1) * page_size
     
-    recipes = db.query(Recipe).join(Users).filter(Recipe.is_published == True).offset(offset).limit(page_size).all()  # type: ignore
+    query = db.query(Recipe).join(Users).filter(Recipe.is_published == True)  # type: ignore
+    
+    # Apply sorting
+    if sort_by == SortOrder.NEWEST:
+        query = query.order_by(Recipe.created_at.desc())
+    elif sort_by == SortOrder.OLDEST:
+        query = query.order_by(Recipe.created_at.asc())
+    elif sort_by == SortOrder.NAME_ASC:
+        query = query.order_by(Recipe.dish_name.asc())
+    elif sort_by == SortOrder.NAME_DESC:
+        query = query.order_by(Recipe.dish_name.desc())
+    
+    recipes = query.offset(offset).limit(page_size).all()
     total_recipes = db.query(Recipe).filter(Recipe.is_published == True).count()  # type: ignore
     total_pages = ceil(total_recipes / page_size)
     
@@ -139,11 +165,23 @@ def get_public_recipes_paginated(db: Session, page: int = 1, page_size: int = 20
         total_pages=total_pages
     )
 
-def get_my_recipes_paginated(db: Session, user_id: int, page: int = 1, page_size: int = 20) -> PaginatedRecipesResponse:
-    """Get user's recipes with pagination"""
+def get_my_recipes_paginated(db: Session, user_id: int, page: int = 1, page_size: int = 20, sort_by: SortOrder = SortOrder.NEWEST) -> PaginatedRecipesResponse:
+    """Get user's recipes with pagination and sorting"""
     offset = (page - 1) * page_size
     
-    recipes = db.query(Recipe).join(Users).filter(Recipe.user_id == user_id).offset(offset).limit(page_size).all()  # type: ignore
+    query = db.query(Recipe).join(Users).filter(Recipe.user_id == user_id)  # type: ignore
+    
+    # Apply sorting
+    if sort_by == SortOrder.NEWEST:
+        query = query.order_by(Recipe.created_at.desc())
+    elif sort_by == SortOrder.OLDEST:
+        query = query.order_by(Recipe.created_at.asc())
+    elif sort_by == SortOrder.NAME_ASC:
+        query = query.order_by(Recipe.dish_name.asc())
+    elif sort_by == SortOrder.NAME_DESC:
+        query = query.order_by(Recipe.dish_name.desc())
+    
+    recipes = query.offset(offset).limit(page_size).all()
     total_recipes = db.query(Recipe).filter(Recipe.user_id == user_id).count()  # type: ignore
     total_pages = ceil(total_recipes / page_size)
     
@@ -156,19 +194,28 @@ def get_my_recipes_paginated(db: Session, user_id: int, page: int = 1, page_size
     )
 
 # Favorites operations
-def get_favorite_recipes_paginated(db: Session, user_id: int, page: int = 1, page_size: int = 20) -> PaginatedFavoriteRecipesResponse:
-    """Get user's favorite recipes with pagination"""
+def get_favorite_recipes_paginated(db: Session, user_id: int, page: int = 1, page_size: int = 20, sort_by: SortOrder = SortOrder.NEWEST) -> PaginatedFavoriteRecipesResponse:
+    """Get user's favorite recipes with pagination and sorting"""
     offset = (page - 1) * page_size
 
-    favorite_recipes = (
+    query = (
         db.query(FavoriteRecipe)
         .join(Recipe)
         .join(Users)
         .filter(FavoriteRecipe.user_id == user_id)
-        .offset(offset)
-        .limit(page_size)
-        .all()
     )
+    
+    # Apply sorting
+    if sort_by == SortOrder.NEWEST:
+        query = query.order_by(Recipe.created_at.desc())
+    elif sort_by == SortOrder.OLDEST:
+        query = query.order_by(Recipe.created_at.asc())
+    elif sort_by == SortOrder.NAME_ASC:
+        query = query.order_by(Recipe.dish_name.asc())
+    elif sort_by == SortOrder.NAME_DESC:
+        query = query.order_by(Recipe.dish_name.desc())
+
+    favorite_recipes = query.offset(offset).limit(page_size).all()
 
     total_favorite_recipes = db.query(FavoriteRecipe).filter(FavoriteRecipe.user_id == user_id).count()
     total_pages = ceil(total_favorite_recipes / page_size)

@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { RecipeCard } from "@/components/Recipes/RecipeCard/RecipeCard";
 import { usePublicRecipesQuery, useMyRecipesQuery, useFavoriteRecipesQuery } from "@/hooks/useRecipesQueries";
-import { IRecipe, FavoriteRecipe } from "@/interfaces/recipe";
+import { IRecipe, FavoriteRecipe, SortOrder } from "@/interfaces/recipe";
 import { Search } from "@/components/Recipes/Search/Search";
 import { Pagination } from "@/components/Pagination/Pagination";
 import { CategoryFilterButton } from "@/components/Recipes/Categories/CategoryFilterButton/CategoryFilterButton";
@@ -76,6 +76,7 @@ export default function PostedPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [showCategorySelector, setShowCategorySelector] = useState(false);
+  const [sortBy, setSortBy] = useState<SortOrder>(SortOrder.NEWEST);
   const [publicPage, setPublicPage] = useState(1);
   const [myPage, setMyPage] = useState(1);
   const [savedPage, setSavedPage] = useState(1);
@@ -85,19 +86,19 @@ export default function PostedPage() {
     data: publicRecipesData, 
     isLoading: publicLoading, 
     error: publicError 
-  } = usePublicRecipesQuery(publicPage, pageSize);
+  } = usePublicRecipesQuery(publicPage, pageSize, sortBy);
   
   const { 
     data: myRecipesData, 
     isLoading: myLoading, 
     error: myError 
-  } = useMyRecipesQuery(myPage, pageSize);
+  } = useMyRecipesQuery(myPage, pageSize, sortBy);
 
   const { 
     data: favoriteRecipesData, 
     isLoading: favoriteLoading, 
     error: favoriteError 
-  } = useFavoriteRecipesQuery(savedPage, pageSize);
+  } = useFavoriteRecipesQuery(savedPage, pageSize, sortBy);
 
   const filteredPublicRecipes = useMemo(() => {
     const publicRecipes = publicRecipesData?.recipes || [];
@@ -158,9 +159,10 @@ export default function PostedPage() {
     setSearchQuery("");
   };
 
-  const handleCategoryFilterApply = (categories: string[]) => {
+  const handleFilterSortApply = (categories: string[], newSortBy: SortOrder) => {
     setSelectedCategories(categories);
-    // Reset to first page when filtering
+    setSortBy(newSortBy);
+    // Reset to first page when filtering or sorting
     if (activeTab === "public") {
       setPublicPage(1);
     } else if (activeTab === "my") {
@@ -187,6 +189,7 @@ export default function PostedPage() {
     setActiveTab(tab);
     setSearchQuery(""); // Clear search when switching tabs
     setSelectedCategories([]); // Clear category filters when switching tabs
+    setSortBy(SortOrder.NEWEST); // Reset sorting when switching tabs
   };
 
   const getCurrentPage = () => {
@@ -246,6 +249,7 @@ export default function PostedPage() {
           />
           <CategoryFilterButton
             selectedCategories={selectedCategories}
+            sortBy={sortBy}
             onClick={() => setShowCategorySelector(true)}
           />
         </div>
@@ -291,19 +295,19 @@ export default function PostedPage() {
               </motion.div>
             ))
           ) : (
-                          <motion.p
-                className={Styles.noRecipes}
-                key={`no-recipes-${activeTab}`}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -30 }}
-                transition={{ duration: 0.35, ease: "easeInOut" }}
-              >
-                {searchQuery || selectedCategories.length > 0 ? 
-                  "No recipes found matching your filters" : 
-                  activeTab === "saved" ? "No saved recipes yet" : "No recipes to show"
-                }
-              </motion.p>
+            <motion.p
+              className={Styles.noRecipes}
+              key={`no-recipes-${activeTab}`}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
+            >
+              {searchQuery || selectedCategories.length > 0 ? 
+                "No recipes found matching your filters" : 
+                activeTab === "saved" ? "No saved recipes yet" : "No recipes to show"
+              }
+            </motion.p>
           )}
         </AnimatePresence>
       </div>
@@ -333,7 +337,8 @@ export default function PostedPage() {
         isOpen={showCategorySelector}
         onClose={() => setShowCategorySelector(false)}
         selectedCategories={selectedCategories}
-        onApply={handleCategoryFilterApply}
+        sortBy={sortBy}
+        onApply={handleFilterSortApply}
       />
     </div>
   );

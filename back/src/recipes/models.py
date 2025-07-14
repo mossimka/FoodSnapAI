@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean, UniqueConstraint, Table
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean, UniqueConstraint, Table, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from src.database import Base
 from slugify import slugify
 
@@ -35,6 +36,7 @@ class Recipe(Base):
     is_published = Column(Boolean, default=False)
     estimated_weight_g = Column(Integer)
     total_calories_per_100g = Column(Integer)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("Users", back_populates="recipes")
     

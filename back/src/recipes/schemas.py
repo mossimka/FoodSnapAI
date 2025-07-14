@@ -1,6 +1,14 @@
 # schemas.py
 from pydantic import BaseModel
 from typing import List, Optional
+from datetime import datetime
+from enum import Enum
+
+class SortOrder(str, Enum):
+    NEWEST = "newest"
+    OLDEST = "oldest"
+    NAME_ASC = "name_asc"
+    NAME_DESC = "name_desc"
 
 class CategoryCreate(BaseModel):
     name: str
@@ -53,6 +61,7 @@ class RecipeResponse(BaseModel):
     estimated_weight_g: Optional[int] = None
     total_calories_per_100g: Optional[int] = None
     categories: List[CategoryResponse] = []
+    created_at: Optional[datetime] = None
 
     model_config = {"from_attributes": True}
 

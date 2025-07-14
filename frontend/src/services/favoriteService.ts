@@ -3,12 +3,13 @@ import { AxiosError } from 'axios';
 import { tokenService } from './tokenService';
 import { 
   PaginatedFavoriteRecipesResponse, 
-  FavoriteStatusResponse, 
+  FavoriteStatusResponse,
+  SortOrder
 } from "@/interfaces/recipe";
 
 // Paginated favorites
-export async function getFavoriteRecipesPaginated(page: number = 1, pageSize: number = 20): Promise<PaginatedFavoriteRecipesResponse> {
-  const response = await axios.get(`/dish/favorites/?page=${page}&page_size=${pageSize}`, {
+export async function getFavoriteRecipesPaginated(page: number = 1, pageSize: number = 20, sortBy: SortOrder = SortOrder.NEWEST): Promise<PaginatedFavoriteRecipesResponse> {
+  const response = await axios.get(`/dish/favorites/?page=${page}&page_size=${pageSize}&sort_by=${sortBy}`, {
     headers: {
       ...tokenService.getAuthHeader(),
     },
