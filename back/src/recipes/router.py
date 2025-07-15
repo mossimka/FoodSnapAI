@@ -184,6 +184,7 @@ async def analyze_dish(
         }
 
     except Exception as e:
+        print("❌ Error:", str(e))
         raise HTTPException(status_code=500, detail=f"Failed to analyze dish: {str(e)}")
 
 @router.post("/save/")
