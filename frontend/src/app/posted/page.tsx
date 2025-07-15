@@ -269,7 +269,7 @@ export default function PostedPage() {
       {(searchQuery || selectedCategories.length > 0) && (
         <div className={Styles.paginationInfo}>
           Showing {recipesToShow.length} filtered recipes
-          {searchQuery && <span> • Search: "{searchQuery}"</span>}
+          {searchQuery && <span> • Search: &quot;{searchQuery}&quot;</span>}
           {selectedCategories.length > 0 && (
             <span> • {selectedCategories.length} categor{selectedCategories.length === 1 ? 'y' : 'ies'} selected</span>
           )}
