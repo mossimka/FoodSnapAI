@@ -126,7 +126,7 @@ def get_recipes_paginated(db: Session, page: int = 1, page_size: int = 20, sort_
     recipes = query.offset(offset).limit(page_size).all()
     total_recipes = db.query(Recipe).count()
     total_pages = ceil(total_recipes / page_size)
-    m
+    
     return PaginatedRecipesResponse(
         recipes=[_build_recipe_response(r) for r in recipes],
         total=total_recipes,
