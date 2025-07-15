@@ -35,14 +35,19 @@ const DropZone: React.FC<DropZoneProps> = ({ setImage }) => {
       return;
     }
 
+    // Генерируем уникальное имя файла
+    const ext = file.type.split('/')[1] || 'png';
+    const uniqueName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const newFile = new File([file], uniqueName, { type: file.type });
+
     // Успешная вставка
     setPasteError(null);
     setJustPasted(true);
     setTimeout(() => setJustPasted(false), 1000);
     
-    const previewUrl = URL.createObjectURL(file);
+    const previewUrl = URL.createObjectURL(newFile);
     setFilePreviewUrl(previewUrl);
-    setImage(file);
+    setImage(newFile);
   }, [setImage]);
 
   // Обработка paste события
