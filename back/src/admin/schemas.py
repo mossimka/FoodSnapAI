@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional, List
+from datetime import datetime
 
 
 class AdminUserResponse(BaseModel):
@@ -27,6 +28,7 @@ class AdminRecipeResponse(BaseModel):
     estimated_weight_g: Optional[int] = None
     total_calories_per_100g: Optional[int] = None
     username: Optional[str] = None
+    created_at: Optional[datetime] = None
 
     model_config = {
         "from_attributes": True 

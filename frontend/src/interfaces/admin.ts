@@ -13,6 +13,7 @@ export interface AdminRecipe {
   dish_name: string;
   is_published: boolean;
   username: string;
+  created_at: string;
 }
 
 export interface AdminStats {
