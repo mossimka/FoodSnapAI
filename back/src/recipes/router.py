@@ -13,7 +13,7 @@ from src.auth.service import get_current_user
 from src.auth.models import Users
 from src.gcs.uploader import upload_large_file_to_gcs
 from src.dependencies import get_db
-from src.recipes.models import Recipe, IngredientCalories, HEALTH_CATEGORIES
+from src.recipes.models import Recipe, IngredientCalories
 from src.recipes.schemas import (
     FavoriteStatusResponse,
     RecipeResponse, 
@@ -46,6 +46,7 @@ from src.services.redis import (
 )
 
 from src.recipes.agents import root_agent, checking_agent
+from src.gcs.signed_urls import signed_url_service
 
 # Custom JSON encoder for datetime objects
 class DateTimeEncoder(json.JSONEncoder):
@@ -474,4 +475,37 @@ async def get_all_categories(db: Session = Depends(get_db)):
 @router.get("/categories/health/", response_model=List[str])
 async def get_health_categories():
     """Get list of available health categories"""
+    from src.recipes.models import HEALTH_CATEGORIES
     return HEALTH_CATEGORIES
+
+@router.get("/image/{recipe_id}/")
+async def get_recipe_image_url(
+    recipe_id: int,
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Get signed URL for recipe image"""
+    try:
+        recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
+        if not recipe:
+            raise HTTPException(status_code=404, detail="Recipe not found")
+        
+        # Проверяем права доступа (только для публичных рецептов или собственных)
+        if not recipe.is_published and recipe.user_id != current_user["id"]:
+            raise HTTPException(status_code=403, detail="Access denied")
+        
+        if not recipe.image_path:
+            raise HTTPException(status_code=404, detail="Image not found")
+        
+        # Извлекаем blob name из URL
+        blob_name = signed_url_service.extract_blob_name_from_url(recipe.image_path)
+        if not blob_name:
+            raise HTTPException(status_code=400, detail="Invalid image path")
+        
+        # Генерируем подписанный URL на 1 час
+        signed_url = signed_url_service.generate_signed_url(blob_name, expiration_minutes=60)
+        
+        return {"signed_url": signed_url}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get image URL: {str(e)}")

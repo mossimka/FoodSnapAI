@@ -14,10 +14,22 @@ from src.recipes.schemas import (
     FavoriteRecipeResponse,
     SortOrder
 )
+from src.gcs.signed_urls import signed_url_service
 
 # Helper functions
 def _build_recipe_response(recipe: Recipe) -> RecipeResponse:
     """Helper function to build RecipeResponse from Recipe model"""
+    # Извлекаем blob name из URL и генерируем подписанный URL
+    secure_url = None
+    if recipe.image_path:
+        blob_name = signed_url_service.extract_blob_name_from_url(recipe.image_path)
+        if blob_name:
+            try:
+                secure_url = signed_url_service.generate_signed_url(blob_name, expiration_minutes=60)
+            except Exception as e:
+                print(f"Failed to generate signed URL for blob {blob_name}: {e}")
+                secure_url = None
+    
     return RecipeResponse(
         id=recipe.id,  # type: ignore
         slug=recipe.slug,  # type: ignore
@@ -28,7 +40,7 @@ def _build_recipe_response(recipe: Recipe) -> RecipeResponse:
         ),
         dish_name=recipe.dish_name,  # type: ignore
         recipe=recipe.recipe,  # type: ignore
-        image_path=recipe.image_path,  # type: ignore
+        image_path=secure_url,  # type: ignore
         is_published=recipe.is_published,  # type: ignore
         ingredients_calories=[
             IngredientCaloriesResponse.model_validate(i)

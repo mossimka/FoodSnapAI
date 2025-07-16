@@ -18,6 +18,8 @@ from src.config import (
 )
 from src.auth.models import Users
 from src.dependencies import get_db
+from src.gcs.signed_urls import signed_url_service
+from src.auth.schemas import UserResponse
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
@@ -117,4 +119,21 @@ def google_auth_flow(token: str, db: Session):
     refresh_token = create_refresh_token(data={"sub": user.username, "id": user.id})
 
     return access_token, refresh_token
+
+def build_user_response(user) -> UserResponse:
+    """Создает UserResponse с подписанным URL для аватара"""
+    profile_pic_url = None
+    
+    if user.profile_pic:
+        profile_pic_url = signed_url_service.get_profile_pic_signed_url(user.profile_pic)
+        # Fallback к оригинальному URL если не удалось сгенерировать подписанный
+        if not profile_pic_url:
+            profile_pic_url = user.profile_pic
+    
+    return UserResponse(
+        id=user.id,
+        username=user.username,
+        email=user.email,
+        profile_pic=profile_pic_url
+    )
 
