@@ -5,6 +5,7 @@ import Styles from "./page.module.css";
 import { HeroSection } from "@/components/HeroSection/HeroSection";
 import { Generation } from "@/components/Generation/Generation";
 import { ScannerSection } from "@/components/ScannerSection/ScannerSection";
+import ReviewSection from "@/components/ReviewSection/ReviewSection";
 
 export const metadata: Metadata = {
   title: "FoodSnap AI - AI Food Recognition & Recipe Generator",
@@ -62,6 +63,7 @@ export default function Home() {
         <HeroSection />
         <Generation />
         <ScannerSection />
+        <ReviewSection />
       </main>
     </>
   );

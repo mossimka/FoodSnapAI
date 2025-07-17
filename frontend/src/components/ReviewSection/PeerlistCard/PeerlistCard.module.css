@@ -1,0 +1,25 @@
+.card {
+  min-width: 300px;
+  max-width: 350px;
+  flex-shrink: 0;
+  background: transparent;
+  border-radius: 12px;
+  padding: 0;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.cardImage {
+  border-radius: 12px;
+  width: 100%;
+  height: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+}
+
+.cardImage:hover {
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}

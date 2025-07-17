@@ -1,0 +1,33 @@
+.reviewSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 75%;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.slider {
+  width: 100%;
+  overflow: visible;
+}
+
+/* Для мобильных устройств */
+@media (max-width: 768px) {
+  .reviewSection {
+    width: 95%;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+}

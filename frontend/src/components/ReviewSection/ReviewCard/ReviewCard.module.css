@@ -1,0 +1,118 @@
+.card {
+  width: 400px;
+  height: 200px;
+  flex-shrink: 0;
+  background: var(--glass-bg);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--glass-border);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  background: var(--glass-bg2);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.authorImage {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.authorInfo {
+  flex: 1;
+}
+
+.authorName {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.rating {
+  margin-top: 4px;
+}
+
+.star {
+  color: #fbbf24;
+  font-size: 0.875rem;
+}
+
+.reviewText {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--text-color-sub);
+  font-size: 0.875rem;
+}
+
+/* Media Queries */
+@media (max-width: 1024px) {
+  .card {
+    width: 350px;
+    height: 180px;
+    padding: 1.25rem;
+  }
+  
+  .authorName {
+    font-size: 0.9rem;
+  }
+  
+  .reviewText {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 300px;
+    height: 160px;
+    padding: 1rem;
+  }
+  
+  .header {
+    gap: 8px;
+    margin-bottom: 0.75rem;
+  }
+  
+  .authorName {
+    font-size: 0.85rem;
+  }
+  
+  .reviewText {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+  
+  .star {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    width: 280px;
+    height: 150px;
+    padding: 0.875rem;
+  }
+  
+  .authorName {
+    font-size: 0.8rem;
+  }
+  
+  .reviewText {
+    font-size: 0.7rem;
+    line-height: 1.4;
+  }
+  
+  .star {
+    font-size: 0.7rem;
+  }
+}
