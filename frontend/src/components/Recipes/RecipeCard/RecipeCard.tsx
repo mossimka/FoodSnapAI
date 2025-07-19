@@ -50,7 +50,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, hidePublishedBad
           <div className={styles.ingredients}>
             {recipe.ingredients_calories.slice(0, 3).map((item, i) => (
               <span key={i} className={styles.ingredient}>
-                {item.ingredient}
+                {item.ingredient.slice(0, 10)}...
               </span>
             ))}
             {recipe.ingredients_calories.length > 3 && (

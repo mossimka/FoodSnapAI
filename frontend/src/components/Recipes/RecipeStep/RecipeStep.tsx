@@ -32,11 +32,10 @@ export const RecipeStep: React.FC<RecipeStepProps> = ({
   };
 
   return (
-    <div className={`${styles.stepContainer} ${step.completed ? styles.completed : ''}`}>
-      <div className={styles.stepHeader}>
+    <div className={`${styles.stepContainer} ${step.completed ? styles.completed : ''}`} onClick={() => onToggle(step.id)}>
+      <div className={styles.stepHeader}> 
         <button
           className={`${styles.stepNumber} ${step.completed ? styles.stepNumberCompleted : ''}`}
-          onClick={() => onToggle(step.id)}
           aria-label={`${step.completed ? 'Unmark' : 'Mark'} step ${stepNumber} as completed`}
         >
           {step.completed ? <Check size={16} /> : stepNumber}
