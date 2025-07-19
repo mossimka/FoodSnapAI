@@ -19,7 +19,12 @@ def upload_large_file_to_gcs(file: UploadFile, chunk_size: int = CHUNK_SIZE):
     try:
         client = storage.Client(credentials=credentials)
         bucket = client.bucket(BUCKET_NAME)
-        blob = bucket.blob(f"recipes/{file.filename}")
+        
+        # Генерируем уникальное имя файла с сохранением расширения
+        file_extension = os.path.splitext(file.filename)[1] if file.filename else '.jpg'
+        unique_filename = f"{uuid4()}{file_extension}"
+        
+        blob = bucket.blob(f"recipes/{unique_filename}")
 
         file.file.seek(0, 2)
         file_size = file.file.tell()
@@ -40,7 +45,12 @@ def upload_file_in_chunks(file: UploadFile, chunk_size: int):
     try:
         client = storage.Client(credentials=credentials)
         bucket = client.bucket(BUCKET_NAME)
-        blob = bucket.blob(f"recipes/{file.filename}")
+        
+        # Генерируем уникальное имя файла с сохранением расширения
+        file_extension = os.path.splitext(file.filename)[1] if file.filename else '.jpg'
+        unique_filename = f"{uuid4()}{file_extension}"
+        
+        blob = bucket.blob(f"recipes/{unique_filename}")
 
         file.file.seek(0, 2)
         file_size = file.file.tell()
@@ -68,7 +78,12 @@ def upload_profile_pic_to_gcs(file: UploadFile, username: str):
     try:
         client = storage.Client(credentials=credentials)
         bucket = client.bucket(BUCKET_NAME)
-        blob = bucket.blob(f"profile_pics/{username}")
+        
+        # Генерируем уникальное имя файла для профильной фотографии
+        file_extension = os.path.splitext(file.filename)[1] if file.filename else '.jpg'
+        unique_filename = f"{username}_{uuid4()}{file_extension}"
+        
+        blob = bucket.blob(f"profile_pics/{unique_filename}")
         
         blob.upload_from_file(file.file, content_type=file.content_type)
         return blob.public_url
