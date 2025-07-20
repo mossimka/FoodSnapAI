@@ -1,0 +1,372 @@
+{
+  "navigation": {
+    "logo": "FoodSnap AI",
+    "menu": {
+      "generate": "+ Generate a recipe",
+      "viewRecipes": "View recipes",
+      "viewProfile": "View Profile",
+      "settings": "Settings",
+      "logout": "Logout",
+      "signIn": "Sign In",
+      "signUp": "Sign Up"
+    },
+    "mobileMenu": {
+      "close": "Close menu"
+    }
+  },
+  "auth": {
+    "signIn": {
+      "title": "Welcome back!",
+      "usernamePlaceholder": "Username or Email",
+      "passwordPlaceholder": "Password",
+      "submitButton": "Sign In",
+      "loadingButton": "Signing in...",
+      "noAccount": "Do not have an account?",
+      "signUpLink": "Sign up",
+      "orDivider": "or"
+    },
+    "signUp": {
+      "title": "Join FoodSnapAI!",
+      "usernamePlaceholder": "Username",
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Password",
+      "submitButton": "Sign Up",
+      "loadingButton": "Signing up...",
+      "hasAccount": "Already have an account?",
+      "signInLink": "Sign in",
+      "orDivider": "or",
+      "errors": {
+        "usernameTooLong": "Username must be less than 30 characters long",
+        "invalidEmail": "Incorrect email",
+        "invalidPassword": "Password must contain at least one digit and one special character",
+        "signUpFailed": "Sign up failed"
+      }
+    },
+    "captcha": {
+      "title": "Security Verification",
+      "message": "Please complete the security verification to continue with your registration.",
+      "verifying": "Verifying...",
+      "success": "Verification successful!",
+      "error": "Verification failed"
+    }
+  },
+  "home": {
+    "hero": {
+      "mainTitle": "Cooking revolution",
+      "subtitle": "Upload dish and get a",
+      "highlightedText": "recipe immediately",
+      "ctaButton": "Try it out!"
+    },
+    "scanner": {
+      "title": "Barcode Scanner",
+      "description": "Scan product barcodes to get detailed nutritional information, ingredients, and product details from Open Food Facts database",
+      "features": {
+        "productInfo": {
+          "title": "Product Information",
+          "description": "Get detailed product data including ingredients, nutritional facts, and brand information"
+        },
+        "nutritionAnalysis": {
+          "title": "Nutrition Analysis",
+          "description": "View Nutri-Score ratings, eco-scores, and comprehensive nutritional breakdown"
+        }
+      }
+    },
+    "reviews": {
+      "title": "Reviews",
+      "cards": [
+        {
+          "text": "Amazing food recognition! The app instantly identified my dish and provided detailed nutritional information.",
+          "author": "Apas Dauren"
+        },
+        {
+          "text": "Love how easy it is to track my meals. Just snap a photo and get all the details!",
+          "author": "Akhmetaliyev Muslim"
+        },
+        {
+          "text": "Perfect for my diet tracking. Very accurate results and clean interface.",
+          "author": "Munsyzbayev Daniyar"
+        },
+        {
+          "text": "Great app for health-conscious people. Helps me make better food choices.",
+          "author": "Emily Davis"
+        }
+      ]
+    }
+  },
+  "generation": {
+    "upload": {
+      "title": "You chose file:",
+      "clearButton": "✕ Clear",
+      "clearTooltip": "Clear image and start over"
+    },
+    "location": {
+      "checkbox": "Share location for delivery links",
+      "detecting": "📍 Detecting location...",
+      "success": "📍 {location}",
+      "error": "❌ {error}",
+      "errors": {
+        "notSupported": "Geolocation is not supported by this browser",
+        "permissionDenied": "Location access denied by user",
+        "unavailable": "Location information unavailable",
+        "timeout": "Location request timed out",
+        "failed": "Failed to get location"
+      }
+    },
+    "generate": {
+      "button": "Generate",
+      "generating": "Generating...",
+      "generated": "Generated"
+    },
+    "results": {
+      "notFood": {
+        "title": "🚫 This doesn't look like food.",
+        "description": "🔍 Detected: {description}"
+      },
+      "error": "❌ Failed to generate recipe. Please try again.",
+      "actions": {
+        "saveRecipe": "Save Recipe",
+        "goToRecipes": "Go to my recipies"
+      }
+    },
+    "signInPrompt": {
+      "message": "Sign in to continue",
+      "signIn": "Sign in",
+      "signUp": "Sign up",
+      "or": "or"
+    }
+  },
+  "recipes": {
+    "search": {
+      "placeholder": "Search recipes, ingredients, or authors...",
+      "clearTooltip": "Clear search"
+    },
+    "filter": {
+      "button": "Filter & Sort",
+      "tooltip": "Categories: {count}, Sort: {sort}",
+      "sortOptions": {
+        "newest": "Newest",
+        "oldest": "Oldest",
+        "nameAsc": "A-Z",
+        "nameDesc": "Z-A"
+      }
+    },
+    "card": {
+      "byAuthor": "by {username}",
+      "moreIngredients": "+{count} more",
+      "moreCategories": "+{count} more categories",
+      "badges": {
+        "published": "Published",
+        "unpublished": "Unpublished"
+      }
+    },
+    "pagination": {
+      "showing": "Showing {showing} of {total} recipes",
+      "page": "Page {current} of {total}",
+      "filtered": "Showing {count} filtered recipes",
+      "searchTerm": "Search: \"{query}\"",
+      "categoriesSelected": "{count} categor{count, plural, one {y} other {ies}} selected"
+    },
+    "empty": {
+      "noRecipes": "No recipes to show",
+      "noSaved": "No saved recipes yet",
+      "noResults": "No recipes found matching your filters"
+    },
+    "loading": "Loading recipes...",
+    "error": {
+      "title": "Failed to load recipes",
+      "message": "Please try refreshing the page"
+    }
+  },
+  "profile": {
+    "notLoggedIn": "You are not logged in",
+    "loading": "Loading recipes...",
+    "error": "Error loading recipes. Please try again.",
+    "stats": "Total recipes: {total}",
+    "pageInfo": "Page {current} of {total}"
+  },
+  "posted": {
+    "tabs": {
+      "public": "Public",
+      "my": "My recipes",
+      "saved": "Saved"
+    },
+    "loading": "Loading recipes...",
+    "error": {
+      "title": "Failed to load recipes",
+      "message": "Please try refreshing the page"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account preferences",
+    "username": {
+      "label": "Username",
+      "placeholder": "Enter new username",
+      "saveButton": "Save Username",
+      "saving": "Saving..."
+    },
+    "password": {
+      "label": "Password",
+      "currentPlaceholder": "Enter current password",
+      "newPlaceholder": "Enter new password",
+      "confirmPlaceholder": "Confirm new password",
+      "saveButton": "Save Password",
+      "saving": "Saving...",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
+    },
+    "feedback": {
+      "title": "Feedback & Support",
+      "message": "Have questions or suggestions? We would love to hear from you!",
+      "contactButton": "Contact Support"
+    },
+    "deleteAccount": {
+      "title": "Delete Account",
+      "message": "Are you absolutely sure you want to delete your account? This action cannot be undone and you will lose all your recipes and data.",
+      "confirmButton": "Delete Account",
+      "cancelButton": "Cancel",
+      "comingSoon": "Account deletion feature coming soon!"
+    }
+  },
+  "footer": {
+    "description": "Discover, cook, and share your favorite recipes with food lovers around the world. Join the cooking revolution!",
+    "explore": {
+      "title": "Explore",
+      "browseRecipes": "Browse Recipes",
+      "uploadRecipe": "Upload Recipe"
+    },
+    "help": {
+      "title": "Help",
+      "faqs": "FAQs",
+      "contactSupport": "Contact Support",
+      "privacyPolicy": "Privacy Policy",
+      "termsConditions": "Terms & Conditions"
+    },
+    "subscribe": {
+      "title": "Subscribe",
+      "placeholder": "Will come soon...",
+      "description": "Get fresh recipes and cooking tips delivered to your inbox weekly!"
+    }
+  },
+  "popups": {
+    "cookieConsent": {
+      "title": "🍪 Cookies & Analytics",
+      "message": "We use cookies for basic functionality and analytics to improve our website. Your data helps us understand how to make the site better.",
+      "acceptButton": "Accept & Enable Analytics",
+      "declineButton": "Decline Analytics"
+    },
+    "addToHomeScreen": {
+      "title": "Add FoodSnap AI to your Home Screen!",
+      "iosInstruction": "Open the Share menu and tap \"Add to Home Screen\".",
+      "androidInstruction": "Install the app for faster access.",
+      "addButton": "Add",
+      "closeButton": "Close",
+      "neverButton": "'Don't show again'"
+    },
+    "confirmation": {
+      "confirmButton": "Confirm",
+      "cancelButton": "Cancel",
+      "processing": "Processing..."
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to common questions about FoodSnap AI",
+    "search": {
+      "placeholder": "Search questions...",
+      "clear": "×"
+    },
+    "categories": {
+      "gettingStarted": "Getting Started",
+      "recipes": "Recipes",
+      "account": "Account",
+      "technical": "Technical"
+    },
+    "questions": {
+      "whatIsFoodsnap": {
+        "question": "What is FoodSnap AI?",
+        "answer": "FoodSnap AI is an innovative web application that uses advanced artificial intelligence to recognize food from photos and generate detailed recipes. Simply upload a photo of any dish, and our AI will identify the ingredients and provide you with a step-by-step recipe to recreate it.",
+        "keywords": ["foodsnap", "ai", "app", "what is", "about"]
+      },
+      "howRecognitionWorks": {
+        "question": "How does food recognition work?",
+        "answer": "Our AI uses computer vision technology to analyze your food photos. It identifies individual ingredients, estimates quantities, and recognizes cooking methods. The system has been trained on thousands of food images and recipes to provide accurate results.",
+        "keywords": ["recognition", "ai", "computer vision", "how", "works"]
+      },
+      "isFree": {
+        "question": "Is FoodSnap AI free to use?",
+        "answer": "Yes! FoodSnap AI is completely free to use. You can upload photos, generate recipes, and save your favorites without any cost. We believe in making cooking accessible to everyone.",
+        "keywords": ["free", "cost", "pricing", "money"]
+      },
+      "needAccount": {
+        "question": "Do I need to create an account?",
+        "answer": "While you can try FoodSnap AI without an account, creating one allows you to save your recipes, make them public to share with others, and access your recipe history. It only takes a few seconds to sign up!",
+        "keywords": ["account", "signup", "registration", "login"]
+      }
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "Terms & Conditions",
+      "subtitle": "Legal terms for using FoodSnap AI",
+      "lastUpdated": "Effective date: June 2025",
+      "introduction": "These Terms and Conditions (\"Terms\") govern your use of FoodSnap AI operated by FoodSnap AI. Please read these Terms carefully before using our service. By accessing or using our service, you agree to be bound by these Terms.",
+      "sections": {
+        "acceptance": {
+          "title": "Acceptance of Terms",
+          "agreement": "Agreement to Terms",
+          "agreementText": "By accessing and using FoodSnap AI, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.",
+          "ageRequirements": "Age Requirements",
+          "minimumAge": "Minimum Age: You must be at least 13 years old to use our service",
+          "parentalConsent": "Parental Consent: Users under 18 require parental consent",
+          "legalCapacity": "Legal Capacity: You must have the legal capacity to enter into this agreement",
+          "modifications": "Modifications to Terms",
+          "modificationsText": "FoodSnap AI reserves the right to change these terms at any time. Continued use of the service constitutes acceptance of modified terms."
+        }
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "subtitle": "How we protect and handle your information",
+      "lastUpdated": "Last updated: June 2025",
+      "introduction": "At FoodSnap AI, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your information when you use our service. By using FoodSnap AI, you agree to the collection and use of information in accordance with this policy."
+    }
+  },
+  "barcode": {
+    "title": "Barcode Scanner",
+    "description": "Scan a product barcode or upload an image to get information from Open Food Facts",
+    "error": {
+      "message": "{error}",
+      "tryAgain": "Try Again"
+    },
+    "loading": "Processing...",
+    "startButton": "Start Scanning"
+  },
+  "metadata": {
+    "title": {
+      "default": "FoodSnap AI - AI Food Recognition & Recipe Generator",
+      "template": "%s | FoodSnap AI"
+    },
+    "description": "Upload a photo of your food and get instant AI-generated recipes! FoodSnap AI uses advanced computer vision to recognize ingredients and create personalized cooking recipes. Turn any dish into a step-by-step recipe with artificial intelligence.",
+    "keywords": [
+      "AI food recognition",
+      "recipe generator",
+      "food photo AI",
+      "cooking app",
+      "recipe from photo",
+      "AI cooking assistant",
+      "ingredient recognition",
+      "personalized recipes",
+      "FoodSnap AI"
+    ],
+    "openGraph": {
+      "title": "FoodSnap AI - Transform Food Photos into Recipes with AI",
+      "description": "Upload a photo of your food and get instant AI-generated recipes! Advanced computer vision technology recognizes ingredients and creates personalized cooking instructions.",
+      "siteName": "FoodSnap AI"
+    },
+    "twitter": {
+      "title": "FoodSnap AI - Transform Food Photos into Recipes with AI",
+      "description": "Upload a photo of your food and get instant AI-generated recipes! Advanced computer vision technology recognizes ingredients and creates personalized cooking instructions."
+    }
+  }
+}

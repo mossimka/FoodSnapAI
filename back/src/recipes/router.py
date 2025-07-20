@@ -1,4 +1,5 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form, status, Path, Body, Query
+from fastapi.responses import StreamingResponse
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
@@ -7,6 +8,7 @@ from typing import List
 import uuid
 import json
 import re
+import requests
 from datetime import datetime
 
 from src.auth.service import get_current_user
@@ -105,6 +107,50 @@ async def get_recipe(slug: str, db: Session = Depends(get_db)):
     await redis_client.set(cache_key, json.dumps(recipe_response.model_dump(), cls=DateTimeEncoder), ex=1000)
 
     return recipe_response
+
+@router.get("/image-proxy/{recipe_id}/")
+async def proxy_recipe_image(
+    recipe_id: int,
+    db: Session = Depends(get_db)
+):
+    """Proxy recipe image to avoid CORS issues"""
+    try:
+        recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
+        if not recipe:
+            raise HTTPException(status_code=404, detail="Recipe not found")
+        
+        if not recipe.image_path:
+            raise HTTPException(status_code=404, detail="Image not found")
+        
+        # Извлекаем blob name из URL и генерируем подписанный URL
+        blob_name = signed_url_service.extract_blob_name_from_url(recipe.image_path)
+        if not blob_name:
+            raise HTTPException(status_code=400, detail="Invalid image path")
+        
+        signed_url = signed_url_service.generate_signed_url(blob_name, expiration_minutes=60)
+        if not signed_url:
+            raise HTTPException(status_code=404, detail="Failed to generate signed URL")
+        
+        # Загружаем изображение через подписанный URL
+        response = requests.get(signed_url, stream=True)
+        if response.status_code != 200:
+            raise HTTPException(status_code=404, detail="Failed to load image")
+        
+        # Определяем content type
+        content_type = response.headers.get('content-type', 'image/jpeg')
+        
+        # Возвращаем изображение как поток
+        return StreamingResponse(
+            response.iter_content(chunk_size=8192),
+            media_type=content_type,
+            headers={
+                'Cache-Control': 'public, max-age=3600',
+                'Access-Control-Allow-Origin': '*'
+            }
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to proxy image: {str(e)}")
 
 @router.post("/")
 async def analyze_dish(
@@ -246,13 +292,16 @@ async def save_recipe(
         await invalidate_recipe_caches()
         await invalidate_user_caches(current_user["id"])
 
-        return {
-            "message": "Recipe saved successfully",
-            "recipe_id": db_recipe.id,  # type: ignore
-            "slug": db_recipe.slug  # type: ignore
-        }
+        return {"message": "Recipe saved successfully", "recipe_id": db_recipe.id}
 
     except Exception as e:
+        print("❌ Error saving recipe:", str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to save recipe: {str(e)}")
+
+@router.patch("/recipes/{slug}/", response_model=RecipeResponse)
+async def update_recipe(
+    slug: str,
+    recipe_update: RecipePatchRequest,
         import traceback
         print(f"=== SAVE RECIPE ERROR ===")
         print(f"Error type: {type(e).__name__}")

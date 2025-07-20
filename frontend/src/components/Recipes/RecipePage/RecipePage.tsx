@@ -20,6 +20,7 @@ import {
   useDeleteRecipeMutation 
 } from "@/hooks/useRecipeQueries";
 import { FavoriteButton } from "@/components/Recipes/FavoriteButton/FavoriteButton";
+import { generatePDF } from "@/utils/generatePDF";
 
 interface RecipePageProps {
   slug: string;
@@ -174,6 +175,29 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
                   recipeUserId={recipe.user_id} 
                 />
               )}
+              <button 
+                onClick={async () => {
+                  try {
+                    const button = event?.target as HTMLButtonElement;
+                    const originalText = button.textContent;
+                    button.textContent = 'Generating PDF...';
+                    button.disabled = true;
+                    
+                    await generatePDF(recipe, `${recipe.dish_name.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
+                    
+                    button.textContent = originalText;
+                    button.disabled = false;
+                  } catch (error) {
+                    console.error('PDF generation failed:', error);
+                    const button = event?.target as HTMLButtonElement;
+                    button.textContent = 'Download PDF';
+                    button.disabled = false;
+                  }
+                }} 
+                className="button"
+              >
+                Download PDF
+              </button>
               </div>
           </div>
 
