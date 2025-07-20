@@ -302,14 +302,32 @@ async def save_recipe(
 async def update_recipe(
     slug: str,
     recipe_update: RecipePatchRequest,
+    current_user: Users = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    try:
+        recipe = db.query(Recipe).filter(Recipe.slug == slug, Recipe.user_id == current_user["id"]).first()
+        if not recipe:
+            raise HTTPException(status_code=404, detail="Recipe not found or unauthorized")
+        
+        # Update recipe fields
+        update_data = recipe_update.model_dump(exclude_unset=True)
+        for field, value in update_data.items():
+            setattr(recipe, field, value)
+        
+        db.commit()
+        db.refresh(recipe)
+        
+        return RecipeResponse.from_orm(recipe)
+    except Exception as e:
         import traceback
-        print(f"=== SAVE RECIPE ERROR ===")
+        print(f"=== UPDATE RECIPE ERROR ===")
         print(f"Error type: {type(e).__name__}")
         print(f"Error message: {str(e)}")
         print(f"Full traceback:")
         traceback.print_exc()
         print(f"========================")
-        raise HTTPException(status_code=500, detail=f"Saving failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Update failed: {str(e)}")
 
     
 @router.patch("/patch/{recipe_id}")
