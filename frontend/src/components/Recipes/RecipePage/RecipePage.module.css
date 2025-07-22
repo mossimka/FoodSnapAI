@@ -244,18 +244,33 @@
 }
 
 .buttons {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  flex-wrap: wrap;
   margin-top: 1.5rem;
+  max-width: 400px;
 }
 
 .buttons button {
-  flex: 1;
-  min-width: 120px;
   padding: 0.75rem 1rem;
+  min-height: 44px;
+  font-size: 0.9rem;
+}
+
+/* Когда только одна кнопка (для владельца без publish/unpublish) */
+.buttons:has(button:only-child) {
+  grid-template-columns: 1fr;
+  max-width: 200px;
+}
+
+/* Когда 3 кнопки (owner: publish + delete + pdf) */
+.buttons:has(button:nth-child(3):last-child) {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.buttons:has(button:nth-child(3):last-child) button:nth-child(3) {
+  grid-column: 1 / -1;
 }
 
 .nameInput {
@@ -350,13 +365,12 @@
   }
 
   .buttons {
-    flex-direction: column;
+    grid-template-columns: 1fr !important;
     max-width: 300px;
     margin: 1rem auto 0;
   }
 
   .buttons button {
-    flex: none;
     width: 100%;
   }
 
@@ -585,4 +599,4 @@
     padding: 0.5rem;
     font-size: 0.8rem;
   }
-} 
+}

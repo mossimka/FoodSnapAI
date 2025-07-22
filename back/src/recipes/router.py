@@ -80,14 +80,13 @@ async def get_all_dishes(
     page_size: int = Query(20, ge=1, le=100, description="Number of items per page"),
     sort_by: SortOrder = Query(SortOrder.NEWEST, description="Sort order for recipes")
 ):
-    """Get all published recipes without authentication"""
     cache_key = f"recipes:page={page}:size={page_size}:sort={sort_by}"
     
     cached_data = await redis_client.get(cache_key)
     if cached_data:
         return PaginatedRecipesResponse(**json.loads(cached_data))
 
-    response: PaginatedRecipesResponse = get_public_recipes_paginated(db, page=page, page_size=page_size, sort_by=sort_by)
+    response: PaginatedRecipesResponse = get_recipes_paginated(db, page=page, page_size=page_size, sort_by=sort_by)
 
     await redis_client.set(cache_key, json.dumps(response.model_dump(), cls=DateTimeEncoder), ex=300)
 
@@ -95,7 +94,6 @@ async def get_all_dishes(
 
 @router.get("/recipes/{slug}/", response_model=RecipeResponse)
 async def get_recipe(slug: str, db: Session = Depends(get_db)):
-    """Get recipe by slug - public recipes available without authentication"""
     cache_key = f"recipe:slug={slug}"
     cached_data = await redis_client.get(cache_key)
 
@@ -105,11 +103,6 @@ async def get_recipe(slug: str, db: Session = Depends(get_db)):
     recipe_response = get_recipe_response_by_slug(db, slug)
     if not recipe_response:
         raise HTTPException(status_code=404, detail="Recipe not found")
-
-    # Проверяем, что рецепт опубликован (для публичного доступа)
-    recipe = db.query(Recipe).filter(Recipe.slug == slug).first()
-    if not recipe or not recipe.is_published:
-        raise HTTPException(status_code=404, detail="Recipe not found or not published")
 
     await redis_client.set(cache_key, json.dumps(recipe_response.model_dump(), cls=DateTimeEncoder), ex=1000)
 
@@ -294,12 +287,18 @@ async def save_recipe(
             db.add(db_ingredient)
 
         db.commit()
+        db.refresh(db_recipe)  # Обновляем объект после коммита
 
         # Invalidate caches after saving new recipe
         await invalidate_recipe_caches()
         await invalidate_user_caches(current_user["id"])
 
-        return {"message": "Recipe saved successfully", "recipe_id": db_recipe.id}
+        # Возвращаем и recipe_id и slug
+        return {
+            "message": "Recipe saved successfully", 
+            "recipe_id": db_recipe.id,
+            "slug": db_recipe.slug  # Добавляем slug в ответ
+        }
 
     except Exception as e:
         print("❌ Error saving recipe:", str(e))
