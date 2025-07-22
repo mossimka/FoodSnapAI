@@ -11,6 +11,7 @@ import { Search } from "@/components/Recipes/Search/Search";
 import { Pagination } from "@/components/Pagination/Pagination";
 import { CategoryFilterButton } from "@/components/Recipes/Categories/CategoryFilterButton/CategoryFilterButton";
 import { CategorySelector } from "@/components/Recipes/Categories/CategorySelector/CategorySelector";
+import { useAuthStore } from "@/stores/authStore";
 
 const filterRecipes = (recipes: IRecipe[], query: string, selectedCategories: string[] = []): IRecipe[] => {
   let filteredRecipes = recipes;
@@ -82,6 +83,8 @@ export default function PostedPage() {
   const [savedPage, setSavedPage] = useState(1);
   const pageSize = 12; // Reduced for better UX
 
+  const { isAuthenticated } = useAuthStore();
+
   const { 
     data: publicRecipesData, 
     isLoading: publicLoading, 
@@ -114,6 +117,21 @@ export default function PostedPage() {
     const favoriteRecipes = favoriteRecipesData?.recipes || [];
     return filterFavoriteRecipes(favoriteRecipes, searchQuery, selectedCategories);
   }, [favoriteRecipesData?.recipes, searchQuery, selectedCategories]);
+
+  // Проверка авторизации для вкладок 'my' и 'saved'
+  if ((activeTab === "my" || activeTab === "saved") && !isAuthenticated) {
+    return (
+      <div className={Styles.postedSection}>
+        <div className={Styles.error}>
+          <h2>You have to login</h2>
+          <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+            <a href="/signin" className="button">Sign in</a>
+            <a href="/signup" className="button">Sign up</a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const recipesToShow = activeTab === "public" 
     ? filteredPublicRecipes 
@@ -186,6 +204,16 @@ export default function PostedPage() {
   };
 
   const handleTabChange = (tab: "public" | "my" | "saved") => {
+    if ((activeTab === "my" || activeTab === "saved") && !isAuthenticated) {
+      return (
+        <div className={Styles.postedSection}>
+          <div className={Styles.error}>
+            <h2>You have to login</h2>
+            <a href="/login" className={Styles.loginButton}>Login</a>
+          </div>
+        </div>
+      );
+    }
     setActiveTab(tab);
     setSearchQuery(""); // Clear search when switching tabs
     setSelectedCategories([]); // Clear category filters when switching tabs
