@@ -37,6 +37,8 @@ class Recipe(Base):
     estimated_weight_g = Column(Integer)
     total_calories_per_100g = Column(Integer)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    is_vegan = Column(Boolean, default=False)
+    is_halal = Column(Boolean, default=False)
 
     user = relationship("Users", back_populates="recipes")
     

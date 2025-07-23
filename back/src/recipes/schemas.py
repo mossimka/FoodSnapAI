@@ -40,6 +40,8 @@ class RecipeCreate(BaseModel):
     estimated_weight_g: Optional[int] = None
     total_calories_per_100g: Optional[int] = None
     categories: List[str] = []
+    is_vegan: bool = False
+    is_halal: bool = False
 
 
 class UserResponse(BaseModel):
@@ -62,6 +64,8 @@ class RecipeResponse(BaseModel):
     total_calories_per_100g: Optional[int] = None
     categories: List[CategoryResponse] = []
     created_at: Optional[datetime] = None
+    is_vegan: Optional[bool] = False
+    is_halal: Optional[bool] = False
 
     model_config = {"from_attributes": True}
 
@@ -73,6 +77,8 @@ class AIRecipeResponse(BaseModel):
     estimated_weight_g: int
     total_calories_per_100g: int
     health_categories: List[str] = []
+    is_vegan: bool = False
+    is_halal: bool = False
 
 
 class RecipeSaveRequest(BaseModel):
@@ -82,6 +88,8 @@ class RecipeSaveRequest(BaseModel):
     estimated_weight_g: int
     total_calories_per_100g: int
     health_categories: List[str] = []
+    is_vegan: bool = False
+    is_halal: bool = False
 
 class RecipePatchRequest(BaseModel):
     dish_name: Optional[str] = None

@@ -70,6 +70,8 @@ export interface RecipeOutput {
   estimated_weight_g: number | null;
   total_calories_per_100g: number | null;
   health_categories: HealthCategory[] | null;
+  is_vegan?: boolean;
+  is_vegetarian?: boolean;
 }
 
 export interface RecipeInput {
@@ -80,7 +82,9 @@ export interface RecipeInput {
     ingredients_calories: IngredientToCalories[];
     estimated_weight_g: number;
     total_calories_per_100g: number;
-    health_categories: string[]
+    health_categories: string[];
+    is_vegan?: boolean;
+    is_vegetarian?: boolean;
   };
 }
 
@@ -118,14 +122,18 @@ export interface GenerationResponse {
   recipe: RecipeOutput;
   calories: CaloriesOutput;
   delivery: DeliveryLink[];
-  health_categories: string[]; // Бэкенд возвращает массив строк
+  health_categories: string[]; 
+  is_vegan?: boolean;
+  is_vegetarian?: boolean;
 }
 
 export interface GenerationOutput {
   recipe: RecipeOutput;
   calories: CaloriesOutput;
   delivery: DeliveryLink[];
-  health_categories: HealthCategory[]; // Фронтенд работает с объектами
+  health_categories: HealthCategory[];
+  is_vegan?: boolean;
+  is_vegetarian?: boolean;
 }
 
 export interface HealthCategory {

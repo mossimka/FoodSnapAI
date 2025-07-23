@@ -52,8 +52,11 @@ def _build_recipe_response(recipe: Recipe) -> RecipeResponse:
             CategoryResponse(id=cat.id, name=cat.name)  # type: ignore
             for cat in recipe.categories
         ],
-        created_at=getattr(recipe, 'created_at', None)  # type: ignore
+        created_at=getattr(recipe, 'created_at', None),  # type: ignore
+        is_vegan=recipe.is_vegan,  # type: ignore
+        is_halal=recipe.is_halal,  # type: ignore
     )
+
 
 def _build_favorite_recipe_response(favorite_recipe: FavoriteRecipe) -> FavoriteRecipeResponse:
     """Helper function to build FavoriteRecipeResponse from FavoriteRecipe model"""

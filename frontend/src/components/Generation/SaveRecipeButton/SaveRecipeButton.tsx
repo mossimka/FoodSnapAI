@@ -26,6 +26,8 @@ export const SaveRecipeButton: React.FC<Props> = ({ file, recipePart }) => {
             estimated_weight_g: recipePart.estimated_weight_g ?? 0,
             total_calories_per_100g: recipePart.total_calories_per_100g ?? 0,
             health_categories: (recipePart.health_categories || []).map(cat => cat.name),
+            is_vegan: recipePart.is_vegan ?? false,
+            is_vegetarian: recipePart.is_vegetarian ?? false,
           },
         };
         

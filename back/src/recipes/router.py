@@ -217,10 +217,6 @@ async def analyze_dish(
             ):
                 final_response = event.content.parts[0].text
                 break
-        
-        print("\n=== RAW FINAL RESPONSE ===")
-        print(final_response)
-        print("==========================\n")
 
         cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", (final_response or "").strip(), flags=re.MULTILINE)
         parsed = json.loads(cleaned)
@@ -251,16 +247,13 @@ async def save_recipe(
         estimated_weight_g = parsed.get("estimated_weight_g")
         total_calories_per_100g = parsed.get("total_calories_per_100g")
         health_categories = parsed.get("health_categories", [])
-        
-        print(f"=== SAVE RECIPE DEBUG ===")
-        print(f"Raw health_categories: {health_categories}")
-        print(f"Type: {type(health_categories)}")
-        print(f"========================")
+        is_vegan = parsed.get("is_vegan", False)
+        is_halal = parsed.get("is_halal", False)
 
         if not dish_name or not recipe_text or not ingredients_calories:
             raise HTTPException(status_code=400, detail="Invalid recipe format")
 
-        # Use new function that handles categories
+        # Create recipe with basic info
         db_recipe = create_recipe_with_categories(
             db=db,
             user_id=current_user["id"],
@@ -271,6 +264,10 @@ async def save_recipe(
             total_calories_per_100g=total_calories_per_100g,
             health_categories=health_categories
         )
+
+        # Update is_vegan and is_halal separately
+        db_recipe.is_vegan = is_vegan
+        db_recipe.is_halal = is_halal
 
         # Add ingredients
         for item in ingredients_calories:
@@ -287,17 +284,16 @@ async def save_recipe(
             db.add(db_ingredient)
 
         db.commit()
-        db.refresh(db_recipe)  # Обновляем объект после коммита
+        db.refresh(db_recipe)
 
         # Invalidate caches after saving new recipe
         await invalidate_recipe_caches()
         await invalidate_user_caches(current_user["id"])
 
-        # Возвращаем и recipe_id и slug
         return {
             "message": "Recipe saved successfully", 
             "recipe_id": db_recipe.id,
-            "slug": db_recipe.slug  # Добавляем slug в ответ
+            "slug": db_recipe.slug
         }
 
     except Exception as e:
@@ -579,6 +575,5 @@ async def get_recipe_image_url(
         signed_url = signed_url_service.generate_signed_url(blob_name, expiration_minutes=60)
         
         return {"signed_url": signed_url}
-        
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get image URL: {str(e)}")

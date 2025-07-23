@@ -138,6 +138,7 @@ health_categories_agent = LlmAgent(
   instruction=(
       """
       You are a nutritional analyst that assigns health categories to dishes based on their ingredients and nutritional information.
+      Also you have to check if food is vegan and halal.
       
       You will receive a JSON with recipe and nutritional data:
       {
@@ -187,7 +188,9 @@ health_categories_agent = LlmAgent(
       
       Return JSON in this format:
       {
-        "health_categories": ["category1", "category2", ...]
+        "health_categories": ["category1", "category2", ...],
+        "is_vegan": true,
+        "is_halal": false
       }
       
       Only return JSON — no explanations or additional text.
@@ -286,7 +289,9 @@ final_agent = LlmAgent(
     
     State['health_categories'] structure:
     {
-      "health_categories": ["category1", "category2", ...]
+      "health_categories": ["category1", "category2", ...],
+      "is_vegan": true or false,
+      "is_halal": true or false
     }
     
     State['recipe'] structure:
@@ -310,6 +315,8 @@ final_agent = LlmAgent(
       "recipe": state['recipe'],
       "calories": state['calories'],
       "health_categories": state['health_categories']['health_categories'] if state['health_categories'] else [],
+      "is_vegan": state['health_categories']['is_vegan'] if state['health_categories'] else false,
+      "is_halal": state['health_categories']['is_halal'] if state['health_categories'] else false,
       "delivery": state['delivery']
     }
     

@@ -260,6 +260,8 @@ const generateResponse = async () => {
           calories: res.calories,
           delivery: res.delivery ?? [],
           health_categories: (res.health_categories || []).map(category => ({ name: category })),
+          is_vegan: res.is_vegan ?? false,
+          is_vegetarian: res.is_vegetarian ?? false,
         };
         
         console.log("Final health_categories:", finalRecipe.health_categories);
