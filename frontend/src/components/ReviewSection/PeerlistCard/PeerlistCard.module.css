@@ -1,6 +1,5 @@
 .card {
-  min-width: 300px;
-  max-width: 400px;
+  width: 400px;
   height: 200px;
   flex-shrink: 0;
   background: transparent;
@@ -23,4 +22,33 @@
 
 .cardImage:hover {
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Media Queries */
+@media (max-width: 1024px) {
+  .card {
+    width: 350px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 300px;
+    height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    width: 250px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 360px) {
+  .card {
+    width: 220px;
+    height: 160px;
+  }
 }
