@@ -145,6 +145,12 @@
   opacity: 1 !important;
 }
 
+.dietaryIcons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
 .statusBadge {
   margin-bottom: 1.5rem;
 }

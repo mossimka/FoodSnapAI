@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { IRecipe } from "@/interfaces/recipe";
 import { CategoryIcon } from "@/components/Recipes/Categories/CategoryIcon/CategoryIcon";
-import styles from "./RecipeCard.module.css";
+import Styles from "./RecipeCard.module.css";
 
 interface RecipeCardProps {
   recipe: IRecipe;
@@ -16,9 +16,9 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, hidePublishedBad
   const recipeUrl = `/recipe/${recipe.slug}`;
 
   return (
-    <Link href={recipeUrl} className={styles.cardLink}>
-      <div className={styles.card}>
-        <div className={styles.imageWrapper}>
+    <Link href={recipeUrl} className={Styles.cardLink}>
+      <div className={Styles.card}>
+        <div className={Styles.imageWrapper}>
           <Image
             src={recipe.image_path || "/images/placeholder.png"}
             alt={recipe.dish_name}
@@ -27,7 +27,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, hidePublishedBad
           />
           {/* Health Categories */}
           {recipe.categories && recipe.categories.length > 0 && (
-            <div className={styles.healthCategories}>
+            <div className={Styles.healthCategories}>
               {recipe.categories.slice(0, 3).map((category) => (
                 <CategoryIcon 
                   key={category.id} 
@@ -37,32 +37,38 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, hidePublishedBad
                 />
               ))}
               {recipe.categories.length > 3 && (
-                <div className={styles.moreCategoriesIndicator} title={`+${recipe.categories.length - 3} more categories`}>
+                <div className={Styles.moreCategoriesIndicator} title={`+${recipe.categories.length - 3} more categories`}>
                   +{recipe.categories.length - 3}
                 </div>
               )}
             </div>
           )}
         </div>
-        <div className={styles.cardContent}>
-          <h3 className={styles.title}>{recipe.dish_name}</h3>
-          <p className={styles.author}>by {recipe.user.username}</p>
-          <div className={styles.ingredients}>
+        <div className={Styles.cardContent}>
+          <h3 className={Styles.title}>{recipe.dish_name}</h3>
+          <div className={Styles.authorAndIcons}>
+            <p className={Styles.author}>by {recipe.user.username}</p>
+            <div className={Styles.icons}>
+              {recipe.is_halal && <Image src="/images/halal.png" alt="Halal" width={24} height={24} />}
+              {recipe.is_vegan && <Image src="/images/vegan.png" alt="Vegan" width={24} height={24} />}
+            </div>
+          </div>
+          <div className={Styles.ingredients}>
             {recipe.ingredients_calories.slice(0, 3).map((item, i) => (
-              <span key={i} className={styles.ingredient}>
+              <span key={i} className={Styles.ingredient}>
                 {item.ingredient.slice(0, 10)}...
               </span>
             ))}
             {recipe.ingredients_calories.length > 3 && (
-              <span className={styles.moreIngredients}>
+              <span className={Styles.moreIngredients}>
                 +{recipe.ingredients_calories.length - 3} more
               </span>
             )}
           </div>
           {recipe.is_published && !hidePublishedBadge ? (
-            <span className={styles.publishedBadge}>Published</span>
+            <span className={Styles.publishedBadge}>Published</span>
           ) : !recipe.is_published ? (
-            <span className={styles.unpublishedBadge}>Unpublished</span>
+            <span className={Styles.unpublishedBadge}>Unpublished</span>
           ) : null}
         </div>
       </div>

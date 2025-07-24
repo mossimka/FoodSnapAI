@@ -2,16 +2,16 @@
 
 import React, { useState } from 'react';
 import { saveRecipe } from '@/services/generateService';
-import { RecipeOutput } from '@/interfaces/recipe';
+import { GenerationOutput } from '@/interfaces/recipe';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
 interface Props {
   file: File;
-  recipePart: RecipeOutput;
+  generatedRecipe: GenerationOutput; // Передаем весь объект
 }
 
-export const SaveRecipeButton: React.FC<Props> = ({ file, recipePart }) => {
+export const SaveRecipeButton: React.FC<Props> = ({ file, generatedRecipe }) => {
     const [isSaving, setIsSaving] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
     const router = useRouter();
@@ -22,16 +22,17 @@ export const SaveRecipeButton: React.FC<Props> = ({ file, recipePart }) => {
         const recipeData = {
           file,
           recipePart: {
-            ...recipePart,
-            estimated_weight_g: recipePart.estimated_weight_g ?? 0,
-            total_calories_per_100g: recipePart.total_calories_per_100g ?? 0,
-            health_categories: (recipePart.health_categories || []).map(cat => cat.name),
-            is_vegan: recipePart.is_vegan ?? false,
-            is_vegetarian: recipePart.is_vegetarian ?? false,
+            ...generatedRecipe.recipe,
+            estimated_weight_g: generatedRecipe.recipe.estimated_weight_g ?? 0,
+            total_calories_per_100g: generatedRecipe.recipe.total_calories_per_100g ?? 0,
+            health_categories: (generatedRecipe.health_categories || []).map(cat => cat.name),
+            is_vegan: generatedRecipe.is_vegan ?? false,  // Берем из правильного места
+            is_halal: generatedRecipe.is_halal ?? false,  // Берем из правильного места
           },
         };
         
-        console.log("Saving recipe with health_categories:", recipeData.recipePart.health_categories);
+        console.log("Saving recipe with is_vegan:", recipeData.recipePart.is_vegan);
+        console.log("Saving recipe with is_halal:", recipeData.recipePart.is_halal);
         
         const { slug } = await saveRecipe(recipeData);
         setIsSaved(true);

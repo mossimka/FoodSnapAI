@@ -66,6 +66,13 @@
   color: var(--text-color);
 }
 
+.authorAndIcons { 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .author {
   display: flex;
   align-items: center;

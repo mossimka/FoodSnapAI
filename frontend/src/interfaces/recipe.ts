@@ -31,6 +31,8 @@ export interface IRecipe {
   ingredients_calories: IngredientCalories[];
   estimated_weight_g: number;
   total_calories_per_100g: number;
+  is_vegan?: boolean;
+  is_halal?: boolean;
   categories: CategoryResponse[];
 }
 
@@ -71,7 +73,7 @@ export interface RecipeOutput {
   total_calories_per_100g: number | null;
   health_categories: HealthCategory[] | null;
   is_vegan?: boolean;
-  is_vegetarian?: boolean;
+  is_halal?: boolean;
 }
 
 export interface RecipeInput {
@@ -84,7 +86,7 @@ export interface RecipeInput {
     total_calories_per_100g: number;
     health_categories: string[];
     is_vegan?: boolean;
-    is_vegetarian?: boolean;
+    is_halal?: boolean;
   };
 }
 
@@ -124,7 +126,7 @@ export interface GenerationResponse {
   delivery: DeliveryLink[];
   health_categories: string[]; 
   is_vegan?: boolean;
-  is_vegetarian?: boolean;
+  is_halal?: boolean;
 }
 
 export interface GenerationOutput {
@@ -133,7 +135,7 @@ export interface GenerationOutput {
   delivery: DeliveryLink[];
   health_categories: HealthCategory[];
   is_vegan?: boolean;
-  is_vegetarian?: boolean;
+  is_halal?: boolean;
 }
 
 export interface HealthCategory {

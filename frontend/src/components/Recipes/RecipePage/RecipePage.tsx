@@ -13,6 +13,8 @@ import { CaloriesSection } from "@/components/Generation/Calories/CaloriesSectio
 import { RecipeSteps } from "@/components/Recipes/RecipeSteps/RecipeSteps";
 import { ConfirmationModal } from "@/components/Popups/ConfirmationModal/ConfirmationModal";
 import { CategoryIcon } from "@/components/Recipes/Categories/CategoryIcon/CategoryIcon";
+import Vegan from "@/components/Recipes/Icons/Vegan/Vegan";
+import Halal from "@/components/Recipes/Icons/Halal/Halal";
 import { 
   useRecipeQuery, 
   useUpdateRecipeNameMutation, 
@@ -235,19 +237,36 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
 
             <p className={Styles.author}>by {recipe.user.username}</p>
 
-            {/* Health Categories */}
-            {recipe.categories && recipe.categories.length > 0 && (
-              <div className={Styles.healthCategories}>
-                {recipe.categories.map((category) => (
+            {/* Health Categories with Vegan/Halal */}
+            <div className={Styles.healthCategories}>
+              {/* Existing Health Categories */}
+              {recipe.categories && recipe.categories.length > 0 && 
+                recipe.categories.map((category) => (
                   <CategoryIcon 
                     key={category.id} 
                     category={{ name: category.name }}
                     size={18}
                     showLabel={true}
                   />
-                ))}
-              </div>
-            )}
+                ))
+              }
+            </div>
+
+            <div className={Styles.dietaryIcons}> 
+              {/* Vegan Icon */}
+              {recipe.is_vegan && (
+                <div className={Styles.dietaryIcon} title="Vegan">
+                  <Vegan />
+                </div>
+              )}
+              
+              {/* Halal Icon */}
+              {recipe.is_halal && (
+                <div className={Styles.dietaryIcon} title="Halal">
+                  <Halal />
+                </div>
+              )}
+            </div> 
 
             <div className={Styles.statusBadge}>
               {recipe.is_published ? (
@@ -304,4 +323,4 @@ export const RecipePage: React.FC<RecipePageProps> = ({ slug }) => {
       />
     </div>
   );
-}; 
+};

@@ -8,6 +8,8 @@ import { CaloriesSection } from "../Calories/CaloriesSection/CaloriesSection";
 import { toast } from "react-toastify";
 import Styles from "./RecipeDisplay.module.css";
 import { CategoryIcon } from "@/components/Recipes/Categories/CategoryIcon/CategoryIcon";
+import Vegan from "@/components/Recipes/Icons/Vegan/Vegan";
+import Halal from "@/components/Recipes/Icons/Halal/Halal";
 
 interface RecipeDisplayProps {
   recipe: GenerationOutput;
@@ -67,12 +69,32 @@ export const RecipeDisplay: React.FC<RecipeDisplayProps> = ({
           </button>
         </div>
       </div>
+      
       <div className={Styles.healthCategories}>
-        {Array.isArray(recipe.health_categories) && recipe.health_categories.length > 0 ? (
+        {/* Health Categories */}
+        {Array.isArray(recipe.health_categories) && recipe.health_categories.length > 0 && (
           recipe.health_categories.map((category) => (
             <CategoryIcon key={category.name} category={category} showLabel={true} />
           ))
-        ) : (
+        )}
+        
+        {/* Vegan Icon */}
+        {recipe.is_vegan && (
+          <div className={Styles.dietaryIcon} title="Vegan">
+            <Vegan /> 
+          </div>
+        )}
+        
+        {/* Halal Icon */}
+        {recipe.is_halal && (
+          <div className={Styles.dietaryIcon} title="Halal">
+            <Halal />
+          </div>
+        )}
+        
+        {/* Fallback message */}
+        {(!Array.isArray(recipe.health_categories) || recipe.health_categories.length === 0) && 
+         !recipe.is_vegan && !recipe.is_halal && (
           <span style={{ color: '#666', fontSize: '0.9rem' }}>No health categories available</span>
         )}
       </div>
@@ -140,4 +162,4 @@ export const RecipeDisplay: React.FC<RecipeDisplayProps> = ({
       />
     </div>
   );
-}; 
+};

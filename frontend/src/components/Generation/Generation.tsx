@@ -261,7 +261,7 @@ const generateResponse = async () => {
           delivery: res.delivery ?? [],
           health_categories: (res.health_categories || []).map(category => ({ name: category })),
           is_vegan: res.is_vegan ?? false,
-          is_vegetarian: res.is_vegetarian ?? false,
+          is_halal: res.is_halal ?? false,
         };
         
         console.log("Final health_categories:", finalRecipe.health_categories);
@@ -408,7 +408,7 @@ const generateResponse = async () => {
                   <div className={Styles.action}>
                     <SaveRecipeButton 
                       file={imageFile!} 
-                      recipePart={generatedRecipe.recipe}
+                      generatedRecipe={generatedRecipe} // Передаем весь объект
                     />
                     <NavButton text="Go to my recipies" link="/posted" inputStyle={{ marginTop: "3vh" }} />
                   </div>
