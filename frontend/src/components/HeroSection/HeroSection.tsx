@@ -5,6 +5,7 @@ import { UtensilsCrossed, Cookie, CookingPot, ChefHat, Hamburger, Croissant, Piz
 import Styles from "./HeroSection.module.css";
 import { NavButton } from "../Navbar/NavButton/NavButton";
 import { Printer } from "@/components/Style/Printer/Printer";
+import Highlight from "@/components/Highlights/Highlight";
 
 
 const ICONS = [ChefHat, Cookie, CookingPot, Hamburger, Croissant, Pizza, Salad, Dessert];
@@ -51,8 +52,7 @@ const foodImages1 = [
   );
 
 
-  export const HeroSection: React.FC = () => {
-
+export const HeroSection: React.FC = () => {
     return (
       <div className={Styles.heroSection}>
         <div className={`${Styles.scrollColumn} ${Styles.left}`}>
@@ -71,11 +71,52 @@ const foodImages1 = [
             <UtensilsCrossed style={{color: "var(--color2)"}}/>
           </div>
 
-          <p style={{ marginBottom: 10}}>
+          <strong style={{ marginBottom: 10, fontWeight: "600" }}>
             Upload dish and get a{" "}
             <span className="gradientText">recipe immediately</span>
-          </p>
+          </strong>
           <NavButton text="Try it out!" link="/generate"/>
+
+          {/* Desktop Highlight */}
+          <div className={Styles.highlightDesktop}>
+            <Highlight
+              text={
+                <>
+                  From the photo of the dish — find<br /> 
+                  out the recipe, calories.
+                </>
+              }
+              left={320}
+              top={-100}
+              angle={20}
+              fontWeight={500}
+              fontSize="1rem"
+            />
+          </div>
+
+          {/* Tablet Highlight */}
+          <div className={Styles.highlightTablet}>
+            <Highlight
+              text="From photo — get recipe & calories!"
+              left={200}
+              top={-80}
+              angle={15}
+              fontWeight={500}
+              fontSize="0.9rem"
+            />
+          </div>
+
+          {/* Mobile Highlight */}
+          <div className={Styles.highlightMobile}>
+            <Highlight
+              text="From photo — get recipe & calories!"
+              left={150}
+              top={-60}
+              angle={10}
+              fontWeight={500}
+              fontSize="0.8rem"
+            />
+          </div>
         </div>
 
 

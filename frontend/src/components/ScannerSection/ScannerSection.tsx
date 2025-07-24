@@ -43,7 +43,7 @@ export const ScannerSection: React.FC = () => {
               <span className="gradientText">Barcode Scanner</span>
             </h2>
             <p className={Styles.description}>
-              Scan product barcodes to get detailed nutritional information, ingredients, and product details from Open Food Facts database
+              Scan product barcodes to get detailed nutritional information, ingredients, and product details
             </p>
           </div>
 

@@ -148,6 +148,7 @@
   opacity: 0.5;
   transform: translate(-50%, -50%);
   animation: orbit 25s linear infinite;
+  filter: drop-shadow(0 2px 4px rgba(244, 138, 59, 0.3));
 }
 
 .splitTextSmall h1 {
@@ -226,5 +227,52 @@
   .ctaButton {
     display: flex;
     flex-direction: column;
+  }
+}
+
+/* HeroSection.module.css */
+
+.highlightDesktop {
+  display: block;
+}
+
+.highlightTablet {
+  display: none;
+}
+
+.highlightMobile {
+  display: none;
+}
+
+/* Tablet styles */
+@media (max-width: 1024px) {
+  .highlightDesktop {
+    display: none;
+  }
+  
+  .highlightTablet {
+    display: block;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .highlightDesktop {
+    display: none;
+  }
+  
+  .highlightTablet {
+    display: none;
+  }
+  
+  .highlightMobile {
+    display: block;
+  }
+}
+
+/* Very small mobile */
+@media (max-width: 480px) {
+  .highlightMobile {
+    display: none; /* Полностью скрыть на очень маленьких экранах */
   }
 }

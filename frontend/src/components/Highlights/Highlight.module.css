@@ -1,0 +1,16 @@
+.highlight {
+    background: var(--gradient3);
+    color: var(--contrast-color);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    animation: wiggle 2.2s infinite;
+}
+
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(1.5deg) translateY(10px); }
+    50% { transform: rotate(-1deg) translateY(5px); }
+    75% { transform: rotate(1.5deg) translateY(10px); }
+    100% { transform: rotate(0deg); }
+}
+
