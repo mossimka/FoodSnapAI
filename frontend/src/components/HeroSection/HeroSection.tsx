@@ -11,18 +11,18 @@ import Highlight from "@/components/Highlights/Highlight";
 const ICONS = [ChefHat, Cookie, CookingPot, Hamburger, Croissant, Pizza, Salad, Dessert];
 
 const foodImages1 = [
-    "/images/food1.png", 
-    "/images/food3.png",
-    "/images/food5.png",
-    "/images/food7.png",
-    "/images/food9.png",
+    "/images/food1.webp", 
+    "/images/food3.webp",
+    "/images/food5.webp",
+    "/images/food7.webp",
+    "/images/food9.webp",
   ];
   const foodImages2 = [
-    "/images/food2.png",
-    "/images/food4.png",
-    "/images/food6.png",
-    "/images/food8.png",
-    "/images/food10.png",
+    "/images/food2.webp",
+    "/images/food4.webp",
+    "/images/food6.webp",
+    "/images/food8.webp",
+    "/images/food10.webp",
   ];
 
 
@@ -71,7 +71,7 @@ export const HeroSection: React.FC = () => {
             <UtensilsCrossed style={{color: "var(--color2)"}}/>
           </div>
 
-          <strong style={{ marginBottom: 10, fontWeight: "600" }}>
+          <strong style={{ marginBottom: 10, fontWeight: "400" }}>
             Upload dish and get a{" "}
             <span className="gradientText">recipe immediately</span>
           </strong>

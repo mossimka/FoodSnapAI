@@ -6,7 +6,7 @@ import Styles from '../Icon.module.css';
 const Vegan = () => {
   return (
     <div className={`${Styles.iconDiv} ${Styles.tooltipContainer}`} data-tooltip="Vegan">
-        <Image className={Styles.icon} src="/images/vegan.png" alt="Vegan" width={30} height={30} />
+        <Image className={Styles.icon} src="/images/vegan.webp" alt="Vegan" width={30} height={30} />
     </div>
   )
 }

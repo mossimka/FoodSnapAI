@@ -9,9 +9,9 @@ export const PeerlistCard = () => {
   
   const getImageSrc = () => {
     if (theme === 'dark') {
-      return '/images/peerlist_black.png';
+      return '/images/peerlist_black.webp';
     }
-    return '/images/peerlist_light.png';
+    return '/images/peerlist_light.webp';
   };
 
   return (

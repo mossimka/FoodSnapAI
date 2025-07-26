@@ -3,6 +3,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
   gap: 20px;
   width: 75%;
   margin: 0 auto;
@@ -11,16 +12,58 @@
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
 .title {
   text-align: center;
-  margin-bottom: 2rem;
   font-size: 2rem;
   font-weight: bold;
+  margin: 0;
+}
+
+.links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
 .slider {
   width: 100%;
   overflow: visible;
+}
+
+.linkItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.linkImage {
+  transition: all 0.3s ease;
+}
+
+.linkImage:hover {
+  transform: translateY(-3px) scale(1.03);
+}
+
+/* Для планшетов */
+@media (max-width: 1024px) {
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .links {
+    gap: 0.75rem;
+  }
 }
 
 /* Для мобильных устройств */
@@ -31,5 +74,22 @@
   
   .title {
     font-size: 1.5rem;
+  }
+  
+  .header {
+    gap: 1.5rem;
+  }
+  
+  .links {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 480px) {
+  .links img {
+    width: 180px !important;
+    height: 43px !important;
   }
 }
