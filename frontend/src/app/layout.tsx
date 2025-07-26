@@ -15,6 +15,7 @@ import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { GoogleAnalytics } from "../analytics/GoogleAnalytics";
 import CookieWrapper from "@/components/Popups/CookieConsent/CookieWrapper";
 import { BarcodeButton } from "@/components/Barcode/BarcodeButton";
+import ProgressBar from "@/components/ProgressBar/ProgressBar";
 
 
 const rubik = Rubik({
@@ -89,6 +90,7 @@ export default function RootLayout({
         <CookieWrapper>
           <GoogleProviderWrapper>
             <Providers>
+              <ProgressBar />
               <ThemeProvider>
                 <GoogleAnalytics />
                 <Navbar />
