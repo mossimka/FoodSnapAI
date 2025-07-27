@@ -3,12 +3,15 @@
 import React from 'react';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
+import { motion } from 'framer-motion';
+import { containerVariants, itemVariants } from '@/styles/anims';
 
 import { ReviewCard } from './ReviewCard/ReviewCard';
 import Styles from './ReviewSection.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useTheme } from '@/context/ThemeProvider';
+
 
 const ReviewSection = () => {
   const { theme } = useTheme();
@@ -106,26 +109,38 @@ const ReviewSection = () => {
     : 'https://peerlist.io/images/Launch_Badge_Light.svg';
 
   return (
-    <div className={Styles.reviewSection}>
-      <div className={Styles.header}>
-        <h2 className={Styles.title}>Reviews</h2>
-        <div className={Styles.links}>
-          <Link href="https://www.producthunt.com/products/foodsnapai" className={Styles.linkItem} target="_blank">
-            <Image src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=996659&theme=light&t=1753373907725" alt="Product Hunt" width={200} height={48} className={Styles.linkImage}/>
-          </Link>
-          <Link href="https://peerlist.io/products/foodsnapai" className={Styles.linkItem} target="_blank">
-            <Image src={peerlistBadgeUrl} alt="Peerlist" width={200} height={48} className={Styles.linkImage}/>
-          </Link>
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ 
+        once: true, 
+        amount: 0.2 
+      }}
+    >
+      <div className={Styles.reviewSection}>
+        <div className={Styles.header}>
+          <motion.div variants={itemVariants}>
+            <h2 className={Styles.title} >Reviews</h2>
+            <div className={Styles.links}>
+              <Link href="https://www.producthunt.com/products/foodsnapai" className={Styles.linkItem} target="_blank">
+                <Image src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=996659&theme=light&t=1753373907725" alt="Product Hunt" width={200} height={48} className={Styles.linkImage}/>
+              </Link>
+              <Link href="https://peerlist.io/products/foodsnapai" className={Styles.linkItem} target="_blank">
+                <Image src={peerlistBadgeUrl} alt="Peerlist" width={200} height={48} className={Styles.linkImage}/>
+              </Link>
+            </div>
+          </motion.div>
         </div>
-      </div>
-      <div ref={sliderRef} className={`keen-slider ${Styles.slider}`}>
-        {reviewCards.map((card, index) => (
-          <div className="keen-slider__slide" key={`review-${index}`}>
-            <ReviewCard {...card} />
+          <div ref={sliderRef} className={`keen-slider ${Styles.slider}`}>
+            {reviewCards.map((card, index) => (
+              <div className="keen-slider__slide" key={`review-${index}`}>
+                <ReviewCard {...card} />
+              </div>
+            ))}
           </div>
-        ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
