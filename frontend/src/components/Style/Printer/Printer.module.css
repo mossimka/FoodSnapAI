@@ -1,27 +1,152 @@
 .responseText {
+  display: inline-block;
   white-space: pre-wrap;
   font-family: inherit;
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 2;
   position: relative;
   text-align: left;
+  overflow: visible;
+  padding: 0.4rem 0; 
+  min-height: 1.6em; 
+  vertical-align: top;
 }
-  
+
+.responseText.withShadow {
+  text-shadow: var(--text-shadow, 2px 2px 4px rgba(0, 0, 0, 0.3));
+}
+
 .responseText::after {
   content: "|";
   color: var(--border-color);
   margin-left: 5px;
   animation: blink 1s step-end infinite;
+  text-shadow: inherit;
+  vertical-align: baseline;
 }
   
-  @keyframes blink {
-    50% {
-      opacity: 0;
-    }
+@keyframes blink {
+  50% {
+    opacity: 0;
   }
+}
   
-  .done::after {
-    content: "";
-    animation: none;
+.done::after {
+  content: "";
+  animation: none;
+}
+
+/* Более светлые тени */
+.coloredShadow {
+  text-shadow: 2px 2px 4px rgba(252, 212, 182, 0.6);
+}
+
+.glowShadow {
+  text-shadow: 
+    0 0 10px rgba(252, 212, 182, 0.8), 
+    0 0 20px rgba(252, 212, 182, 0.6),
+    0 0 30px rgba(252, 212, 182, 0.4);
+  animation: neonGlow 2s ease-in-out infinite alternate;
+}
+
+/* Неоновые эффекты */
+.neonPulse {
+  text-shadow: 
+    0 0 10px rgba(244, 138, 59, 0.8),
+    0 0 15px rgba(244, 138, 59, 0.6),
+    0 0 20px rgba(244, 138, 59, 0.4);
+  animation: neonPulse 2s ease-in-out infinite alternate;
+}
+
+.neonFlicker {
+  text-shadow: 
+    0 0 8px rgba(244, 138, 59, 0.7),
+    0 0 16px rgba(244, 138, 59, 0.5),
+    0 0 24px rgba(244, 138, 59, 0.3);
+  animation: neonFlicker 3s ease-in-out infinite;
+}
+
+.softGlow {
+  text-shadow: 
+    0 0 6px rgba(244, 138, 59, 0.5),
+    0 0 9px rgba(244, 138, 59, 0.3);
+  animation: softGlow 2.5s ease-in-out infinite alternate;
+}
+
+.largeText {
+  line-height: 1.2;
+  padding: 0.5rem 0;
+  min-height: 1.6em;
+}
+
+/* Анимации неонового свечения */
+@keyframes neonGlow {
+  0% {
+    text-shadow: 
+      0 0 10px rgba(252, 212, 182, 0.8), 
+      0 0 20px rgba(252, 212, 182, 0.6),
+      0 0 30px rgba(252, 212, 182, 0.4);
   }
-  
+  100% {
+    text-shadow: 
+      0 0 15px rgba(252, 212, 182, 1), 
+      0 0 30px rgba(252, 212, 182, 0.8),
+      0 0 45px rgba(252, 212, 182, 0.6);
+  }
+}
+
+@keyframes neonPulse {
+  0% {
+    text-shadow: 
+      0 0 10px rgba(244, 138, 59, 0.8),
+      0 0 15px rgba(244, 138, 59, 0.6),
+      0 0 20px rgba(244, 138, 59, 0.4);
+  }
+  100% {
+    text-shadow: 
+      0 0 18px rgba(244, 138, 59, 1),
+      0 0 28px rgba(244, 138, 59, 0.8),
+      0 0 38px rgba(244, 138, 59, 0.6);
+  }
+}
+
+@keyframes neonFlicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    text-shadow: 
+      0 0 8px rgba(244, 138, 59, 0.7),
+      0 0 16px rgba(244, 138, 59, 0.5),
+      0 0 24px rgba(244, 138, 59, 0.3);
+  }
+  20%, 24%, 55% {
+    text-shadow: 
+      0 0 2px rgba(244, 138, 59, 0.4),
+      0 0 4px rgba(244, 138, 59, 0.3),
+      0 0 6px rgba(244, 138, 59, 0.2);
+  }
+}
+
+@keyframes softGlow {
+  0%, 100% {
+    text-shadow: 
+      0 0 6px rgba(244, 138, 59, 0.5),
+      0 0 9px rgba(244, 138, 59, 0.3);
+  }
+  50% {
+    text-shadow: 
+      0 0 12px rgba(244, 138, 59, 0.7),
+      0 0 18px rgba(244, 138, 59, 0.5);
+  }
+}
+
+/* Классы для разной интенсивности */
+.lighter {
+  opacity: 0.8;
+}
+
+.light {
+  opacity: 0.6;
+}
+
+.veryLight {
+  opacity: 0.4;
+}

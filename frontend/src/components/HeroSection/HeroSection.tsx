@@ -67,11 +67,19 @@ export const HeroSection: React.FC = () => {
 
         <div className={Styles.centerContent}>
           <div className={Styles.ctaButton}>
-            <Printer initialText="Cooking revolution" fontSize="2rem" textAlign="center" className="gradientText"/>
+              <Printer 
+                initialText="Cooking revolution" 
+                fontSize="3rem" 
+                textAlign="center" 
+                className="gradientText" 
+                fontFamily="'Brittany', cursive" 
+                textShadow="neonPulse"
+                brightness="lighter"
+              />
             <UtensilsCrossed style={{color: "var(--color2)"}}/>
           </div>
 
-          <strong style={{ marginBottom: 10, fontWeight: "400" }}>
+          <strong style={{ marginBottom: 10, fontWeight: "400"}}>
             Upload dish and get a{" "}
             <span className="gradientText">recipe immediately</span>
           </strong>
