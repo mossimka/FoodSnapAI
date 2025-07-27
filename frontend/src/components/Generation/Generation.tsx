@@ -396,7 +396,7 @@ const generateResponse = async () => {
           ) : (
             <div className={Styles.responseBoxContainer}>
               {isNotFood && (
-                <Printer initialText={responseText} speed={10}/>
+                <Printer initialText={responseText} typeSpeed={10}/>
               )}
               
               {generatedRecipe && !isNotFood && (

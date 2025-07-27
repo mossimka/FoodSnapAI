@@ -76,7 +76,7 @@ export const HeroSection: React.FC = () => {
                 textShadow="neonPulse"
                 brightness="lighter"
               />
-            <UtensilsCrossed style={{color: "var(--color2)"}}/>
+            <UtensilsCrossed style={{color: "var(--color2)", filter: "drop-shadow(0 2px 4px rgba(244, 138, 59, 0.3))"}}/>
           </div>
 
           <strong style={{ marginBottom: 10, fontWeight: "400"}}>
