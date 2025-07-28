@@ -12,11 +12,40 @@
 
 .logoSection {
     display: flex;
-    width: 15vw;
+    width: 16vw;
     align-items: center;
     justify-content: flex-start;
     gap: var(--spacing-md);
     transition: transform 0.3s ease;
+    position: fixed;
+    z-index: 1000;
+    background-color: var(--bg-color);
+    padding: 1rem;
+    border-radius: 1rem;
+    
+    /* Градиентная маска со всех краев */
+    mask-image: linear-gradient(to right, 
+        transparent 0%, 
+        black 10%, 
+        black 90%, 
+        transparent 100%),
+        linear-gradient(to bottom, 
+        transparent 0%, 
+        black 10%, 
+        black 90%, 
+        transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, 
+        transparent 0%, 
+        black 10%, 
+        black 90%, 
+        transparent 100%),
+        linear-gradient(to bottom, 
+        transparent 0%, 
+        black 10%, 
+        black 90%, 
+        transparent 100%);
+    mask-composite: intersect;
+    -webkit-mask-composite: intersect;
 }
 
 .logoSection:hover {
@@ -73,6 +102,10 @@
     border-radius: var(--border-radius-xl);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0.5rem;
+    right: 6rem;
+    min-width: fit-content;
 }
 
 .profileButton{
