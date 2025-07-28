@@ -49,8 +49,8 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, hidePublishedBad
           <div className={Styles.authorAndIcons}>
             <p className={Styles.author}>by {recipe.user.username}</p>
             <div className={Styles.icons}>
-              {recipe.is_halal && <Image src="/images/halal.png" alt="Halal" width={24} height={24} />}
-              {recipe.is_vegan && <Image src="/images/vegan.png" alt="Vegan" width={24} height={24} />}
+              {recipe.is_halal && <Image src="/images/halal.webp" alt="Halal" width={24} height={24} />}
+              {recipe.is_vegan && <Image src="/images/vegan.webp" alt="Vegan" width={24} height={24} />}
             </div>
           </div>
           <div className={Styles.ingredients}>
