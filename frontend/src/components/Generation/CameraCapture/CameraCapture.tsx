@@ -167,13 +167,6 @@ const CameraCapture: React.FC<DropZoneProps> = ({ setImage }) => {
           <span>❌ {pasteError}</span>
         </div>
       )}
-      
-      {/* Индикатор успешной вставки */}
-      {justPasted && (
-        <div className={Styles.pasteSuccess}>
-          <span>✅ Image pasted successfully!</span>
-        </div>
-      )}
 
       {capturing &&
         typeof window !== "undefined" &&

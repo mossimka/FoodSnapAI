@@ -12,7 +12,7 @@
 
 .logoSection {
     display: flex;
-    width: 16vw;
+    width: 20rem;
     align-items: center;
     justify-content: flex-start;
     gap: var(--spacing-md);
@@ -20,10 +20,11 @@
     position: fixed;
     z-index: 1000;
     background-color: var(--bg-color);
-    padding: 1rem;
+    padding: 1rem 2rem;
     border-radius: 1rem;
+    top: 0.5rem;
+    left: 1rem;
     
-    /* Градиентная маска со всех краев */
     mask-image: linear-gradient(to right, 
         transparent 0%, 
         black 10%, 
@@ -170,6 +171,18 @@
     box-shadow: var(--hover-shadow);
 }
 
+@media (max-width: 1200px) {
+    .logoSection {
+        width: 18rem;
+        padding: 0.8rem 1.5rem;
+        left: 1.5rem;
+    }
+    
+    .logoText {
+        font-size: 1.4rem;
+    }
+}
+
 @media (max-width: 1024px) {
     .nav {
         gap: var(--spacing-s);
@@ -180,6 +193,20 @@
     .nav a {
         font-size: 0.95rem;
         padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    .logoSection {
+        width: 10rem;
+        padding: 0.7rem 1.2rem;
+        left: 1rem;
+        top: 0.3rem;
+        mask-image: none;
+        -webkit-mask-image: none;
+        background: none;
+    }
+    
+    .logoText {
+        font-size: 1.3rem;
     }
 }
   
@@ -203,20 +230,36 @@
     }
 
     .logoSection {
+        position: relative; /* Убираем fixed на мобильных */
         justify-content: center;
         margin: 0 auto;
-        width: 100vw;
+        width: calc(100vw - 8rem); /* Учитываем burger menu */
+        left: auto;
+        top: auto;
+        padding: 0.8rem 1rem;
     }
-
+    
     .header {
         justify-content: center;
         position: relative;
+        padding: var(--spacing-md) 2rem; /* Добавляем отступы для burger */
     }
-  }
-  
-@media (min-width: 901px) {
-    .mobileNavWrapper {
-      display: none;
+}
+
+@media (max-width: 768px) {
+    .logoSection {
+        width: calc(100vw - 6rem);
+        padding: 0.6rem 0.8rem;
+        gap: var(--spacing-sm);
+    }
+    
+    .logoText {
+        font-size: 1.2rem;
+    }
+    
+    .logo {
+        width: 50px;
+        height: 50px;
     }
 }
 
@@ -232,5 +275,70 @@
     .logoSection {
         margin-left: 1.5rem;
         width: 60vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .logoSection {
+        width: calc(100vw - 3rem);
+        padding: 0.4rem 0.5rem;
+        
+        /* Упрощаем маску для очень маленьких экранов */
+        mask-image: linear-gradient(to right, 
+            transparent 0%, 
+            black 5%, 
+            black 95%, 
+            transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, 
+            transparent 0%, 
+            black 5%, 
+            black 95%, 
+            transparent 100%);
+        mask-composite: none;
+        -webkit-mask-composite: none;
+    }
+    
+    .logoText {
+        font-size: 1rem;
+    }
+    
+    .logo {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* Дополнительные стили для очень широких экранов */
+@media (min-width: 1400px) {
+    .logoSection {
+        width: 22rem;
+        padding: 1.2rem 2.5rem;
+        left: 3rem;
+    }
+    
+    .logoText {
+        font-size: 1.6rem;
+    }
+}
+
+/* Для планшетов в горизонтальной ориентации */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .logoSection {
+        width: 15rem;
+        padding: 0.6rem 1rem;
+        left: 1rem;
+    }
+    
+    .logoText {
+        font-size: 1.2rem;
+    }
+}
+
+/* Убираем маску на очень маленьких экранах для лучшей производительности */
+@media (max-width: 400px) {
+    .logoSection {
+        mask-image: none;
+        -webkit-mask-image: none;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 }
