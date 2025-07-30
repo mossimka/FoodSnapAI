@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence } from "framer-motion";
@@ -17,6 +17,48 @@ export const Navbar: React.FC = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: user} = useUserQuery();
+  
+  // Рефы для отслеживания кликов вне popup
+  const profileWrapperRef = useRef<HTMLDivElement>(null);
+  const burgerMenuRef = useRef<HTMLDivElement>(null);
+
+  // Закрытие popup при клике вне его
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileWrapperRef.current && !profileWrapperRef.current.contains(event.target as Node)) {
+        setShowPopup(false);
+      }
+      if (burgerMenuRef.current && !burgerMenuRef.current.contains(event.target as Node)) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    if (showPopup || mobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showPopup, mobileMenuOpen]);
+
+  // Закрытие при нажатии Escape
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowPopup(false);
+        setMobileMenuOpen(false);
+      }
+    };
+
+    if (showPopup || mobileMenuOpen) {
+      document.addEventListener('keydown', handleEscapeKey);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [showPopup, mobileMenuOpen]);
 
   return (
     <header className={Styles.header}>
@@ -45,7 +87,7 @@ export const Navbar: React.FC = () => {
         <NavButton text="+ Generate Recipe" link="/generate" />
         <NavButton text="Browse Recipes" link="/posted" />
 
-        <div className={Styles.profileWrapper}>
+        <div className={Styles.profileWrapper} ref={profileWrapperRef}>
             <button
               onClick={() => setShowPopup(!showPopup)}
               className={Styles.profileButton}
@@ -71,7 +113,7 @@ export const Navbar: React.FC = () => {
       </nav>
       
       {mobileMenuOpen && (
-        <div className={Styles.mobileNavWrapper}>
+        <div className={Styles.mobileNavWrapper} ref={burgerMenuRef}>
           <BurgerMenu onClose={() => setMobileMenuOpen(false)}/>
         </div>
       )}

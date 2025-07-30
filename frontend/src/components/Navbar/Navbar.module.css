@@ -196,13 +196,17 @@
     }
     
     .logoSection {
-        width: 10rem;
+        width: 100%;
         padding: 0.7rem 1.2rem;
         left: 1rem;
         top: 0.3rem;
         mask-image: none;
         -webkit-mask-image: none;
         background: none;
+    }
+
+    .logoLink {
+        width: 14rem;
     }
     
     .logoText {
@@ -274,6 +278,9 @@
     
     .logoSection {
         margin-left: 1.5rem;
+        width: 60vw;
+    }
+    .logoLink {
         width: 60vw;
     }
 }
