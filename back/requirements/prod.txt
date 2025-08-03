@@ -31,3 +31,4 @@ google-adk==1.3.0
 python-slugify
 alembic
 redis
+slowapi

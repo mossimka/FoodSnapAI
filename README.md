@@ -20,7 +20,6 @@ FoodSnapAI is a modern web application that allows users to upload photos of dis
 - **Frontend:** React, Next.js, TypeScript
 - **Styling:** CSS Modules
 - **Icons:** Lucide, React Icons
-- **Image Handling:** next/image
 - **Backend:** FastAPI, Google Cloud Storage
 - **AI:** Gemini Multi Agent System
 
@@ -110,14 +109,15 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 
 ## License
 
-[MIT](LICENSE)
+This project is licensed under the GNU General Public License v3.0.  
+See the [LICENSE](./LICENSE) file for details.
 
 ---
 
 ## Contact
 
 - [Instagram](https://www.instagram.com/foodsnap_ai/)
-- [Twitter](https://x.com/FoodSnapAI)
+- [Twitter](https://x.com/mossimka)
 - [LinkedIn](https://www.linkedin.com/in/maxim-sarsekeyev-a133ba354/)
 
 ---

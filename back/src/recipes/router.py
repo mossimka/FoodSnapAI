@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form, status, Path, Body, Query
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form, status, Path, Body, Query, Request
 from fastapi.responses import StreamingResponse
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
@@ -10,6 +10,9 @@ import json
 import re
 import requests
 from datetime import datetime
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from src.auth.service import get_current_user
 from src.auth.models import Users
@@ -70,11 +73,15 @@ checking_runner = Runner(
     session_service=session_service,
 )
 
+limiter = Limiter(key_func=get_remote_address)
+
 
 router = APIRouter(prefix="/dish", tags=["dish"])
 
 @router.get("/", response_model=PaginatedRecipesResponse, status_code=status.HTTP_200_OK)
+@limiter.limit("3/minute")
 async def get_all_dishes(
+    request: Request,
     db: Session = Depends(get_db),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Number of items per page"),
@@ -93,7 +100,8 @@ async def get_all_dishes(
     return response
 
 @router.get("/recipes/{slug}/", response_model=RecipeResponse)
-async def get_recipe(slug: str, db: Session = Depends(get_db)):
+@limiter.limit("10/minute")
+async def get_recipe(request: Request, slug: str, db: Session = Depends(get_db)):
     cache_key = f"recipe:slug={slug}"
     cached_data = await redis_client.get(cache_key)
 
@@ -109,7 +117,9 @@ async def get_recipe(slug: str, db: Session = Depends(get_db)):
     return recipe_response
 
 @router.get("/image-proxy/{recipe_id}/")
+@limiter.limit("10/minute")
 async def proxy_recipe_image(
+    request: Request,
     recipe_id: int,
     db: Session = Depends(get_db)
 ):
@@ -153,7 +163,9 @@ async def proxy_recipe_image(
         raise HTTPException(status_code=500, detail=f"Failed to proxy image: {str(e)}")
 
 @router.post("/")
+@limiter.limit("5/minute")
 async def analyze_dish(
+    request: Request,
     file: UploadFile = File(...), 
     location: str = Form(None),
     current_user: Users = Depends(get_current_user)
@@ -231,7 +243,9 @@ async def analyze_dish(
         raise HTTPException(status_code=500, detail=f"Failed to analyze dish: {str(e)}")
 
 @router.post("/save/")
+@limiter.limit("5/minute")
 async def save_recipe(
+    request: Request,
     file: UploadFile = File(...),
     recipe: str = Form(...),
     current_user: Users = Depends(get_current_user),
@@ -301,7 +315,9 @@ async def save_recipe(
         raise HTTPException(status_code=500, detail=f"Failed to save recipe: {str(e)}")
 
 @router.patch("/recipes/{slug}/", response_model=RecipeResponse)
+@limiter.limit("10/minute")
 async def update_recipe(
+    request: Request,
     slug: str,
     recipe_update: RecipePatchRequest,
     current_user: Users = Depends(get_current_user),
@@ -333,7 +349,9 @@ async def update_recipe(
 
     
 @router.patch("/patch/{recipe_id}")
+@limiter.limit("5/minute")
 async def patch_recipe(
+    request: Request,
     recipe_id: int,
     patch_data: RecipePatchRequest = Body(...),
     db: Session = Depends(get_db)
@@ -374,7 +392,9 @@ async def patch_recipe(
     }}
 
 @router.delete("/{recipe_id}/", status_code=status.HTTP_200_OK)
+@limiter.limit("10/minute")
 async def delete_recipe(
+    request: Request,
     recipe_id: int = Path(..., description="ID of the recipe to delete"),
     current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -398,7 +418,9 @@ async def delete_recipe(
         raise HTTPException(status_code=500, detail=f"Failed to delete recipe: {str(e)}")
 
 @router.get("/public/", response_model=PaginatedRecipesResponse)
+@limiter.limit("3/minute")
 async def get_public_recipe(
+    request: Request,
     db: Session = Depends(get_db),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Number of items per page"),
@@ -418,7 +440,9 @@ async def get_public_recipe(
 
 
 @router.get("/my/", response_model=PaginatedRecipesResponse)
+@limiter.limit("3/minute")
 async def get_my_recipes(
+    request: Request,
     current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db),
     page: int = Query(1, ge=1, description="Page number"),
@@ -441,7 +465,9 @@ async def get_my_recipes(
 #Favorites
 
 @router.get("/favorites/", response_model=PaginatedFavoriteRecipesResponse)
+@limiter.limit("3/minute")
 async def get_favorite_revipes(
+    request: Request,
     current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db),
     page: int = Query(1, ge=1, description="Page number"),
@@ -461,7 +487,9 @@ async def get_favorite_revipes(
     return response
 
 @router.post("/favorites/{recipe_id}/", response_model=FavoriteStatusResponse)
+@limiter.limit("10/minute")
 async def add_recipe_to_favorites(
+    request: Request,
     recipe_id: int = Path(..., description="Recipe ID to add to favorites"),
     current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -488,7 +516,9 @@ async def add_recipe_to_favorites(
         raise HTTPException(status_code=500, detail=f"Failed to add to favorites: {str(e)}")
 
 @router.delete("/favorites/{recipe_id}/", response_model=FavoriteStatusResponse)
+@limiter.limit("10/minute")
 async def remove_recipe_from_favorites(
+    request: Request,
     recipe_id: int = Path(..., description="Recipe ID to remove from favorites"),
     current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -512,7 +542,9 @@ async def remove_recipe_from_favorites(
         raise HTTPException(status_code=500, detail=f"Failed to remove from favorites: {str(e)}")
 
 @router.get("/favorites/check/{recipe_id}/", response_model=FavoriteStatusResponse)
+@limiter.limit("10/minute")
 async def check_favorite_status(
+    request: Request,
     recipe_id: int = Path(..., description="Recipe ID to check"),
     current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -533,7 +565,8 @@ async def check_favorite_status(
 # Categories endpoints
 
 @router.get("/categories/", response_model=CategoryListResponse)
-async def get_all_categories(db: Session = Depends(get_db)):
+@limiter.limit("3/minute")
+async def get_all_categories(request: Request, db: Session = Depends(get_db)):
     """Get all available categories"""
     try:
         categories = get_categories(db)
@@ -542,13 +575,16 @@ async def get_all_categories(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Failed to get categories: {str(e)}")
 
 @router.get("/categories/health/", response_model=List[str])
-async def get_health_categories():
+@limiter.limit("3/minute")
+async def get_health_categories(request: Request):
     """Get list of available health categories"""
     from src.recipes.models import HEALTH_CATEGORIES
     return HEALTH_CATEGORIES
 
 @router.get("/image/{recipe_id}/")
+@limiter.limit("10/minute")
 async def get_recipe_image_url(
+    request: Request,
     recipe_id: int,
     current_user: Users = Depends(get_current_user),
     db: Session = Depends(get_db)

@@ -2,17 +2,24 @@ from fastapi import FastAPI, Response, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from datetime import datetime
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from src.database import engine, Base
 from src.dependencies import get_db
 from src.auth.router import router as auth_router
 from src.gcs.router import router as gcs_router
-from src.recipes.router import router as ai_router
+from src.recipes.router import router as ai_router, limiter
 from src.profile.router import router as profile_router
 from src.admin.router import router as admin_router
 from src.recipes.models import Recipe
 
 app = FastAPI()
+
+# Add rate limiter to app state
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 origins = [
     "http://localhost:3000",
