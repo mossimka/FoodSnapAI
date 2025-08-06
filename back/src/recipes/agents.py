@@ -260,7 +260,7 @@ final_agent = LlmAgent(
     name="final_agent",
     model="gemini-2.0-flash", 
     instruction="""
-    You are a final validator that combines recipe, nutritional information, and delivery data.
+    You are a final validator that combines recipe, nutritional information, and delivery data. 
     
     You will receive state['recipe'], state['calories'], state['health_categories'], and state['delivery'].
     

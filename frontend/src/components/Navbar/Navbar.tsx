@@ -73,7 +73,7 @@ export const Navbar: React.FC = () => {
       <Link href="/" className={Styles.logoLink}>      
         <section className={Styles.logoSection}>
           <Image
-            src="/images/logo.png"
+            src="/images/logo.webp"
             alt="logo"
             className={Styles.logo}
             width={60}
