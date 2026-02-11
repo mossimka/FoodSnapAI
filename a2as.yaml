@@ -1,0 +1,359 @@
+manifest:
+  version: "0.1.3"
+  schema: https://a2as.org/cert/schema
+  subject:
+    name: mossimka/foodsnapai
+    source: https://github.com/mossimka/foodsnapai
+    branch: main
+    commit: "5db3dc45"
+    scope: [back/src/recipes/agents.py, back/src/recipes/router.py]
+  issued:
+    by: A2AS.org
+    at: '2026-02-11T16:41:30Z'
+    url: https://a2as.org/certified/agents/mossimka/foodsnapai
+  signatures:
+    digest: sha256:kjKkhxPCaR8xCVyO6xWu-ym4yteoIwuzpPh2Fa7YJKk
+    key: ed25519:ajPGC946HBIs0J5zYZ4y-BIyJLd1x6AKje-8qw6BUdg
+    sig: ed25519:q-EriHjufOoszuKn3PJpXjU_NmGtjARFZZwPYsvyh-78KWPDTpLhSLshLJ6xOkJAqTH1ubtUvJQuuNl076yjDw
+
+agents:
+  calories_agent:
+    type: instance
+    models: [gemini-2.0-flash]
+    params:
+      name: calories_agent
+      instruction: [You are a nutritionist that estimates calories in dishes based on their ingredients and preparation method.,
+        'You will receive a JSON with the following structure:', '{', '"dish_name": "string",', '"ingredients": ["string",
+          ...],', '"recipe": "string"', '}', 'Your task is to respond with a JSON like this:', '{', '"dish_name": "string",',
+        '"ingredients_calories": {', '"ingredient1": calories_per_100g1,', '"ingredient2": calories_per_100g2,', "...", '},',
+        '"estimated_weight_g": number,', '"total_calories_per_100g": number,', '}', 'CALCULATION GUIDELINES:', '- Use standard
+          nutritional databases for calorie estimates', '- Account for cooking methods (frying adds calories, boiling doesn''t)',
+        '- For homemade versions of processed foods, estimate based on typical ingredients', '- Consider portion sizes realistically',
+        '- Estimated weight should reflect final prepared dish weight', '- Be conservative with estimates - better to underestimate
+          than overestimate', 'SPECIAL CONSIDERATIONS:', '- Fried foods: add 20-30% calories for oil absorption', '- Baked
+          goods: account for sugar, butter, flour ratios', '- Beverages: consider sugar content, dairy additions', '- Snacks:
+          account for oil, salt, processing methods', Only return JSON — no explanations or additional text., Be as accurate
+          as possible based on standard nutritional knowledge.]
+      description: Estimates detailed nutritional information including cooking method impacts.
+      output_key: calories
+  checking_agent:
+    type: instance
+    models: [gemini-2.0-flash]
+    params:
+      name: checking_agent
+      instruction: [You are an assistant that determines whether the given image contains food that can be used to create
+          a recipe., 'You will receive an image. Your task is to analyze if the image contains:', '- VALID: Prepared dishes,
+          meals, cooked food, raw ingredients, packaged food items, beverages, snacks that can be recreated with a recipe',
+        '- INVALID: People, animals (living or cooked whole animals like roasted pig), non-food objects, empty plates, cooking
+          utensils only, restaurant exteriors, menus, text-only images', 'Special cases:', '- Packaged/bottled beverages (soda,
+          juice, etc.) → VALID (recipe should show how to make similar drink)', '- Packaged snacks (chips, cookies, etc.)
+          → VALID (recipe should show how to make homemade version)', '- Ready-made food items → VALID (recipe should show
+          how to prepare from scratch)', '- Whole roasted animals, disturbing content → INVALID', '- People eating or holding
+          food → INVALID', '- Just hands or utensils without clear food → INVALID', 'Respond with:', '{', '"is_food": true
+          or false,', '"description": "short description of what''s in the image and why it''s valid/invalid for recipe generation"',
+        '}', Only return JSON — no extra text.]
+      description: Determines whether image contains food suitable for recipe generation.
+  delivery_agent:
+    type: instance
+    models: [gemini-2.0-flash]
+    params:
+      name: delivery_agent
+      instruction: ['STEP 1: Check for "User location:" in message', '- If NOT found: return exactly []', '- If found: extract
+          location and continue', 'STEP 2: For each basic or rare ingredient from the recipe, create Google search URLs for
+          delivery:', 'Create search URLs in this format:', 'https://www.google.com/search?q=[ingredient]+[delivery_term]+[location',
+        'Examples:', '- For English locations: "deliver+flour+london", "order+tomatoes+new+york"', 'STEP 3: Generate search
+          URLs for main ingredients:', '- Bread flour: "https://www.google.com/search?q=заказать+мука+хлебопекарная+[location]"',
+        '- Mozzarella: "https://www.google.com/search?q=доставка+моцарелла+сыр+[location]"', '- Cherry tomatoes: "https://www.google.com/search?q=заказать+помидоры+черри+[location]"',
+        '- Olive oil: "https://www.google.com/search?q=доставка+оливковое+масло+[location]"', 'For English-speaking locations
+          use English terms:', '- "https://www.google.com/search?q=deliver+bread+flour+[location]"', '- "https://www.google.com/search?q=order+mozzarella+cheese+[location]"',
+        'STEP 4: Return array with Google search links:', '[', '{', '"product": "bread flour",', '},', '{', '"product": "mozzarella
+          cheese",', '"link": "https://www.google.com/search?q=доставка+моцарелла+сыр+алматы",', '}', ']', 'LANGUAGE RULES:',
+        '- For Kazakhstan, Russia, Belarus: use Russian terms (заказать, доставка)', '- For USA, UK, Canada, Australia: use
+          English terms (deliver, order)', '- For other locations: use English terms', 'URL ENCODING:', '- Replace spaces
+          with + in URLs', '- Use proper Google search format', '- Each ingredient gets its own search URL', NO google_search
+          tool needed - just generate the search URLs directly.]
+      output_key: delivery
+      description: Generates Google search URLs for ingredient delivery queries.
+  final_agent:
+    type: instance
+    models: [gemini-2.0-flash]
+    params:
+      name: final_agent
+      instruction: ['You are a final validator that combines recipe, nutritional information, and delivery data.', 'You will
+          receive state[''recipe''], state[''calories''], state[''health_categories''], and state[''delivery''].', 'VALIDATION
+          RULES:', '- Ensure recipe is realistic and achievable', '- Verify ingredients match between recipe and calories',
+        '- Check that nutritional estimates are reasonable', '- Ensure no "buy this product" instructions exist', '- Validate
+          health categories are appropriate for ingredients', '- Ensure health categories are ONLY from this approved list:',
+        '["High in Fiber", "High Sodium", "High Sugar", "High Saturated Fat",', '"Spicy/Irritant", "Red Meat-Based", "Plant-Based",
+          "Dairy-Free",', '"High Protein", "Contains Nuts"]', '- Include delivery data if available', 'State[''calories'']
+          structure:', '{', '"dish_name": "string",', '"ingredients_calories": {', '"ingredient1": calories_per_100g,', "...",
+        '},', '"estimated_weight_g": number,', '"total_calories_per_100g": number', '}', 'State[''health_categories''] structure:',
+        '{', '"health_categories": ["category1", "category2", ...],', '"is_vegan": true or false,', '"is_halal": true or false',
+        '}', 'State[''recipe''] structure:', '{', '"dish_name": "string",', '"ingredients": ["string", ...],', '"recipe":
+          "string"', '}', 'State[''delivery''] structure:', '[', '{', '"product": "specific ingredient name",', '"link": "https://store.com/specific-product-page",',
+        '},', "...", ']', 'Return a JSON object:', '{', '"recipe": state[''recipe''],', '"calories": state[''calories''],',
+        '"health_categories": state[''health_categories''][''health_categories''] if state[''health_categories''] else [],',
+        '"is_vegan": state[''health_categories''][''is_vegan''] if state[''health_categories''] else false,', '"is_halal":
+          state[''health_categories''][''is_halal''] if state[''health_categories''] else false,', '"delivery": state[''delivery'']',
+        '}', Only return JSON — no extra text., Ensure all data is consistent and realistic.]
+      output_key: final_output
+  health_categories_agent:
+    type: instance
+    models: [gemini-2.0-flash]
+    params:
+      name: health_categories_agent
+      instruction: [You are a nutritional analyst that assigns health categories to dishes based on their ingredients and
+          nutritional information., Also you have to check if food is vegan and halal., 'You will receive a JSON with recipe
+          and nutritional data:', '{', '"recipe": {', '"dish_name": "string",', '"ingredients": ["string", ...],', '"recipe":
+          "string"', '},', '"calories": {', '"dish_name": "string",', '"ingredients_calories": {...},', '"estimated_weight_g":
+          number,', '"total_calories_per_100g": number,', '"healthiness": "string"', '}', '}', 'Analyze the dish and assign
+          relevant health categories ONLY from this exact list:', '- "High in Fiber" - dishes with high fiber content (>5g
+          per 100g)', '- "High Sodium" - dishes with high salt content (>1.5g per 100g)', '- "High Sugar" - dishes with high
+          sugar content (>15g per 100g)', '- "High Saturated Fat" - dishes with high saturated fat content (>5g per 100g)',
+        '- "Spicy/Irritant" - spicy dishes or containing irritating spices', '- "Red Meat-Based" - dishes based on red meat
+          (beef, pork, lamb)', '- "Plant-Based" - dishes without any animal products', '- "Dairy-Free" - dishes without dairy
+          products', '- "High Protein" - dishes with high protein content (>20g per 100g)', '- "Contains Nuts" - dishes containing
+          any nuts or tree nuts', 'ANALYSIS GUIDELINES:', '- Check ingredients for fiber sources (vegetables, whole grains,
+          legumes)', '- Identify sodium sources (salt, soy sauce, processed ingredients)', '- Look for sugar content (added
+          sugars, natural sugars, sweeteners)', '- Analyze fat types (saturated vs unsaturated)', '- Check for spices (chili,
+          pepper, hot sauce)', '- Identify protein sources (meat, fish, dairy, legumes, nuts)', '- Check for nuts/tree nuts
+          (almonds, walnuts, peanuts, etc.)', '- Determine if dish is plant-based (no animal products)', '- Check for dairy
+          ingredients (milk, cheese, butter, cream)', 'CATEGORY ASSIGNMENT RULES:', '- Return health_categories as an array
+          of strings', '- Use ONLY the exact category names from the approved list', '- Do not invent new categories or modify
+          existing category names', '- Multiple categories can be assigned to one dish if applicable', '- If no categories
+          apply, return empty array []', 'Return JSON in this format:', '{', '"health_categories": ["category1", "category2",
+          ...],', '"is_vegan": true,', '"is_halal": false', '}', Only return JSON — no explanations or additional text.]
+      description: Analyzes dishes and assigns health categories based on ingredients and nutritional data.
+      output_key: health_categories
+  recipe_agent:
+    type: instance
+    models: [gemini-2.0-flash]
+    params:
+      name: recipe_agent
+      instruction: [You are a professional chef analyzing food photos to create detailed recipes., 'You will receive an image
+          file. Analyze the food and determine the best approach:', 'FOR HOMEMADE/COOKED DISHES:', '- Analyze visible ingredients
+          and cooking methods', '- Provide complete recipe from scratch', 'FOR PACKAGED/READY-MADE ITEMS (snacks, beverages,
+          processed foods):', '- Identify the product type', '- Create a homemade version recipe (e.g., for Coca-Cola → homemade
+          cola recipe, for potato chips → homemade chips recipe)', '- Focus on recreating the flavor and texture from basic
+          ingredients', 'FOR BEVERAGES:', '- If bottled/canned → provide recipe for homemade version', '- If fresh/homemade
+          → analyze ingredients and method', 'IMPORTANT RULES:', '- Never suggest buying or purchasing items', '- Always provide
+          cooking/preparation instructions', '- For processed foods, reverse-engineer a homemade version', '- Include specific
+          measurements and cooking times', '- Make recipes realistic and achievable in home kitchen', 'Output must be a JSON
+          like:', '{', '"dish_name": "descriptive name of the dish/item",', '"ingredients": ["specific ingredient with measurements",
+          ...],', '"recipe": "detailed step-by-step cooking instructions with temperatures, times, and techniques"', '}',
+        'RECIPE FORMATTING RULES:', '- Write recipe steps in numbered format: "1. First step', 2. Second step, 3. Third step",
+        '- Use numbers followed by period and space: "1. ", "2. ", "3. "', '- Each step on a new line separated by', '- NO
+          asterisks (*), bullets (•), or dashes (-)', '- NO markdown formatting', '- Keep steps clear and actionable', 'Example
+          recipe format:', '"1. Preheat oven to 180°C', 2. Mix flour and sugar in a bowl, 3. Add eggs and milk, 4. Bake for
+          25 minutes", 'Make the recipe clear, detailed, and completely achievable at home.']
+      description: Analyze food photos and create detailed homemade recipes, including for packaged items.
+      output_key: recipe
+  root_agent:
+    type: instance
+    params:
+      name: root_agent
+      sub_agents: [recipe_agent, calories_agent, health_categories_agent, delivery_agent, final_agent]
+
+models:
+  gemini-2.0-flash:
+    type: literal
+    agents: [checking_agent, recipe_agent, calories_agent, health_categories_agent, delivery_agent, final_agent]
+
+teams:
+  root_agent:
+    type: sequential
+    agents: [root_agent, recipe_agent, calories_agent, health_categories_agent, delivery_agent, final_agent]
+
+imports:
+  _rate_limit_exceeded_handler: slowapi._rate_limit_exceeded_handler
+  add_to_favorites: src.recipes.service.add_to_favorites
+  admin_router: src.admin.router.router
+  ai_router: src.recipes.router.router
+  APIRouter: fastapi.APIRouter
+  auth_router: src.auth.router.router
+  Base: src.database.Base
+  Body: fastapi.Body
+  CategoryListResponse: src.recipes.schemas.CategoryListResponse
+  CategoryResponse: src.recipes.schemas.CategoryResponse
+  checking_agent: src.recipes.agents.checking_agent
+  CORSMiddleware: fastapi.middleware.cors.CORSMiddleware
+  create_recipe_with_categories: src.recipes.service.create_recipe_with_categories
+  datetime: datetime.datetime
+  Depends: fastapi.Depends
+  engine: src.database.engine
+  FastAPI: fastapi.FastAPI
+  FavoriteStatusResponse: src.recipes.schemas.FavoriteStatusResponse
+  File: fastapi.File
+  Form: fastapi.Form
+  gcs_router: src.gcs.router.router
+  get_categories: src.recipes.service.get_categories
+  get_current_user: src.auth.service.get_current_user
+  get_db: src.dependencies.get_db
+  get_favorite_recipes_paginated: src.recipes.service.get_favorite_recipes_paginated
+  get_my_recipes_paginated: src.recipes.service.get_my_recipes_paginated
+  get_public_recipes_paginated: src.recipes.service.get_public_recipes_paginated
+  get_recipe_by_slug: src.recipes.service.get_recipe_by_slug
+  get_recipe_response_by_slug: src.recipes.service.get_recipe_response_by_slug
+  get_recipes_paginated: src.recipes.service.get_recipes_paginated
+  get_remote_address: slowapi.util.get_remote_address
+  google_search: google.adk.tools.google_search
+  HEALTH_CATEGORIES: src.recipes.models.HEALTH_CATEGORIES
+  HTTPException: fastapi.HTTPException
+  IngredientCalories: src.recipes.models.IngredientCalories
+  InMemorySessionService: google.adk.sessions.InMemorySessionService
+  invalidate_favorite_caches: src.services.redis.invalidate_favorite_caches
+  invalidate_recipe_caches: src.services.redis.invalidate_recipe_caches
+  invalidate_user_caches: src.services.redis.invalidate_user_caches
+  is_recipe_favorited: src.recipes.service.is_recipe_favorited
+  json: json
+  Limiter: slowapi.Limiter
+  limiter: src.recipes.router.limiter
+  List: typing.List
+  LlmAgent: google.adk.agents.LlmAgent
+  PaginatedFavoriteRecipesResponse: src.recipes.schemas.PaginatedFavoriteRecipesResponse
+  PaginatedRecipesResponse: src.recipes.schemas.PaginatedRecipesResponse
+  Path: fastapi.Path
+  profile_router: src.profile.router.router
+  Query: fastapi.Query
+  RateLimitExceeded: slowapi.errors.RateLimitExceeded
+  re: re
+  Recipe: src.recipes.models.Recipe
+  RecipePatchRequest: src.recipes.schemas.RecipePatchRequest
+  RecipeResponse: src.recipes.schemas.RecipeResponse
+  redis_client: src.services.redis.redis_client
+  remove_from_favorites: src.recipes.service.remove_from_favorites
+  Request: fastapi.Request
+  requests: requests
+  Response: fastapi.Response
+  root_agent: src.recipes.agents.root_agent
+  Runner: google.adk.runners.Runner
+  SequentialAgent: google.adk.agents.SequentialAgent
+  Session: sqlalchemy.orm.Session
+  signed_url_service: src.gcs.signed_urls.signed_url_service
+  SortOrder: src.recipes.schemas.SortOrder
+  status: fastapi.status
+  StreamingResponse: fastapi.responses.StreamingResponse
+  traceback: traceback
+  types: google.genai.types
+  upload_large_file_to_gcs: src.gcs.uploader.upload_large_file_to_gcs
+  UploadFile: fastapi.UploadFile
+  Users: src.auth.models.Users
+  uuid: uuid
+
+functions:
+  add_recipe_to_favorites:
+    type: async
+    module: back.src.recipes.router
+    args: [request, recipe_id, current_user, db]
+  analyze_dish:
+    type: async
+    module: back.src.recipes.router
+    args: [request, file, location, current_user]
+  check_favorite_status:
+    type: async
+    module: back.src.recipes.router
+    args: [request, recipe_id, current_user, db]
+  default:
+    type: sync
+    module: back.src.recipes.router
+    args: [self, obj]
+  delete_recipe:
+    type: async
+    module: back.src.recipes.router
+    args: [request, recipe_id, current_user, db]
+  get_all_categories:
+    type: async
+    module: back.src.recipes.router
+    args: [request, db]
+  get_all_dishes:
+    type: async
+    module: back.src.recipes.router
+    args: [request, db, page, page_size, sort_by]
+  get_favorite_revipes:
+    type: async
+    module: back.src.recipes.router
+    args: [request, current_user, db, page, page_size, sort_by]
+  get_health_categories:
+    type: async
+    module: back.src.recipes.router
+    args: [request]
+  get_my_recipes:
+    type: async
+    module: back.src.recipes.router
+    args: [request, current_user, db, page, page_size, sort_by]
+  get_public_recipe:
+    type: async
+    module: back.src.recipes.router
+    args: [request, db, page, page_size, sort_by]
+  get_recipe:
+    type: async
+    module: back.src.recipes.router
+    args: [request, slug, db]
+  get_recipe_image_url:
+    type: async
+    module: back.src.recipes.router
+    args: [request, recipe_id, current_user, db]
+  patch_recipe:
+    type: async
+    module: back.src.recipes.router
+    args: [request, recipe_id, patch_data, db]
+  proxy_recipe_image:
+    type: async
+    module: back.src.recipes.router
+    args: [request, recipe_id, db]
+  remove_recipe_from_favorites:
+    type: async
+    module: back.src.recipes.router
+    args: [request, recipe_id, current_user, db]
+  robots_txt:
+    type: sync
+    module: back.src.main
+  root:
+    type: sync
+    module: back.src.main
+  save_recipe:
+    type: async
+    module: back.src.recipes.router
+    args: [request, file, recipe, current_user, db]
+  sitemap:
+    type: sync
+    module: back.src.main
+    args: [db]
+  structured_data:
+    type: sync
+    module: back.src.main
+    args: [db]
+  update_recipe:
+    type: async
+    module: back.src.recipes.router
+    args: [request, slug, recipe_update, current_user, db]
+  web_manifest:
+    type: sync
+    module: back.src.main
+
+networks:
+  content:
+    type: api
+    actions: [GET]
+    protocols: [https]
+    params:
+      caller: [sitemap]
+      dynamic: "True"
+      variable: content
+  foodsnapai.food:
+    type: api
+    actions: [GET]
+    urls: ['/{...}']
+    protocols: [https]
+    ports: ["443"]
+    params:
+      pattern: https://foodsnapai.food/recipe/{recipe.slug}
+      caller: [structured_data]
+  recipe_url:
+    type: api
+    actions: [GET]
+    protocols: [https]
+    params:
+      caller: [sitemap]
+      dynamic: "True"
+      variable: recipe_url
