@@ -47,7 +47,7 @@ This Code of Conduct applies to:
 
 If you experience or witness inappropriate behavior, please report it to the project maintainer.
 
-Contact: **maksimsarsekeyev@gmail.com**
+Contact: **maksimsarsekeev@gmail.com**
 
 All reports will be reviewed respectfully and handled as fairly and confidentially as possible.
 

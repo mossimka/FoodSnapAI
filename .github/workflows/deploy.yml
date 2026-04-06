@@ -5,22 +5,22 @@ on:
     branches: [main]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  ##deploy:
+    ##runs-on: ubuntu-latest
 
-    environment: Production
+    ##environment: Production
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+    ##steps:
+      ##- name: Checkout
+        ##uses: actions/checkout@v3
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd FoodSnapAI/
-            git pull origin main
-            sudo docker compose up --build -d
+      ##- name: Deploy via SSH
+        ##uses: appleboy/ssh-action@v1.0.0
+        ##with:
+          ##host: ${{ secrets.SSH_HOST }}
+          ##username: ${{ secrets.SSH_USER }}
+          ##key: ${{ secrets.SSH_KEY }}
+          ##script: |
+            ##cd FoodSnapAI/
+            ##git pull origin main
+            ##sudo docker compose up --build -d
