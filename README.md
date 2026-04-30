@@ -27,6 +27,8 @@ FoodSnapAI is a modern web application that allows users to upload photos of dis
 
 ## Getting Started
 
+Food Snap AI video demonstration: https://drive.google.com/file/d/1LORKBxksoeOcmvYVumXHNFUr8nT6Ftii/view?usp=drivesdk
+
 ### Prerequisites
 
 - Node.js (v16+ recommended)
