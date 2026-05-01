@@ -25,6 +25,25 @@ FoodSnapAI is a modern web application that allows users to upload photos of dis
 
 ---
 
+## AI Pipeline Architecture
+
+This project uses a modular **Agentic Pipeline** defined in `agents.py` to transform food images into structured recipes and nutritional data. Instead of a single prompt, the system breaks the task into specialized stages.
+
+The workflow is orchestrated by a `SequentialAgent` called the `root_agent`, which passes data through the following experts:
+
+-   **The Filter (`checking_agent`):** Validates that the uploaded image contains actual food rather than people or objects.
+-   **The Chef (`recipe_agent`):** Identifies ingredients and generates a from-scratch recipe—even reverse-engineering packaged snacks like chips or soda.
+-   **The Nutritionist (`calories_agent`):** Estimates calories per 100g and total weight, accounting for cooking methods like frying.
+-   **The Analyst (`health_categories_agent`):** Tags the dish with dietary labels such as "Vegan," "Halal," or "High Protein".
+-   **The Shopper (`delivery_agent`):** Generates localized Google Search links to help you buy the required ingredients based on your location.
+-   **The Auditor (`final_agent`):** Validates all data for consistency and packages it into a final JSON response.
+
+## Technical Implementation
+
+All logic for these interactions, including specific model instructions for the `gemini-2.0-flash` model, can be found in `agents.py`.
+
+---
+
 ## Getting Started
 
 Food Snap AI video demonstration: https://drive.google.com/file/d/1LORKBxksoeOcmvYVumXHNFUr8nT6Ftii/view?usp=drivesdk
